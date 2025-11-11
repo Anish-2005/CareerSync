@@ -88,7 +88,7 @@ export default function LandingPage() {
               <Zap className="w-7 h-7 text-white" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] bg-clip-text text-transparent">
-              NexusTrack
+              Career Sync
             </span>
           </m.div>
 
@@ -124,59 +124,109 @@ export default function LandingPage() {
         </div>
       </m.nav>      {/* Hero Section */}
       <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
-        {/* Simplified background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a1428] via-[#1a2d4d] to-[#0a1428]">
-          {/* Subtle animated grid */}
-          <div className="absolute inset-0 opacity-20">
-            <div
-              className="absolute inset-0"
+        {/* Innovative morphing background */}
+        <div className="absolute inset-0 overflow-hidden">
+          {/* Morphing geometric shapes */}
+          <m.div
+            className="absolute top-1/4 left-1/4 w-96 h-96 opacity-20"
+            animate={{
+              borderRadius: ["50% 20% 80% 30%", "30% 80% 20% 70%", "80% 30% 50% 20%", "50% 20% 80% 30%"],
+              rotate: [0, 90, 180, 360],
+              scale: [1, 1.2, 0.8, 1],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+            style={{
+              background: "linear-gradient(135deg, rgba(255, 107, 0, 0.3), rgba(0, 212, 255, 0.3))",
+              filter: "blur(40px)",
+            }}
+          />
+          <m.div
+            className="absolute bottom-1/4 right-1/4 w-80 h-80 opacity-15"
+            animate={{
+              borderRadius: ["20% 80% 30% 70%", "70% 30% 80% 20%", "30% 70% 20% 80%", "20% 80% 30% 70%"],
+              rotate: [360, 270, 180, 0],
+              scale: [0.8, 1.3, 1, 0.8],
+            }}
+            transition={{
+              duration: 25,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 5,
+            }}
+            style={{
+              background: "linear-gradient(225deg, rgba(0, 255, 136, 0.2), rgba(255, 107, 0, 0.2))",
+              filter: "blur(30px)",
+            }}
+          />
+
+          {/* Advanced particle system */}
+          {[...Array(30)].map((_, i) => (
+            <m.div
+              key={i}
+              className="absolute w-2 h-2 rounded-full"
+              animate={{
+                x: [
+                  Math.random() * window.innerWidth,
+                  Math.random() * window.innerWidth,
+                  Math.random() * window.innerWidth,
+                ],
+                y: [
+                  Math.random() * window.innerHeight,
+                  Math.random() * window.innerHeight,
+                  Math.random() * window.innerHeight,
+                ],
+                scale: [0, 1, 0.5, 1, 0],
+                opacity: [0, 0.8, 0.4, 0.8, 0],
+              }}
+              transition={{
+                duration: 15 + Math.random() * 10,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+                delay: Math.random() * 5,
+              }}
               style={{
-                backgroundImage: `
-                  linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
-                  linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px)
-                `,
-                backgroundSize: '60px 60px',
+                background: i % 3 === 0 ? "#00d4ff" : i % 3 === 1 ? "#ff6b00" : "#00ff88",
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                filter: "blur(1px)",
               }}
             />
-          </div>
+          ))}
 
-          {/* Minimal floating elements */}
+          {/* Liquid-like flowing elements */}
           <m.div
-            className="absolute top-20 right-20 w-2 h-2 bg-[#00d4ff] rounded-full"
+            className="absolute top-0 left-0 w-full h-32 opacity-30"
             animate={{
-              scale: [1, 1.5, 1],
-              opacity: [0.3, 0.8, 0.3],
+              backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
             }}
             transition={{
-              duration: 4,
+              duration: 10,
               repeat: Number.POSITIVE_INFINITY,
               ease: "easeInOut",
+            }}
+            style={{
+              background: "linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.4), transparent)",
+              filter: "blur(20px)",
             }}
           />
           <m.div
-            className="absolute bottom-32 left-16 w-1 h-1 bg-[#ff6b00] rounded-full"
+            className="absolute bottom-0 right-0 w-full h-32 opacity-20"
             animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.4, 0.9, 0.4],
+              backgroundPosition: ["100% 50%", "0% 50%", "100% 50%"],
             }}
             transition={{
-              duration: 3,
+              duration: 12,
               repeat: Number.POSITIVE_INFINITY,
               ease: "easeInOut",
-              delay: 1,
+              delay: 3,
             }}
-          />
-          <m.div
-            className="absolute top-1/3 right-1/4 w-3 h-3 bg-[#00ff88] rounded-full"
-            animate={{
-              scale: [1, 1.8, 1],
-              opacity: [0.2, 0.6, 0.2],
-            }}
-            transition={{
-              duration: 5,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-              delay: 2,
+            style={{
+              background: "linear-gradient(90deg, transparent, rgba(255, 107, 0, 0.3), transparent)",
+              filter: "blur(25px)",
             }}
           />
         </div>
@@ -188,77 +238,305 @@ export default function LandingPage() {
           initial="hidden"
           animate="visible"
         >
-          {/* Simple badge */}
+          {/* Innovative badge with morphing effect */}
           <m.div
             variants={itemVariants}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[#00d4ff]/30 bg-[#00d4ff]/5 backdrop-blur-md mb-12"
+            className="relative inline-flex items-center gap-3 px-8 py-4 rounded-full border border-[#00d4ff]/30 bg-[#00d4ff]/5 backdrop-blur-xl overflow-hidden"
+            whileHover={{ scale: 1.05 }}
           >
-            <Zap className="w-5 h-5 text-[#00d4ff]" />
-            <span className="text-[#00d4ff] font-medium">Next-Generation Career Intelligence</span>
+            {/* Morphing background */}
+            <m.div
+              className="absolute inset-0 rounded-full"
+              animate={{
+                background: [
+                  "linear-gradient(45deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 0, 0.1))",
+                  "linear-gradient(135deg, rgba(255, 107, 0, 0.1), rgba(0, 255, 136, 0.1))",
+                  "linear-gradient(225deg, rgba(0, 255, 136, 0.1), rgba(0, 212, 255, 0.1))",
+                  "linear-gradient(315deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 0, 0.1))",
+                ],
+              }}
+              transition={{
+                duration: 8,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+              }}
+            />
+            <m.div
+              className="w-3 h-3 rounded-full bg-[#00d4ff]"
+              animate={{
+                scale: [1, 1.5, 1],
+                opacity: [0.7, 1, 0.7],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+              }}
+            />
+            <span className="text-[#00d4ff] font-semibold relative z-10">Next-Generation Career Intelligence</span>
+            <m.div
+              className="w-2 h-2 rounded-full bg-[#ff6b00]"
+              animate={{
+                scale: [1, 1.3, 1],
+                opacity: [0.5, 0.9, 0.5],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+                delay: 0.5,
+              }}
+            />
           </m.div>
 
-          {/* Clean headline */}
+          {/* Fluid morphing headline */}
           <m.h1
             variants={itemVariants}
-            className="text-6xl md:text-8xl font-black mb-8 leading-tight"
+            className="text-7xl md:text-9xl font-black mb-8 leading-none tracking-tight"
             style={{
-              background: "linear-gradient(135deg, #ffffff 0%, #00d4ff 50%, #ff6b00 100%)",
-              backgroundSize: "200% 200%",
+              background: "linear-gradient(135deg, #ffffff 0%, #00d4ff 25%, #ff6b00 50%, #00ff88 75%, #ffffff 100%)",
+              backgroundSize: "400% 400%",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
+              filter: "drop-shadow(0 0 40px rgba(0, 212, 255, 0.3))",
             }}
             animate={{
               backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+              textShadow: [
+                "0 0 20px rgba(0, 212, 255, 0.5)",
+                "0 0 40px rgba(255, 107, 0, 0.5)",
+                "0 0 20px rgba(0, 255, 136, 0.5)",
+                "0 0 20px rgba(0, 212, 255, 0.5)",
+              ],
             }}
             transition={{
-              duration: 8,
+              duration: 12,
               repeat: Number.POSITIVE_INFINITY,
-              ease: "linear",
+              ease: "easeInOut",
+            }}
+            whileHover={{
+              scale: 1.02,
+              transition: { duration: 0.3 },
             }}
           >
-            NexusTrack
+            Career Sync
           </m.h1>
 
-          {/* Focused subheading */}
+          {/* Dynamic subheading with typing effect */}
           <m.p
             variants={itemVariants}
-            className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-16 leading-relaxed"
+            className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto mb-16 leading-relaxed font-light"
+            animate={{
+              opacity: [0.7, 1, 0.7],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
           >
-            Connect with infinite career possibilities through intelligent networking and quantum insights.
+            <span className="inline-block">
+              Sync your career trajectory with
+              <m.span
+                className="text-[#00d4ff] font-semibold mx-2"
+                animate={{
+                  color: ["#00d4ff", "#ff6b00", "#00ff88", "#00d4ff"],
+                }}
+                transition={{
+                  duration: 6,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                }}
+              >
+                intelligent networking
+              </m.span>
+              and quantum-powered insights.
+            </span>
           </m.p>
 
-          {/* Clean CTA buttons */}
-          <m.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-6">
+          {/* Innovative CTA buttons with morphing effects */}
+          <m.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-8">
             <m.button
-              whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(255, 107, 0, 0.4)" }}
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0 0 40px rgba(255, 107, 0, 0.6)",
+              }}
               whileTap={{ scale: 0.95 }}
-              className="px-10 py-5 text-white font-bold text-lg rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-2xl transition-all duration-300"
+              className="group relative px-12 py-6 text-white font-bold text-xl rounded-2xl overflow-hidden"
+              style={{
+                background: "linear-gradient(135deg, #ff6b00 0%, #ff8c00 100%)",
+                boxShadow: "0 0 20px rgba(255, 107, 0, 0.4)",
+              }}
             >
-              Start Your Journey
+              {/* Morphing background effect */}
+              <m.div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100"
+                animate={{
+                  background: [
+                    "linear-gradient(45deg, rgba(0, 212, 255, 0.3), rgba(255, 107, 0, 0.3))",
+                    "linear-gradient(135deg, rgba(0, 255, 136, 0.3), rgba(0, 212, 255, 0.3))",
+                    "linear-gradient(45deg, rgba(0, 212, 255, 0.3), rgba(255, 107, 0, 0.3))",
+                  ],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                }}
+              />
+              {/* Floating particles */}
+              <div className="absolute inset-0 overflow-hidden rounded-2xl">
+                {[...Array(5)].map((_, i) => (
+                  <m.div
+                    key={i}
+                    className="absolute w-1 h-1 bg-white rounded-full opacity-60"
+                    animate={{
+                      y: [0, -20, 0],
+                      x: [0, Math.sin(i) * 15, 0],
+                      scale: [0, 1, 0],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Number.POSITIVE_INFINITY,
+                      delay: i * 0.2,
+                    }}
+                    style={{
+                      left: `${20 + i * 15}%`,
+                      top: `${60}%`,
+                    }}
+                  />
+                ))}
+              </div>
+              <span className="relative z-10">Start Your Journey</span>
             </m.button>
             <m.button
-              whileHover={{ scale: 1.05 }}
+              whileHover={{
+                scale: 1.05,
+                backgroundColor: "rgba(0, 212, 255, 0.1)",
+              }}
               whileTap={{ scale: 0.95 }}
-              className="px-10 py-5 text-white font-bold text-lg rounded-full border-2 border-[#00d4ff] hover:bg-[#00d4ff]/10 transition-all duration-300"
+              className="group relative px-12 py-6 text-white font-bold text-xl rounded-2xl border-2 border-[#00d4ff] hover:bg-[#00d4ff]/10 transition-all duration-300 overflow-hidden"
             >
-              Learn More
+              {/* Liquid border effect */}
+              <m.div
+                className="absolute inset-0 rounded-2xl border-2 border-transparent"
+                animate={{
+                  borderImage: [
+                    "linear-gradient(45deg, #00d4ff, #ff6b00) 1",
+                    "linear-gradient(135deg, #ff6b00, #00ff88) 1",
+                    "linear-gradient(225deg, #00ff88, #00d4ff) 1",
+                    "linear-gradient(45deg, #00d4ff, #ff6b00) 1",
+                  ],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                }}
+                style={{
+                  borderImageSlice: 1,
+                }}
+              />
+              <span className="relative z-10">Explore Features</span>
             </m.button>
           </m.div>
 
-          {/* Single floating stat */}
+          {/* Interactive floating stat with morphing effects */}
           <m.div
             variants={itemVariants}
-            className="mt-20 flex justify-center"
+            className="mt-24 flex justify-center"
           >
             <m.div
-              className="flex items-center gap-4 px-8 py-4 rounded-full bg-[#1a3a52]/50 backdrop-blur-md border border-[#00d4ff]/20"
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 300 }}
+              className="group relative flex items-center gap-6 px-10 py-6 rounded-3xl bg-gradient-to-r from-[#1a3a52]/80 to-[#0f2540]/80 backdrop-blur-xl border border-[#00d4ff]/30 overflow-hidden cursor-pointer"
+              whileHover={{
+                scale: 1.05,
+                rotateY: 5,
+                z: 20,
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 20,
+              }}
+              style={{
+                transformStyle: "preserve-3d",
+              }}
             >
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-[#00d4ff] rounded-full animate-pulse"></div>
-                <span className="text-white font-semibold">10,000+ Professionals Connected</span>
+              {/* Morphing background */}
+              <m.div
+                className="absolute inset-0 rounded-3xl opacity-30"
+                animate={{
+                  background: [
+                    "linear-gradient(45deg, rgba(0, 212, 255, 0.2), rgba(255, 107, 0, 0.2))",
+                    "linear-gradient(135deg, rgba(255, 107, 0, 0.2), rgba(0, 255, 136, 0.2))",
+                    "linear-gradient(45deg, rgba(0, 212, 255, 0.2), rgba(255, 107, 0, 0.2))",
+                  ],
+                }}
+                transition={{
+                  duration: 6,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                }}
+              />
+
+              {/* Floating particles */}
+              <div className="absolute inset-0 overflow-hidden rounded-3xl">
+                {[...Array(8)].map((_, i) => (
+                  <m.div
+                    key={i}
+                    className="absolute w-1 h-1 rounded-full opacity-70"
+                    animate={{
+                      y: [0, -25, 0],
+                      x: [0, Math.cos(i) * 20, 0],
+                      scale: [0, 1.5, 0],
+                      opacity: [0, 0.8, 0],
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Number.POSITIVE_INFINITY,
+                      delay: i * 0.3,
+                    }}
+                    style={{
+                      left: `${15 + i * 10}%`,
+                      top: `${40}%`,
+                      backgroundColor: i % 2 === 0 ? "#00d4ff" : "#ff6b00",
+                    }}
+                  />
+                ))}
+              </div>
+
+              <div className="flex items-center gap-4 relative z-10">
+                <m.div
+                  className="w-4 h-4 rounded-full bg-[#00d4ff] shadow-lg shadow-[#00d4ff]/50"
+                  animate={{
+                    scale: [1, 1.3, 1],
+                    boxShadow: [
+                      "0 0 10px rgba(0, 212, 255, 0.5)",
+                      "0 0 20px rgba(0, 212, 255, 0.8)",
+                      "0 0 10px rgba(0, 212, 255, 0.5)",
+                    ],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Number.POSITIVE_INFINITY,
+                    ease: "easeInOut",
+                  }}
+                />
+                <span className="text-white font-bold text-lg">15,000+ Professionals Connected</span>
+                <m.div
+                  className="w-3 h-3 rounded-full bg-[#ff6b00] shadow-lg shadow-[#ff6b00]/50"
+                  animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.7, 1, 0.7],
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Number.POSITIVE_INFINITY,
+                    ease: "easeInOut",
+                    delay: 0.5,
+                  }}
+                />
               </div>
             </m.div>
           </m.div>
@@ -282,63 +560,131 @@ export default function LandingPage() {
         </m.div>
       </section>
 
-      {/* Features Section */}
-      <section className="relative py-20 px-6 bg-gradient-to-b from-[#0a1428] to-[#1a2d4d] overflow-hidden">
-        {/* Dynamic background elements */}
+      {/* Features Section with Fluid Layout */}
+      <section className="relative py-24 px-6 bg-gradient-to-b from-[#0a1428] to-[#1a2d4d] overflow-hidden">
+        {/* Dynamic fluid background */}
         <div className="absolute inset-0">
-          {[...Array(15)].map((_, i) => (
+          {/* Organic flowing shapes */}
+          {[...Array(20)].map((_, i) => (
             <m.div
               key={i}
-              className="absolute w-1 h-1 bg-[#00d4ff] rounded-full opacity-40"
+              className="absolute opacity-10"
               animate={{
-                y: [0, -100, 0],
-                x: [0, Math.sin(i) * 50, 0],
-                scale: [1, 1.5, 1],
+                x: [0, Math.sin(i) * 100, 0],
+                y: [0, Math.cos(i) * 80, 0],
+                scale: [1, 1.5, 0.8, 1],
+                borderRadius: ["50% 30% 70% 20%", "30% 70% 20% 50%", "70% 20% 50% 30%", "50% 30% 70% 20%"],
               }}
               transition={{
-                duration: 8 + i,
+                duration: 15 + i * 2,
                 repeat: Number.POSITIVE_INFINITY,
                 ease: "easeInOut",
                 delay: i * 0.5,
               }}
               style={{
-                left: `${(i * 7) % 100}%`,
-                top: `${(i * 13) % 100}%`,
+                width: `${40 + i * 10}px`,
+                height: `${40 + i * 10}px`,
+                left: `${(i * 5) % 100}%`,
+                top: `${(i * 7) % 100}%`,
+                background: i % 3 === 0
+                  ? "linear-gradient(45deg, rgba(0, 212, 255, 0.3), rgba(255, 107, 0, 0.3))"
+                  : i % 3 === 1
+                  ? "linear-gradient(135deg, rgba(255, 107, 0, 0.3), rgba(0, 255, 136, 0.3))"
+                  : "linear-gradient(225deg, rgba(0, 255, 136, 0.3), rgba(0, 212, 255, 0.3))",
+                filter: "blur(20px)",
               }}
             />
           ))}
+
+          {/* Fluid wave patterns */}
+          <m.div
+            className="absolute inset-0 opacity-5"
+            animate={{
+              backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"],
+            }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "linear",
+            }}
+            style={{
+              backgroundImage: `
+                radial-gradient(circle at 20% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 107, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 255, 136, 0.1) 0%, transparent 50%)
+              `,
+              backgroundSize: "200% 200%",
+            }}
+          />
         </div>
 
-        <div className="max-w-6xl mx-auto relative z-10">
+        <div className="max-w-7xl mx-auto relative z-10">
           <m.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-20"
           >
+            {/* Fluid section title */}
             <m.h2
-              className="text-5xl md:text-6xl font-black mb-4 text-white"
+              className="text-6xl md:text-8xl font-black mb-6 leading-none"
               animate={{
+                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                 textShadow: [
-                  "0 0 20px rgba(0, 212, 255, 0.5)",
-                  "0 0 40px rgba(255, 107, 0, 0.5)",
-                  "0 0 20px rgba(0, 212, 255, 0.5)",
+                  "0 0 30px rgba(0, 212, 255, 0.5)",
+                  "0 0 50px rgba(255, 107, 0, 0.5)",
+                  "0 0 30px rgba(0, 255, 136, 0.5)",
+                  "0 0 30px rgba(0, 212, 255, 0.5)",
                 ],
               }}
               transition={{
-                duration: 2,
+                duration: 8,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+              }}
+              style={{
+                background: "linear-gradient(135deg, #ffffff 0%, #00d4ff 30%, #ff6b00 60%, #00ff88 90%, #ffffff 100%)",
+                backgroundSize: "300% 300%",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              Sync Features
+            </m.h2>
+            <m.p
+              className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed font-light"
+              animate={{
+                opacity: [0.6, 1, 0.6],
+              }}
+              transition={{
+                duration: 6,
                 repeat: Number.POSITIVE_INFINITY,
                 ease: "easeInOut",
               }}
             >
-              Quantum Features
-            </m.h2>
-            <p className="text-gray-400 text-xl">Navigate infinite possibilities with intelligent connections</p>
+              Experience the future of career management with
+              <m.span
+                className="text-[#00d4ff] font-semibold mx-2"
+                animate={{
+                  color: ["#00d4ff", "#ff6b00", "#00ff88", "#00d4ff"],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                }}
+              >
+                intelligent synchronization
+              </m.span>
+              and quantum insights.
+            </m.p>
           </m.div>
 
+          {/* Fluid dynamic grid */}
           <m.div
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -347,91 +693,124 @@ export default function LandingPage() {
             {[
               {
                 icon: Target,
-                title: "Neural Targeting",
-                description: "Lock onto opportunities with AI-powered matching and intelligent opportunity detection",
-                color: "from-[#ff6b00] to-[#ff8c00]",
-                shadowColor: "rgba(255, 107, 0, 0.3)",
+                title: "Smart Targeting",
+                description: "AI-powered opportunity matching with predictive career trajectory analysis and intelligent connection recommendations.",
+                color: "from-[#00d4ff] to-[#0088cc]",
+                shadowColor: "rgba(0, 212, 255, 0.4)",
+                gradient: "linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 0, 0.1))",
+                size: "large",
               },
               {
                 icon: BarChart3,
-                title: "Quantum Analytics",
-                description: "Analyze career trajectories with advanced metrics and predictive insights",
-                color: "from-[#00d4ff] to-[#0088cc]",
-                shadowColor: "rgba(0, 212, 255, 0.3)",
+                title: "Sync Analytics",
+                description: "Real-time career performance metrics with advanced data visualization and trend analysis for optimal decision making.",
+                color: "from-[#ff6b00] to-[#ff8c00]",
+                shadowColor: "rgba(255, 107, 0, 0.4)",
+                gradient: "linear-gradient(225deg, rgba(255, 107, 0, 0.1), rgba(0, 255, 136, 0.1))",
+                size: "medium",
               },
               {
                 icon: Clock,
-                title: "Temporal Sync",
-                description: "Synchronize your schedule with intelligent time management and deadline tracking",
-                color: "from-[#ff6b00] to-[#00d4ff]",
-                shadowColor: "rgba(255, 107, 0, 0.3)",
+                title: "Time Sync",
+                description: "Intelligent scheduling with automated deadline tracking, priority management, and productivity optimization.",
+                color: "from-[#00d4ff] to-[#ff6b00]",
+                shadowColor: "rgba(0, 212, 255, 0.4)",
+                gradient: "linear-gradient(315deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 0, 0.1))",
+                size: "large",
               },
               {
                 icon: Users,
-                title: "Network Matrix",
-                description: "Connect with a vast network of professionals and access insider opportunities",
-                color: "from-[#00d4ff] to-[#ff6b00]",
-                shadowColor: "rgba(0, 212, 255, 0.3)",
+                title: "Network Sync",
+                description: "Seamless professional networking with automated introductions, relationship management, and opportunity alerts.",
+                color: "from-[#00ff88] to-[#00d4ff]",
+                shadowColor: "rgba(0, 255, 136, 0.4)",
+                gradient: "linear-gradient(45deg, rgba(0, 255, 136, 0.1), rgba(0, 212, 255, 0.1))",
+                size: "medium",
               },
               {
                 icon: Shield,
-                title: "Quantum Security",
-                description: "Enterprise-grade encryption protects your career data with zero-trust architecture",
-                color: "from-[#ff8c00] to-[#00d4ff]",
-                shadowColor: "rgba(255, 140, 0, 0.3)",
+                title: "Secure Sync",
+                description: "Enterprise-grade data protection with end-to-end encryption, privacy controls, and secure career data management.",
+                color: "from-[#ff8c00] to-[#00ff88]",
+                shadowColor: "rgba(255, 140, 0, 0.4)",
+                gradient: "linear-gradient(135deg, rgba(255, 140, 0, 0.1), rgba(0, 255, 136, 0.1))",
+                size: "large",
               },
               {
                 icon: Zap,
-                title: "AI Nexus",
-                description: "Experience intelligent career guidance powered by advanced neural networks",
-                color: "from-[#00d4ff] to-[#ff6b00]",
-                shadowColor: "rgba(0, 212, 255, 0.3)",
+                title: "AI Sync",
+                description: "Next-generation AI assistance with personalized career coaching, opportunity prediction, and intelligent recommendations.",
+                color: "from-[#00d4ff] to-[#00ff88]",
+                shadowColor: "rgba(0, 212, 255, 0.4)",
+                gradient: "linear-gradient(225deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 136, 0.1))",
+                size: "medium",
               },
             ].map((feature, index) => (
               <m.div
                 key={index}
                 variants={itemVariants}
                 whileHover={{
-                  scale: 1.05,
-                  rotateY: 5,
+                  scale: feature.size === 'large' ? 1.08 : 1.05,
+                  rotateY: feature.size === 'large' ? 8 : 5,
                   rotateX: -5,
-                  z: 50,
+                  z: 60,
                 }}
                 transition={{
                   type: "spring",
                   stiffness: 300,
-                  damping: 20,
+                  damping: 25,
                 }}
-                className="group relative p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/80 to-[#0f2540]/80 border border-[#00d4ff]/30 hover:border-[#00d4ff]/60 backdrop-blur-xl transition-all duration-500 cursor-pointer"
+                className={`group relative overflow-hidden rounded-3xl backdrop-blur-xl transition-all duration-700 cursor-pointer ${
+                  feature.size === 'large'
+                    ? 'md:col-span-2 lg:col-span-1 p-10'
+                    : 'p-8'
+                }`}
                 style={{
+                  background: "linear-gradient(135deg, rgba(26, 58, 82, 0.8), rgba(15, 37, 64, 0.8))",
+                  border: "1px solid rgba(0, 212, 255, 0.2)",
                   transformStyle: "preserve-3d",
                   perspective: "1000px",
+                  gridRow: feature.size === 'large' && index % 3 === 1 ? 'span 2' : 'span 1',
                 }}
               >
-                {/* Animated background glow */}
-                <div
-                  className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-xl`}
+                {/* Morphing background gradient */}
+                <m.div
+                  className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                  animate={{
+                    background: [
+                      feature.gradient,
+                      "linear-gradient(180deg, rgba(0, 212, 255, 0.15), rgba(255, 107, 0, 0.15))",
+                      feature.gradient,
+                    ],
+                  }}
+                  transition={{
+                    duration: 6,
+                    repeat: Number.POSITIVE_INFINITY,
+                    ease: "easeInOut",
+                  }}
                 />
 
-                {/* Floating particles */}
+                {/* Fluid particle system */}
                 <div className="absolute inset-0 overflow-hidden rounded-3xl">
-                  {[...Array(3)].map((_, i) => (
+                  {[...Array(feature.size === 'large' ? 12 : 8)].map((_, i) => (
                     <m.div
                       key={i}
-                      className="absolute w-1 h-1 bg-[#00d4ff] rounded-full opacity-60"
+                      className="absolute w-1 h-1 rounded-full opacity-70"
                       animate={{
-                        y: [0, -20, 0],
-                        x: [0, Math.sin(i * 2) * 10, 0],
-                        opacity: [0.6, 1, 0.6],
+                        y: [0, -40, 0],
+                        x: [0, Math.sin(i * 1.2) * (feature.size === 'large' ? 30 : 20), 0],
+                        scale: [0, 1.5, 0],
+                        opacity: [0, 0.8, 0],
                       }}
                       transition={{
-                        duration: 2 + i,
+                        duration: 4 + i * 0.3,
                         repeat: Number.POSITIVE_INFINITY,
-                        delay: i * 0.3,
+                        delay: i * 0.2,
                       }}
                       style={{
-                        left: `${20 + i * 30}%`,
-                        top: `${30 + i * 20}%`,
+                        left: `${15 + i * (feature.size === 'large' ? 7 : 10)}%`,
+                        top: `${25 + i * 8}%`,
+                        background: `linear-gradient(45deg, ${feature.color.split(' ')[1]}, ${feature.color.split(' ')[3]})`,
                       }}
                     />
                   ))}
@@ -1359,7 +1738,7 @@ export default function LandingPage() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Zap className="w-6 h-6 text-[#ff6b00]" />
-                <span className="font-bold text-white">NexusTrack</span>
+                <span className="font-bold text-white">Career Sync</span>
               </div>
               <p className="text-gray-400 text-sm">Connect deeply with infinite career possibilities</p>
             </div>
@@ -1393,7 +1772,7 @@ export default function LandingPage() {
           </div>
 
           <div className="pt-8 border-t border-[#00d4ff]/20 flex flex-col md:flex-row items-center justify-between">
-            <p className="text-gray-500 text-sm mb-4 md:mb-0">© 2024 NexusTrack. All rights reserved.</p>
+            <p className="text-gray-500 text-sm mb-4 md:mb-0">© 2024 Career Sync. All rights reserved.</p>
             <div className="flex gap-6">
               {["Twitter", "LinkedIn", "GitHub"].map((social) => (
                 <m.a
