@@ -543,7 +543,7 @@ export default function LandingPage() {
 
         {/* Minimal scroll indicator */}
         <m.div
-          className="absolute bottom-12 left-1/2 transform -translate-x-1/2"
+          className="absolute bottom-2 left-1/2 transform -translate-x-1/2"
           animate={{
             y: [0, 10, 0],
           }}
@@ -855,18 +855,9 @@ export default function LandingPage() {
                       feature.size === 'large' ? 'text-2xl' : 'text-xl'
                     }`}
                     style={{
-                      background: `linear-gradient(135deg, ${feature.color})`,
+                      background: `linear-gradient(135deg, #${feature.color.split('from-[')[1].split(']')[0]}, #${feature.color.split('to-[')[1].split(']')[0]})`,
                       backgroundClip: "text",
                       WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                    }}
-                    animate={{
-                      backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                    }}
-                    transition={{
-                      duration: 4,
-                      repeat: Number.POSITIVE_INFINITY,
-                      ease: "easeInOut",
                     }}
                   >
                     {feature.title}
