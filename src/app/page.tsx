@@ -27,9 +27,11 @@ export default function LandingPage() {
   const [scrollY, setScrollY] = useState(0)
 
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY)
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
+    if (typeof window !== 'undefined') {
+      const handleScroll = () => setScrollY(window.scrollY)
+      window.addEventListener("scroll", handleScroll)
+      return () => window.removeEventListener("scroll", handleScroll)
+    }
   }, [])
 
   const containerVariants = {
@@ -170,14 +172,14 @@ export default function LandingPage() {
               className="absolute w-2 h-2 rounded-full"
               animate={{
                 x: [
-                  Math.random() * window.innerWidth,
-                  Math.random() * window.innerWidth,
-                  Math.random() * window.innerWidth,
+                  Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1920),
+                  Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1920),
+                  Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1920),
                 ],
                 y: [
-                  Math.random() * window.innerHeight,
-                  Math.random() * window.innerHeight,
-                  Math.random() * window.innerHeight,
+                  Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1080),
+                  Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1080),
+                  Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1080),
                 ],
                 scale: [0, 1, 0.5, 1, 0],
                 opacity: [0, 0.8, 0.4, 0.8, 0],
@@ -1488,14 +1490,14 @@ export default function LandingPage() {
               className="absolute w-1 h-1 rounded-full"
               animate={{
                 x: [
-                  Math.random() * window.innerWidth,
-                  Math.random() * window.innerWidth,
-                  Math.random() * window.innerWidth,
+                  Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1920),
+                  Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1920),
+                  Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1920),
                 ],
                 y: [
-                  Math.random() * window.innerHeight,
-                  Math.random() * window.innerHeight,
-                  Math.random() * window.innerHeight,
+                  Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1080),
+                  Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1080),
+                  Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1080),
                 ],
                 scale: [0, 1.5, 0.5, 1, 0],
                 opacity: [0, 0.7, 0.3, 0.7, 0],
