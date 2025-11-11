@@ -1,7 +1,9 @@
 "use client";
 
-import ThreeScene from "./ThreeScene";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
+
+const ThreeScene = dynamic(() => import("./ThreeScene"), { ssr: false });
 
 export default function Hero() {
   return (

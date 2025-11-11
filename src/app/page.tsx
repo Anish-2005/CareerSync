@@ -1,7 +1,6 @@
 import Navbar from "../components/Navbar";
-import Hero from "../components/Hero";
 import Features from "../components/Features";
-import DemoDashboard from "../components/DemoDashboard";
+import ClientOnly from "../components/ClientOnly";
 
 export default function Home() {
   return (
@@ -9,9 +8,8 @@ export default function Home() {
       <Navbar />
 
       <main style={{ maxWidth: 1200, margin: "0 auto" }}>
-        <Hero />
+        <ClientOnly />
         <Features />
-        <DemoDashboard />
       </main>
     </div>
   );
