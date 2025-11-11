@@ -18,235 +18,6 @@ import {
   Star,
 } from "lucide-react"
 
-// Nexus Field 3D Scene Component - Abstract particle network
-const NexusField3D = () => {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const sceneRef = useRef<THREE.Scene | null>(null)
-  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null)
-  const rendererRef = useRef<THREE.WebGLRenderer | null>(null)
-  const particlesRef = useRef<THREE.Points | null>(null)
-  const geometriesRef = useRef<THREE.Mesh[]>([])
-
-  useEffect(() => {
-    if (!containerRef.current) return
-
-    // Scene setup
-    const scene = new THREE.Scene()
-    sceneRef.current = scene
-    scene.background = new THREE.Color(0x0a1428)
-    scene.fog = new THREE.Fog(0x0a1428, 50, 200)
-
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      containerRef.current.clientWidth / containerRef.current.clientHeight,
-      0.1,
-      1000,
-    )
-    cameraRef.current = camera
-    camera.position.set(0, 10, 30)
-    camera.lookAt(0, 0, 0)
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
-    rendererRef.current = renderer
-    renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight)
-    renderer.shadowMap.enabled = true
-    renderer.shadowMap.type = THREE.PCFShadowMap
-    containerRef.current.appendChild(renderer.domElement)
-
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4)
-    scene.add(ambientLight)
-
-    const directionalLight = new THREE.DirectionalLight(0x00d4ff, 0.6)
-    directionalLight.position.set(20, 20, 20)
-    directionalLight.castShadow = true
-    scene.add(directionalLight)
-
-    const pointLight1 = new THREE.PointLight(0xff6b00, 0.8, 100)
-    pointLight1.position.set(-20, 15, -10)
-    scene.add(pointLight1)
-
-    const pointLight2 = new THREE.PointLight(0x00ff88, 0.6, 100)
-    pointLight2.position.set(20, -10, 10)
-    scene.add(pointLight2)
-
-    // Central energy core
-    const coreGeometry = new THREE.SphereGeometry(2, 32, 32)
-    const coreMaterial = new THREE.MeshStandardMaterial({
-      color: 0x00d4ff,
-      emissive: 0x00d4ff,
-      emissiveIntensity: 0.3,
-      transparent: true,
-      opacity: 0.8,
-    })
-    const core = new THREE.Mesh(coreGeometry, coreMaterial)
-    core.position.y = 0
-    scene.add(core)
-
-    // Floating geometric shapes
-    const shapes = []
-    const shapeTypes = [
-      () => new THREE.OctahedronGeometry(1.5, 0),
-      () => new THREE.IcosahedronGeometry(1.2, 0),
-      () => new THREE.TetrahedronGeometry(1.8, 0),
-      () => new THREE.DodecahedronGeometry(1, 0),
-    ]
-
-    for (let i = 0; i < 8; i++) {
-      const geometry = shapeTypes[i % shapeTypes.length]()
-      const material = new THREE.MeshStandardMaterial({
-        color: i % 2 === 0 ? 0xff6b00 : 0x00ff88,
-        emissive: i % 2 === 0 ? 0xff6b00 : 0x00ff88,
-        emissiveIntensity: 0.2,
-        transparent: true,
-        opacity: 0.7,
-        metalness: 0.8,
-        roughness: 0.2,
-      })
-      const shape = new THREE.Mesh(geometry, material)
-      shape.position.set(
-        (Math.random() - 0.5) * 40,
-        (Math.random() - 0.5) * 20,
-        (Math.random() - 0.5) * 40
-      )
-      shape.castShadow = true
-      shapes.push(shape)
-      geometriesRef.current.push(shape)
-      scene.add(shape)
-    }
-
-    // Particle network
-    const particleCount = 100
-    const positions = new Float32Array(particleCount * 3)
-    const connections = []
-
-    for (let i = 0; i < particleCount; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 60
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 40
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 60
-
-      // Create connections between nearby particles
-      for (let j = i + 1; j < particleCount; j++) {
-        const distance = Math.sqrt(
-          Math.pow(positions[i * 3] - positions[j * 3], 2) +
-          Math.pow(positions[i * 3 + 1] - positions[j * 3 + 1], 2) +
-          Math.pow(positions[i * 3 + 2] - positions[j * 3 + 2], 2)
-        )
-        if (distance < 15) {
-          connections.push({ from: i, to: j, distance })
-        }
-      }
-    }
-
-    const particlesGeometry = new THREE.BufferGeometry()
-    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
-
-    const particlesMaterial = new THREE.PointsMaterial({
-      color: 0xffffff,
-      size: 0.8,
-      transparent: true,
-      opacity: 0.8,
-    })
-
-    const particles = new THREE.Points(particlesGeometry, particlesMaterial)
-    particlesRef.current = particles
-    scene.add(particles)
-
-    // Connection lines
-    const lineMaterial = new THREE.LineBasicMaterial({
-      color: 0x00d4ff,
-      transparent: true,
-      opacity: 0.3,
-    })
-
-    connections.forEach(({ from, to }) => {
-      const lineGeometry = new THREE.BufferGeometry()
-      const linePositions = new Float32Array(6)
-      linePositions[0] = positions[from * 3]
-      linePositions[1] = positions[from * 3 + 1]
-      linePositions[2] = positions[from * 3 + 2]
-      linePositions[3] = positions[to * 3]
-      linePositions[4] = positions[to * 3 + 1]
-      linePositions[5] = positions[to * 3 + 2]
-      lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3))
-      const line = new THREE.Line(lineGeometry, lineMaterial)
-      scene.add(line)
-    })
-
-    let animationFrameId: number
-    let time = 0
-
-    const animate = () => {
-      animationFrameId = requestAnimationFrame(animate)
-      time += 0.01
-
-      // Animate core
-      if (core) {
-        core.rotation.x += 0.005
-        core.rotation.y += 0.008
-        core.scale.setScalar(1 + Math.sin(time * 0.5) * 0.1)
-      }
-
-      // Animate shapes
-      geometriesRef.current.forEach((shape, index) => {
-        shape.rotation.x += 0.01 + index * 0.002
-        shape.rotation.y += 0.015 + index * 0.003
-        shape.position.y += Math.sin(time + index) * 0.01
-
-        // Orbital motion
-        const radius = 20 + index * 2
-        shape.position.x = Math.cos(time * 0.2 + index) * radius
-        shape.position.z = Math.sin(time * 0.2 + index) * radius
-      })
-
-      // Animate particles
-      if (particlesRef.current) {
-        const positions = particlesRef.current.geometry.attributes.position.array as Float32Array
-        for (let i = 0; i < particleCount; i++) {
-          positions[i * 3 + 1] += Math.sin(time + i * 0.1) * 0.02
-        }
-        particlesRef.current.geometry.attributes.position.needsUpdate = true
-        particlesRef.current.rotation.y += 0.001
-      }
-
-      renderer.render(scene, camera)
-    }
-
-    animate()
-
-    // Handle resize
-    const handleResize = () => {
-      if (!containerRef.current) return
-      const width = containerRef.current.clientWidth
-      const height = containerRef.current.clientHeight
-      camera.aspect = width / height
-      camera.updateProjectionMatrix()
-      renderer.setSize(width, height)
-    }
-
-    window.addEventListener("resize", handleResize)
-
-    return () => {
-      window.removeEventListener("resize", handleResize)
-      cancelAnimationFrame(animationFrameId)
-      containerRef.current?.removeChild(renderer.domElement)
-    }
-  }, [])
-
-  return (
-    <div
-      ref={containerRef}
-      style={{
-        width: "100%",
-        height: "100%",
-        position: "absolute",
-        top: 0,
-        left: 0,
-      }}
-    />
-  )
-}
-
 // Cast motion to any to avoid strict prop typing issues in this file
 const m = motion as any
 
@@ -352,163 +123,161 @@ export default function LandingPage() {
           </div>
         </div>
       </m.nav>      {/* Hero Section */}
-      <section className="relative h-screen w-full flex items-center justify-center overflow-hidden pt-20">
-        <div className="absolute inset-0">
-          <NexusField3D />
-        </div>
-
-        {/* Dynamic particle background */}
-        <div className="absolute inset-0">
-          {[...Array(20)].map((_, i) => (
-            <m.div
-              key={i}
-              className="absolute w-2 h-2 bg-[#00d4ff] rounded-full opacity-60"
-              animate={{
-                x: [0, Math.random() * 100 - 50, 0],
-                y: [0, Math.random() * 100 - 50, 0],
-                scale: [1, 1.5, 1],
-              }}
-              transition={{
-                duration: 3 + Math.random() * 2,
-                repeat: Number.POSITIVE_INFINITY,
-                delay: Math.random() * 2,
-              }}
+      <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+        {/* Simplified background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a1428] via-[#1a2d4d] to-[#0a1428]">
+          {/* Subtle animated grid */}
+          <div className="absolute inset-0 opacity-20">
+            <div
+              className="absolute inset-0"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
+                backgroundImage: `
+                  linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px)
+                `,
+                backgroundSize: '60px 60px',
               }}
             />
-          ))}
+          </div>
+
+          {/* Minimal floating elements */}
+          <m.div
+            className="absolute top-20 right-20 w-2 h-2 bg-[#00d4ff] rounded-full"
+            animate={{
+              scale: [1, 1.5, 1],
+              opacity: [0.3, 0.8, 0.3],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          <m.div
+            className="absolute bottom-32 left-16 w-1 h-1 bg-[#ff6b00] rounded-full"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.4, 0.9, 0.4],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 1,
+            }}
+          />
+          <m.div
+            className="absolute top-1/3 right-1/4 w-3 h-3 bg-[#00ff88] rounded-full"
+            animate={{
+              scale: [1, 1.8, 1],
+              opacity: [0.2, 0.6, 0.2],
+            }}
+            transition={{
+              duration: 5,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+          />
         </div>
 
-        {/* Interactive floating panels */}
+        {/* Content */}
         <m.div
-          className="absolute top-20 left-10 w-64 h-32 bg-gradient-to-br from-[#ff6b00]/20 to-[#00d4ff]/20 backdrop-blur-xl border border-[#00d4ff]/30 rounded-2xl p-4"
-          animate={{
-            y: [0, -10, 0],
-            rotateY: [0, 5, 0],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut",
-          }}
-          whileHover={{
-            scale: 1.05,
-            rotateY: 10,
-            boxShadow: "0 0 40px rgba(0, 212, 255, 0.3)",
-          }}
-        >
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-[#00d4ff] rounded-full animate-pulse"></div>
-            <span className="text-white text-sm font-bold">Neural Tracking</span>
-          </div>
-          <p className="text-gray-300 text-xs mt-1">47 connections active</p>
-        </m.div>
-
-        <m.div
-          className="absolute top-32 right-16 w-56 h-24 bg-gradient-to-br from-[#00d4ff]/20 to-[#ff6b00]/20 backdrop-blur-xl border border-[#ff6b00]/30 rounded-2xl p-3"
-          animate={{
-            y: [0, 15, 0],
-            rotateX: [0, -3, 0],
-          }}
-          transition={{
-            duration: 5,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut",
-            delay: 1,
-          }}
-          whileHover={{
-            scale: 1.05,
-            rotateX: -5,
-            boxShadow: "0 0 40px rgba(255, 107, 0, 0.3)",
-          }}
-        >
-          <div className="flex items-center gap-2">
-            <Zap className="w-4 h-4 text-[#ff6b00]" />
-            <span className="text-white text-sm font-bold">92% Connection Rate</span>
-          </div>
-        </m.div>
-        {/* Content overlay */}
-        <m.div
-          className="relative z-10 max-w-6xl mx-auto px-6 text-center"
+          className="relative z-10 max-w-5xl mx-auto px-6 text-center"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          {/* Badge */}
+          {/* Simple badge */}
           <m.div
             variants={itemVariants}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00d4ff]/30 bg-[#00d4ff]/5 backdrop-blur-md mb-8"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[#00d4ff]/30 bg-[#00d4ff]/5 backdrop-blur-md mb-12"
           >
-            <Star className="w-4 h-4 text-[#00d4ff]" />
-            <span className="text-sm text-[#00d4ff] font-medium">The Ultimate Career Connection Engine</span>
+            <Zap className="w-5 h-5 text-[#00d4ff]" />
+            <span className="text-[#00d4ff] font-medium">Next-Generation Career Intelligence</span>
           </m.div>
 
-          {/* Main headline */}
+          {/* Clean headline */}
           <m.h1
             variants={itemVariants}
-            className="text-5xl md:text-7xl font-black mb-6 leading-tight"
+            className="text-6xl md:text-8xl font-black mb-8 leading-tight"
             style={{
-              background: "linear-gradient(135deg, #ff6b00 0%, #ff8c00 25%, #00d4ff 50%, #00d4ff 75%, #ff6b00 100%)",
+              background: "linear-gradient(135deg, #ffffff 0%, #00d4ff 50%, #ff6b00 100%)",
               backgroundSize: "200% 200%",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
             }}
+            animate={{
+              backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "linear",
+            }}
           >
-            MASTER YOUR CAREER NEXUS
+            NexusTrack
           </m.h1>
 
-          {/* Subheading */}
+          {/* Focused subheading */}
           <m.p
             variants={itemVariants}
-            className="text-lg md:text-2xl text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed"
+            className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-16 leading-relaxed"
           >
-            Connect with infinite possibilities. Track opportunities, analyze patterns, and navigate your career through intelligent connections.
+            Connect with infinite career possibilities through intelligent networking and quantum insights.
           </m.p>
 
-          {/* CTA Buttons */}
-          {/* CTA Buttons */}
-          <m.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            
+          {/* Clean CTA buttons */}
+          <m.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <m.button
-              whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(255, 107, 0, 0.6)" }}
+              whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(255, 107, 0, 0.4)" }}
               whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 text-white font-bold rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] flex items-center gap-2 hover:shadow-2xl transition-all duration-300"
+              className="px-10 py-5 text-white font-bold text-lg rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-2xl transition-all duration-300"
             >
-              Activate Nexus <ArrowRight className="w-5 h-5" />
+              Start Your Journey
             </m.button>
             <m.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 text-white font-bold rounded-full border-2 border-[#00d4ff] hover:bg-[#00d4ff]/10 flex items-center gap-2 transition-all duration-300"
+              className="px-10 py-5 text-white font-bold text-lg rounded-full border-2 border-[#00d4ff] hover:bg-[#00d4ff]/10 transition-all duration-300"
             >
-              <Play className="w-5 h-5" /> Explore Demo
+              Learn More
             </m.button>
+          </m.div>
+
+          {/* Single floating stat */}
+          <m.div
+            variants={itemVariants}
+            className="mt-20 flex justify-center"
+          >
+            <m.div
+              className="flex items-center gap-4 px-8 py-4 rounded-full bg-[#1a3a52]/50 backdrop-blur-md border border-[#00d4ff]/20"
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-[#00d4ff] rounded-full animate-pulse"></div>
+                <span className="text-white font-semibold">10,000+ Professionals Connected</span>
+              </div>
+            </m.div>
           </m.div>
         </m.div>
 
-        {/* Floating cards */}
-  <m.div
-          className="absolute bottom-20 left-10 p-4 rounded-lg bg-[#1a3a52]/80 backdrop-blur-lg border border-[#00d4ff]/30"
-          animate={{ y: [0, -20, 0] }}
-          transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
-        >
-          <div className="flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-[#00d4ff]" />
-            <span className="text-sm text-white font-semibold">92% Success Rate</span>
-          </div>
-        </m.div>
-
+        {/* Minimal scroll indicator */}
         <m.div
-          className="absolute bottom-32 right-10 p-4 rounded-lg bg-[#3a1a52]/80 backdrop-blur-lg border border-[#ff6b00]/30"
-          animate={{ y: [0, 20, 0] }}
-          transition={{ duration: 3.5, repeat: Number.POSITIVE_INFINITY, delay: 0.2 }}
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+          animate={{
+            y: [0, 10, 0],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Number.POSITIVE_INFINITY,
+            ease: "easeInOut",
+          }}
         >
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-5 h-5 text-[#ff6b00]" />
-            <span className="text-sm text-white font-semibold">10K+ Connections Made</span>
+          <div className="w-6 h-10 border-2 border-[#00d4ff]/50 rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-[#00d4ff] rounded-full mt-2 animate-pulse"></div>
           </div>
         </m.div>
       </section>
