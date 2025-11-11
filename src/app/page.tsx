@@ -250,17 +250,16 @@ export default function LandingPage() {
             <m.div
               className="absolute inset-0 rounded-full"
               animate={{
-                background: [
-                  "linear-gradient(45deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 0, 0.1))",
-                  "linear-gradient(135deg, rgba(255, 107, 0, 0.1), rgba(0, 255, 136, 0.1))",
-                  "linear-gradient(225deg, rgba(0, 255, 136, 0.1), rgba(0, 212, 255, 0.1))",
-                  "linear-gradient(315deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 0, 0.1))",
-                ],
+                scale: [1, 1.2, 0.8, 1],
+                rotate: [0, 90, 180, 270, 360],
               }}
               transition={{
                 duration: 8,
                 repeat: Number.POSITIVE_INFINITY,
                 ease: "easeInOut",
+              }}
+              style={{
+                background: "linear-gradient(45deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 0, 0.1))",
               }}
             />
             <m.div
@@ -371,20 +370,18 @@ export default function LandingPage() {
                 boxShadow: "0 0 20px rgba(255, 107, 0, 0.4)",
               }}
             >
-              {/* Morphing background effect */}
               <m.div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100"
                 animate={{
-                  background: [
-                    "linear-gradient(45deg, rgba(0, 212, 255, 0.3), rgba(255, 107, 0, 0.3))",
-                    "linear-gradient(135deg, rgba(0, 255, 136, 0.3), rgba(0, 212, 255, 0.3))",
-                    "linear-gradient(45deg, rgba(0, 212, 255, 0.3), rgba(255, 107, 0, 0.3))",
-                  ],
+                  opacity: [0, 0.3, 0.1, 0.3, 0],
                 }}
                 transition={{
                   duration: 3,
                   repeat: Number.POSITIVE_INFINITY,
                   ease: "easeInOut",
+                }}
+                style={{
+                  background: "linear-gradient(45deg, rgba(0, 212, 255, 0.3), rgba(255, 107, 0, 0.3))",
                 }}
               />
               {/* Floating particles */}
@@ -469,16 +466,16 @@ export default function LandingPage() {
               <m.div
                 className="absolute inset-0 rounded-3xl opacity-30"
                 animate={{
-                  background: [
-                    "linear-gradient(45deg, rgba(0, 212, 255, 0.2), rgba(255, 107, 0, 0.2))",
-                    "linear-gradient(135deg, rgba(255, 107, 0, 0.2), rgba(0, 255, 136, 0.2))",
-                    "linear-gradient(45deg, rgba(0, 212, 255, 0.2), rgba(255, 107, 0, 0.2))",
-                  ],
+                  scale: [1, 1.05, 0.95, 1],
+                  opacity: [0.3, 0.4, 0.2, 0.3],
                 }}
                 transition={{
                   duration: 6,
                   repeat: Number.POSITIVE_INFINITY,
                   ease: "easeInOut",
+                }}
+                style={{
+                  background: "linear-gradient(45deg, rgba(0, 212, 255, 0.2), rgba(255, 107, 0, 0.2))",
                 }}
               />
 
@@ -546,7 +543,7 @@ export default function LandingPage() {
 
         {/* Minimal scroll indicator */}
         <m.div
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+          className="absolute bottom-12 left-1/2 transform -translate-x-1/2"
           animate={{
             y: [0, 10, 0],
           }}
@@ -779,16 +776,16 @@ export default function LandingPage() {
                 <m.div
                   className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"
                   animate={{
-                    background: [
-                      feature.gradient,
-                      "linear-gradient(180deg, rgba(0, 212, 255, 0.15), rgba(255, 107, 0, 0.15))",
-                      feature.gradient,
-                    ],
+                    scale: [1, 1.02, 0.98, 1],
+                    opacity: [0, 0.1, 0.05, 0.1, 0],
                   }}
                   transition={{
                     duration: 6,
                     repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut",
+                  }}
+                  style={{
+                    background: feature.gradient,
                   }}
                 />
 
@@ -1075,7 +1072,7 @@ export default function LandingPage() {
                   <span className="text-[#00d4ff] font-bold text-sm">SYSTEM ONLINE</span>
                 </div>
                 <div className="text-gray-400 text-sm font-mono">
-                  {new Date().toLocaleTimeString()}
+                  {typeof window !== 'undefined' ? new Date().toLocaleTimeString() : 'Loading...'}
                 </div>
               </div>
 
@@ -1106,6 +1103,7 @@ export default function LandingPage() {
                       className="absolute inset-0 opacity-0"
                       animate={{
                         opacity: activeTab === tab ? 1 : 0,
+                        scale: activeTab === tab ? [1, 1.05, 1] : 1,
                       }}
                       style={{
                         background: "linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 0, 0.1))",
