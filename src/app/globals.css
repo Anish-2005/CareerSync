@@ -24,3 +24,14 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Additional landing styles */
+.bg-foreground { background-color: var(--foreground); }
+.text-background { color: var(--background); }
+
+/* Simple card shadows for the landing page */
+.shadow-xl { box-shadow: 0 10px 30px rgba(2,6,23,0.08); }
+.shadow-sm { box-shadow: 0 6px 18px rgba(2,6,23,0.04); }
+
+/* Small utility to blur background panels */
+.backdrop-blur { backdrop-filter: blur(6px); }
