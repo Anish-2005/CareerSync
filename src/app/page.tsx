@@ -2088,10 +2088,10 @@ export default function LandingPage() {
 
       {/* Interactive cursor follower */}
       <m.div
-        className="fixed w-4 h-4 bg-[#00d4ff] rounded-full pointer-events-none z-50 mix-blend-difference"
+        className="fixed w-4 h-4 bg-[#00d4ff] rounded-full pointer-events-none z-50 mix-blend-difference opacity-0"
         animate={{
           scale: [1, 1.5, 1],
-          opacity: [0.5, 1, 0.5],
+          opacity: [0, 0.8, 0],
         }}
         transition={{
           duration: 2,
@@ -2099,8 +2099,8 @@ export default function LandingPage() {
           ease: "easeInOut",
         }}
         style={{
-          left: 'var(--mouse-x, 50%)',
-          top: 'var(--mouse-y, 50%)',
+          left: 'var(--mouse-x, -100px)',
+          top: 'var(--mouse-y, -100px)',
           transform: 'translate(-50%, -50%)',
         }}
       />
@@ -2109,7 +2109,7 @@ export default function LandingPage() {
       <m.div
         className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] z-40"
         style={{
-          scaleX: scrollY / (document.body.scrollHeight - window.innerHeight),
+          scaleX: typeof window !== 'undefined' ? scrollY / (document.body.scrollHeight - window.innerHeight) : 0,
         }}
       />
     </div>
