@@ -88,7 +88,7 @@ export default function LandingPage() {
               <Zap className="w-7 h-7 text-white" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] bg-clip-text text-transparent">
-              Career Sync
+              CareerSync
             </span>
           </m.div>
 
@@ -123,7 +123,7 @@ export default function LandingPage() {
           </div>
         </div>
       </m.nav>      {/* Hero Section */}
-      <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+      <section className="mt-18 relative h-screen w-full flex items-center justify-center overflow-hidden">
         {/* Innovative morphing background */}
         <div className="absolute inset-0 overflow-hidden">
           {/* Morphing geometric shapes */}
@@ -320,7 +320,7 @@ export default function LandingPage() {
               transition: { duration: 0.3 },
             }}
           >
-            Career Sync
+            CareerSync
           </m.h1>
 
           {/* Dynamic subheading with typing effect */}
@@ -816,43 +816,84 @@ export default function LandingPage() {
                   ))}
                 </div>
 
-                {/* Icon with 3D effect */}
+                {/* Fluid icon container */}
                 <m.div
-                  className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-[#ff6b00]/20 to-[#00d4ff]/20 flex items-center justify-center mb-6 group-hover:from-[#ff6b00]/40 group-hover:to-[#00d4ff]/40 transition-all duration-500"
+                  className={`relative rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500 ${
+                    feature.size === 'large' ? 'w-20 h-20' : 'w-16 h-16'
+                  }`}
+                  style={{
+                    background: `linear-gradient(135deg, ${feature.color})`,
+                    boxShadow: `0 0 30px ${feature.shadowColor}`,
+                    transform: "translateZ(25px)",
+                  }}
                   whileHover={{
-                    rotate: [0, -10, 10, 0],
-                    scale: 1.1,
+                    rotate: [0, -5, 5, 0],
+                    scale: feature.size === 'large' ? 1.15 : 1.12,
                   }}
                   transition={{
-                    duration: 0.6,
+                    duration: 0.8,
                     ease: "easeInOut",
                   }}
-                  style={{
-                    transform: "translateZ(20px)",
-                  }}
                 >
-                  <feature.icon className="w-8 h-8 text-[#00d4ff] group-hover:text-white transition-colors duration-300" />
+                  {/* Icon glow effect */}
+                  <div
+                    className="absolute inset-0 rounded-2xl opacity-50 blur-md"
+                    style={{
+                      background: `linear-gradient(135deg, ${feature.color})`,
+                    }}
+                  />
+                  <feature.icon
+                    className={`relative z-10 text-white ${
+                      feature.size === 'large' ? 'w-10 h-10' : 'w-8 h-8'
+                    }`}
+                  />
                 </m.div>
 
-                {/* Content */}
-                <div style={{ transform: "translateZ(10px)" }}>
-                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-[#00d4ff] transition-colors duration-300">
+                {/* Fluid content */}
+                <div style={{ transform: "translateZ(15px)" }}>
+                  <m.h3
+                    className={`font-bold text-white mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r transition-all duration-500 ${
+                      feature.size === 'large' ? 'text-2xl' : 'text-xl'
+                    }`}
+                    style={{
+                      background: `linear-gradient(135deg, ${feature.color})`,
+                      backgroundClip: "text",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                    }}
+                    animate={{
+                      backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Number.POSITIVE_INFINITY,
+                      ease: "easeInOut",
+                    }}
+                  >
                     {feature.title}
-                  </h3>
-                  <p className="text-gray-400 text-sm leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
+                  </m.h3>
+                  <p className={`text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors duration-300 ${
+                    feature.size === 'large' ? 'text-base' : 'text-sm'
+                  }`}>
                     {feature.description}
                   </p>
                 </div>
 
-                {/* Hover indicator */}
+                {/* Interactive hover indicator */}
                 <m.div
-                  className="absolute bottom-4 right-4 w-3 h-3 rounded-full bg-[#00d4ff] opacity-0 group-hover:opacity-100"
+                  className="absolute bottom-6 right-6 w-4 h-4 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{
+                    background: `linear-gradient(135deg, ${feature.color})`,
+                    boxShadow: `0 0 15px ${feature.shadowColor}`,
+                  }}
                   animate={{
-                    scale: [1, 1.2, 1],
+                    scale: [1, 1.3, 1],
+                    opacity: [0, 1, 0],
                   }}
                   transition={{
-                    duration: 1,
+                    duration: 2,
                     repeat: Number.POSITIVE_INFINITY,
+                    ease: "easeInOut",
                   }}
                 />
               </m.div>
@@ -904,23 +945,58 @@ export default function LandingPage() {
             className="text-center mb-12"
           >
             <m.h2
-              className="text-5xl md:text-6xl font-black mb-4 text-white"
+              className="text-6xl md:text-7xl font-black mb-6 text-white leading-none"
               animate={{
                 textShadow: [
-                  "0 0 10px rgba(0, 212, 255, 0.5)",
-                  "0 0 20px rgba(255, 107, 0, 0.5)",
-                  "0 0 10px rgba(0, 212, 255, 0.5)",
+                  "0 0 20px rgba(0, 212, 255, 0.6)",
+                  "0 0 40px rgba(255, 107, 0, 0.6)",
+                  "0 0 20px rgba(0, 255, 136, 0.6)",
+                  "0 0 20px rgba(0, 212, 255, 0.6)",
                 ],
+                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
               }}
               transition={{
-                duration: 3,
+                duration: 6,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+              }}
+              style={{
+                background: "linear-gradient(135deg, #ffffff 0%, #00d4ff 40%, #ff6b00 70%, #00ff88 100%)",
+                backgroundSize: "300% 300%",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              CareerSync Hub
+            </m.h2>
+            <m.p
+              className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto font-light"
+              animate={{
+                opacity: [0.7, 1, 0.7],
+              }}
+              transition={{
+                duration: 4,
                 repeat: Number.POSITIVE_INFINITY,
                 ease: "easeInOut",
               }}
             >
-              Your Nexus Control Center
-            </m.h2>
-            <p className="text-gray-400 text-xl">Command your career destiny with quantum intelligence</p>
+              Master your career trajectory with
+              <m.span
+                className="text-[#00d4ff] font-semibold mx-2"
+                animate={{
+                  color: ["#00d4ff", "#ff6b00", "#00ff88", "#00d4ff"],
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                }}
+              >
+                intelligent synchronization
+              </m.span>
+              and real-time insights.
+            </m.p>
           </m.div>
 
           <m.div
@@ -928,16 +1004,66 @@ export default function LandingPage() {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="relative rounded-3xl overflow-hidden border-2 border-[#00d4ff]/40 shadow-2xl shadow-[#00d4ff]/20 backdrop-blur-xl"
+            className="relative rounded-3xl overflow-hidden border-2 border-[#00d4ff]/50 shadow-2xl shadow-[#00d4ff]/30 backdrop-blur-xl group"
             style={{
               background: "linear-gradient(135deg, rgba(10, 20, 40, 0.95), rgba(26, 61, 83, 0.95))",
             }}
+            whileHover={{
+              boxShadow: "0 0 60px rgba(0, 212, 255, 0.4)",
+            }}
           >
-            {/* HUD corners */}
-            <div className="absolute top-0 left-0 w-8 h-8 border-l-2 border-t-2 border-[#00d4ff]/60"></div>
-            <div className="absolute top-0 right-0 w-8 h-8 border-r-2 border-t-2 border-[#00d4ff]/60"></div>
-            <div className="absolute bottom-0 left-0 w-8 h-8 border-l-2 border-b-2 border-[#00d4ff]/60"></div>
-            <div className="absolute bottom-0 right-0 w-8 h-8 border-r-2 border-b-2 border-[#00d4ff]/60"></div>
+            {/* Advanced HUD corners with animation */}
+            <div className="absolute top-0 left-0 w-10 h-10 border-l-2 border-t-2 border-[#00d4ff]/70"></div>
+            <div className="absolute top-0 right-0 w-10 h-10 border-r-2 border-t-2 border-[#00d4ff]/70"></div>
+            <div className="absolute bottom-0 left-0 w-10 h-10 border-l-2 border-b-2 border-[#00d4ff]/70"></div>
+            <div className="absolute bottom-0 right-0 w-10 h-10 border-r-2 border-b-2 border-[#00d4ff]/70"></div>
+
+            {/* Animated border effect */}
+            <m.div
+              className="absolute inset-0 rounded-3xl border border-transparent"
+              animate={{
+                borderImage: [
+                  "linear-gradient(45deg, rgba(0, 212, 255, 0.5), rgba(255, 107, 0, 0.5), rgba(0, 255, 136, 0.5), rgba(0, 212, 255, 0.5)) 1",
+                  "linear-gradient(135deg, rgba(255, 107, 0, 0.5), rgba(0, 255, 136, 0.5), rgba(0, 212, 255, 0.5), rgba(255, 107, 0, 0.5)) 1",
+                  "linear-gradient(225deg, rgba(0, 255, 136, 0.5), rgba(0, 212, 255, 0.5), rgba(255, 107, 0, 0.5), rgba(0, 255, 136, 0.5)) 1",
+                  "linear-gradient(315deg, rgba(0, 212, 255, 0.5), rgba(255, 107, 0, 0.5), rgba(0, 255, 136, 0.5), rgba(0, 212, 255, 0.5)) 1",
+                ],
+              }}
+              transition={{
+                duration: 8,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+              }}
+              style={{
+                borderImageSlice: 1,
+              }}
+            />
+
+            {/* Interactive background particles */}
+            <div className="absolute inset-0 overflow-hidden rounded-3xl">
+              {[...Array(25)].map((_, i) => (
+                <m.div
+                  key={i}
+                  className="absolute w-1 h-1 rounded-full opacity-40"
+                  animate={{
+                    y: [0, -30, 0],
+                    x: [0, Math.sin(i * 0.8) * 25, 0],
+                    scale: [0, 1.2, 0],
+                    opacity: [0, 0.6, 0],
+                  }}
+                  transition={{
+                    duration: 5 + i * 0.2,
+                    repeat: Number.POSITIVE_INFINITY,
+                    delay: i * 0.1,
+                  }}
+                  style={{
+                    left: `${10 + i * 3.6}%`,
+                    top: `${20 + i * 3}%`,
+                    background: i % 4 === 0 ? "#00d4ff" : i % 4 === 1 ? "#ff6b00" : i % 4 === 2 ? "#00ff88" : "#ff8c00",
+                  }}
+                />
+              ))}
+            </div>
 
             <div className="p-8 space-y-8">
               {/* Status bar */}
@@ -951,25 +1077,82 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              {/* Tab buttons with HUD style */}
-              <div className="flex gap-6 border-b border-[#00d4ff]/30 pb-4">
-                {["connections", "interactions", "insights"].map((tab) => (
+              {/* Enhanced tab buttons with fluid interactions */}
+              <div className="flex gap-8 border-b border-[#00d4ff]/40 pb-6 mb-8">
+                {["connections", "interactions", "insights"].map((tab, index) => (
                   <m.button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`relative px-4 py-2 text-sm font-bold transition-all duration-300 rounded-lg ${
+                    className={`relative px-6 py-3 text-sm font-bold transition-all duration-500 rounded-xl overflow-hidden ${
                       activeTab === tab
-                        ? "text-[#00d4ff] bg-[#00d4ff]/10 border border-[#00d4ff]/50"
-                        : "text-gray-400 hover:text-white hover:bg-[#00d4ff]/5"
+                        ? "text-[#00d4ff] bg-[#00d4ff]/15 border border-[#00d4ff]/60 shadow-lg shadow-[#00d4ff]/20"
+                        : "text-gray-400 hover:text-white hover:bg-[#00d4ff]/8 border border-transparent hover:border-[#00d4ff]/30"
                     }`}
-                    whileHover={{ scale: 1.05 }}
+                    whileHover={{
+                      scale: 1.05,
+                      y: -2,
+                    }}
                     whileTap={{ scale: 0.95 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 25,
+                    }}
                   >
-                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    {/* Tab background effect */}
+                    <m.div
+                      className="absolute inset-0 opacity-0"
+                      animate={{
+                        opacity: activeTab === tab ? 1 : 0,
+                      }}
+                      style={{
+                        background: "linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 0, 0.1))",
+                      }}
+                    />
+
+                    {/* Floating particles for active tab */}
+                    {activeTab === tab && (
+                      <div className="absolute inset-0 overflow-hidden rounded-xl">
+                        {[...Array(6)].map((_, i) => (
+                          <m.div
+                            key={i}
+                            className="absolute w-1 h-1 bg-[#00d4ff] rounded-full opacity-60"
+                            animate={{
+                              y: [0, -15, 0],
+                              x: [0, Math.sin(i) * 10, 0],
+                              scale: [0, 1, 0],
+                            }}
+                            transition={{
+                              duration: 2,
+                              repeat: Number.POSITIVE_INFINITY,
+                              delay: i * 0.2,
+                            }}
+                            style={{
+                              left: `${20 + i * 12}%`,
+                              top: `${70}%`,
+                            }}
+                          />
+                        ))}
+                      </div>
+                    )}
+
+                    <span className="relative z-10 capitalize tracking-wide">
+                      {tab}
+                    </span>
+
+                    {/* Active tab indicator */}
                     {activeTab === tab && (
                       <m.div
-                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#00d4ff]"
-                        layoutId="activeTab"
+                        className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#00d4ff] via-[#ff6b00] to-[#00ff88]"
+                        layoutId="activeTabIndicator"
+                        animate={{
+                          backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                        }}
+                        transition={{
+                          duration: 3,
+                          repeat: Number.POSITIVE_INFINITY,
+                          ease: "easeInOut",
+                        }}
                       />
                     )}
                   </m.button>
@@ -1238,29 +1421,96 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Statistics Section */}
-      <section className="relative py-20 px-6 overflow-hidden">
-        {/* Dynamic background */}
+      {/* Statistics Section with Dynamic Animations */}
+      <section className="relative py-24 px-6 overflow-hidden">
+        {/* Morphing background with fluid dynamics */}
         <div className="absolute inset-0">
-          {[...Array(25)].map((_, i) => (
+          {/* Primary morphing shapes */}
+          {[...Array(15)].map((_, i) => (
             <m.div
               key={i}
-              className="absolute w-1 h-1 rounded-full opacity-30"
+              className="absolute opacity-20"
               animate={{
-                y: [0, -200, 0],
-                x: [0, Math.sin(i) * 100, 0],
-                opacity: [0.3, 0.8, 0.3],
+                x: [0, Math.sin(i * 0.7) * 200, 0],
+                y: [0, Math.cos(i * 0.9) * 150, 0],
+                scale: [1, 1.8, 0.6, 1],
+                borderRadius: ["50% 30% 70% 20%", "30% 70% 20% 50%", "70% 20% 50% 30%", "50% 30% 70% 20%"],
+                rotate: [0, 180, 360],
               }}
               transition={{
-                duration: 10 + i * 0.5,
+                duration: 20 + i * 3,
                 repeat: Number.POSITIVE_INFINITY,
-                ease: "linear",
-                delay: i * 0.2,
+                ease: "easeInOut",
+                delay: i * 0.8,
               }}
               style={{
-                left: `${(i * 4) % 100}%`,
-                top: `${(i * 7) % 100}%`,
-                backgroundColor: i % 2 === 0 ? '#00d4ff' : '#ff6b00',
+                width: `${60 + i * 15}px`,
+                height: `${60 + i * 15}px`,
+                left: `${(i * 6.5) % 90}%`,
+                top: `${(i * 8.3) % 80}%`,
+                background: i % 4 === 0
+                  ? "linear-gradient(45deg, rgba(0, 212, 255, 0.4), rgba(255, 107, 0, 0.4))"
+                  : i % 4 === 1
+                  ? "linear-gradient(135deg, rgba(255, 107, 0, 0.4), rgba(0, 255, 136, 0.4))"
+                  : i % 4 === 2
+                  ? "linear-gradient(225deg, rgba(0, 255, 136, 0.4), rgba(0, 212, 255, 0.4))"
+                  : "linear-gradient(315deg, rgba(255, 140, 0, 0.4), rgba(0, 212, 255, 0.4))",
+                filter: "blur(25px)",
+              }}
+            />
+          ))}
+
+          {/* Flowing wave patterns */}
+          <m.div
+            className="absolute inset-0 opacity-10"
+            animate={{
+              backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"],
+            }}
+            transition={{
+              duration: 25,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "linear",
+            }}
+            style={{
+              backgroundImage: `
+                radial-gradient(circle at 25% 25%, rgba(0, 212, 255, 0.3) 0%, transparent 40%),
+                radial-gradient(circle at 75% 75%, rgba(255, 107, 0, 0.3) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(0, 255, 136, 0.3) 0%, transparent 40%)
+              `,
+              backgroundSize: "300% 300%",
+            }}
+          />
+
+          {/* Dynamic particle field */}
+          {[...Array(40)].map((_, i) => (
+            <m.div
+              key={`particle-${i}`}
+              className="absolute w-1 h-1 rounded-full"
+              animate={{
+                x: [
+                  Math.random() * window.innerWidth,
+                  Math.random() * window.innerWidth,
+                  Math.random() * window.innerWidth,
+                ],
+                y: [
+                  Math.random() * window.innerHeight,
+                  Math.random() * window.innerHeight,
+                  Math.random() * window.innerHeight,
+                ],
+                scale: [0, 1.5, 0.5, 1, 0],
+                opacity: [0, 0.7, 0.3, 0.7, 0],
+              }}
+              transition={{
+                duration: 18 + Math.random() * 12,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+                delay: Math.random() * 8,
+              }}
+              style={{
+                background: i % 5 === 0 ? "#00d4ff" : i % 5 === 1 ? "#ff6b00" : i % 5 === 2 ? "#00ff88" : i % 5 === 3 ? "#ff8c00" : "#8b5cf6",
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                filter: "blur(0.5px)",
               }}
             />
           ))}
@@ -1738,7 +1988,7 @@ export default function LandingPage() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Zap className="w-6 h-6 text-[#ff6b00]" />
-                <span className="font-bold text-white">Career Sync</span>
+                <span className="font-bold text-white">CareerSync</span>
               </div>
               <p className="text-gray-400 text-sm">Connect deeply with infinite career possibilities</p>
             </div>
@@ -1772,7 +2022,7 @@ export default function LandingPage() {
           </div>
 
           <div className="pt-8 border-t border-[#00d4ff]/20 flex flex-col md:flex-row items-center justify-between">
-            <p className="text-gray-500 text-sm mb-4 md:mb-0">© 2024 Career Sync. All rights reserved.</p>
+            <p className="text-gray-500 text-sm mb-4 md:mb-0">© 2024 CareerSync. All rights reserved.</p>
             <div className="flex gap-6">
               {["Twitter", "LinkedIn", "GitHub"].map((social) => (
                 <m.a
