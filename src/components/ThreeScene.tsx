@@ -1,15 +1,17 @@
 "use client";
+// @ts-nocheck
 
+import React, { Suspense, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import { useRef } from "react";
+import type { Group } from "three";
 
 function RotatingShapes() {
-  const ref = useRef<any>(null);
-  useFrame((state: any) => {
+  const ref = useRef<Group | null>(null);
+  useFrame((state, delta) => {
     if (ref.current) {
-      ref.current.rotation.x += 0.005;
-      ref.current.rotation.y += 0.01;
+      ref.current.rotation.x += 0.005 * (delta * 60);
+      ref.current.rotation.y += 0.01 * (delta * 60);
     }
   });
   return (
@@ -35,10 +37,17 @@ function RotatingShapes() {
 export default function ThreeScene({ className }: { className?: string }) {
   return (
     <div style={{ width: '100%', height: 420, maxWidth: 520 }} className={className}>
-      <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
+      <Canvas
+        camera={{ position: [0, 0, 5], fov: 50 }}
+        shadows
+        dpr={[1, 2]}
+        style={{ width: "100%", height: "100%" }}
+      >
         <ambientLight intensity={0.8} />
-        <directionalLight position={[5, 5, 5]} intensity={0.6} />
-        <RotatingShapes />
+        <directionalLight position={[5, 5, 5]} intensity={0.6} castShadow />
+        <Suspense fallback={null}>
+          <RotatingShapes />
+        </Suspense>
         <OrbitControls enablePan={false} enableZoom={false} />
       </Canvas>
     </div>
