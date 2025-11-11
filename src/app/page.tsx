@@ -300,7 +300,6 @@ export default function LandingPage() {
         className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[#0a1428]/80 border-b border-[#00d4ff]/20"
       >
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-3">
           <m.div whileHover={{ scale: 1.05 }} className="flex items-center gap-3">
             <m.a whileHover={{ color: "#00d4ff" }} className="text-gray-300 hover:text-[#00d4ff] transition-colors duration-300 text-sm font-medium" href="#">
             <div className="relative w-12 h-12 bg-gradient-to-br from-[#ff6b00] to-[#ff8c00] rounded-full flex items-center justify-center shadow-lg shadow-[#ff6b00]/50">
@@ -309,41 +308,39 @@ export default function LandingPage() {
             <span className="text-xl font-bold bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] bg-clip-text text-transparent">
               JobField
             </span>
-          </motion.div>
+          </m.div>
 
           <div className="hidden md:flex items-center gap-8">
             {["Features", "How It Works", "Pricing", "Contact"].map((item) => (
-              <motion.a
+              <m.a
                 key={item}
                 href="#"
                 whileHover={{ color: "#00d4ff" }}
                 className="text-gray-300 hover:text-[#00d4ff] transition-colors duration-300 text-sm font-medium"
               >
                 {item}
-              </motion.a>
+              </m.a>
             ))}
           </div>
 
           <div className="flex items-center gap-3">
-            <motion.button
-            <m.button
             <m.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="px-6 py-2 text-white text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
             >
               Sign In
-            </motion.button>
-            <motion.button
+            </m.button>
+            <m.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
             >
               Get Started
-            </motion.button>
+            </m.button>
           </div>
         </div>
-      </motion.nav>
+      </m.nav>
 
       {/* Hero Section */}
       <section className="relative h-screen w-full flex items-center justify-center overflow-hidden pt-20">
@@ -378,7 +375,7 @@ export default function LandingPage() {
           >
             <Star className="w-4 h-4 text-[#00d4ff]" />
             <span className="text-sm text-[#00d4ff] font-medium">The Ultimate Job Hunting Game</span>
-          </motion.div>
+          </m.div>
 
           {/* Main headline */}
           <m.h1
@@ -393,7 +390,7 @@ export default function LandingPage() {
             }}
           >
             TRACK. DOMINATE. WIN.
-          </motion.h1>
+          </m.h1>
 
           {/* Subheading */}
           <m.p
@@ -402,34 +399,31 @@ export default function LandingPage() {
           >
             Master your job search like a championship team. Track applications, manage interviews, and score your dream
             job with intelligent analytics.
-          </motion.p>
+          </m.p>
 
           {/* CTA Buttons */}
           {/* CTA Buttons */}
           <m.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <m.button
+            
             <m.button
               whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(255, 107, 0, 0.6)" }}
               whileTap={{ scale: 0.95 }}
               className="px-8 py-4 text-white font-bold rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] flex items-center gap-2 hover:shadow-2xl transition-all duration-300"
             >
               Start Playing <ArrowRight className="w-5 h-5" />
-            </motion.button>
-            <motion.button
+            </m.button>
+            <m.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="px-8 py-4 text-white font-bold rounded-full border-2 border-[#00d4ff] hover:bg-[#00d4ff]/10 flex items-center gap-2 transition-all duration-300"
             >
               <Play className="w-5 h-5" /> Watch Demo
-            </motion.button>
-          </motion.div>
-        </motion.div>
+            </m.button>
+          </m.div>
+        </m.div>
 
         {/* Floating cards */}
   <m.div
-  <m.div
-          <m.div
-          <m.div
           className="absolute bottom-20 left-10 p-4 rounded-lg bg-[#1a3a52]/80 backdrop-blur-lg border border-[#00d4ff]/30"
           animate={{ y: [0, -20, 0] }}
           transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
@@ -438,9 +432,9 @@ export default function LandingPage() {
             <TrendingUp className="w-5 h-5 text-[#00d4ff]" />
             <span className="text-sm text-white font-semibold">72% Success Rate</span>
           </div>
-        </motion.div>
+        </m.div>
 
-        <motion.div
+        <m.div
           className="absolute bottom-32 right-10 p-4 rounded-lg bg-[#3a1a52]/80 backdrop-blur-lg border border-[#ff6b00]/30"
           animate={{ y: [0, 20, 0] }}
           transition={{ duration: 3.5, repeat: Number.POSITIVE_INFINITY, delay: 0.2 }}
@@ -449,13 +443,13 @@ export default function LandingPage() {
             <CheckCircle2 className="w-5 h-5 text-[#ff6b00]" />
             <span className="text-sm text-white font-semibold">500+ Jobs Tracked</span>
           </div>
-        </motion.div>
+        </m.div>
       </section>
 
       {/* Features Section */}
       <section className="relative py-20 px-6 bg-gradient-to-b from-[#0a1428] to-[#1a2d4d]">
         <div className="max-w-6xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -464,9 +458,9 @@ export default function LandingPage() {
           >
             <h2 className="text-4xl md:text-5xl font-black mb-4 text-white">Championship Features</h2>
             <p className="text-gray-400 text-lg">Everything you need to win the game</p>
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
             variants={containerVariants}
             initial="hidden"
@@ -506,10 +500,8 @@ export default function LandingPage() {
                 description: "Get AI-powered recommendations to optimize your application strategy",
               },
             ].map((feature, index) => (
-              <m.div
-                <m.div
-              </m.div>
-          <m.div
+               
+          
           <m.div
             {[
                 key={index}
@@ -517,24 +509,24 @@ export default function LandingPage() {
                 whileHover={{ scale: 1.05, y: -5 }}
                 className="group p-6 rounded-xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 backdrop-blur-lg transition-all duration-300"
               >
-                <motion.div
+                <m.div
                   className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#ff6b00]/20 to-[#00d4ff]/20 flex items-center justify-center mb-4 group-hover:from-[#ff6b00]/40 group-hover:to-[#00d4ff]/40 transition-all duration-300"
                   whileHover={{ rotate: 10 }}
                 >
                   <feature.icon className="w-6 h-6 text-[#00d4ff]" />
-                </motion.div>
+                </m.div>
                 <h3 className="text-lg font-bold text-white mb-2">{feature.title}</h3>
                 <p className="text-gray-400 text-sm leading-relaxed">{feature.description}</p>
-              </motion.div>
+              </m.div>
             ))}
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
       {/* Dashboard Preview */}
       <section className="relative py-20 px-6 bg-gradient-to-b from-[#1a2d4d] to-[#0a1428]">
         <div className="max-w-6xl mx-auto">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -543,9 +535,9 @@ export default function LandingPage() {
           >
             <h2 className="text-4xl md:text-5xl font-black mb-4 text-white">Your Command Center</h2>
             <p className="text-gray-400 text-lg">Beautiful, powerful, intuitive dashboard experience</p>
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
@@ -562,7 +554,7 @@ export default function LandingPage() {
               {/* Tab buttons */}
               <div className="flex gap-4 border-b border-[#00d4ff]/20">
                 {["applications", "interviews", "analytics"].map((tab) => (
-                  <motion.button
+                  <m.button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
                     className={`pb-3 text-sm font-bold transition-all duration-300 ${
@@ -572,13 +564,13 @@ export default function LandingPage() {
                     }`}
                   >
                     {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                  </motion.button>
+                  </m.button>
                 ))}
               </div>
 
               {/* Tab content */}
               <AnimatePresence mode="wait">
-                <motion.div
+                <m.div
                   key={activeTab}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -592,7 +584,7 @@ export default function LandingPage() {
                         { company: "Microsoft", status: "Applied", progress: 33 },
                         { company: "Apple", status: "Offer", progress: 100 },
                       ].map((app, idx) => (
-                        <motion.div
+                        <m.div
                           key={idx}
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
@@ -604,14 +596,14 @@ export default function LandingPage() {
                             <p className="text-xs text-gray-400">{app.status}</p>
                           </div>
                           <div className="w-24 h-2 bg-[#0f2540] rounded-full overflow-hidden">
-                            <motion.div
+                            <m.div
                               initial={{ width: 0 }}
                               animate={{ width: `${app.progress}%` }}
                               transition={{ duration: 1, delay: idx * 0.2 }}
                               className="h-full bg-gradient-to-r from-[#ff6b00] to-[#00d4ff]"
                             />
                           </div>
-                        </motion.div>
+                        </m.div>
                       ))}
                     </div>
                   )}
@@ -622,7 +614,7 @@ export default function LandingPage() {
                         { company: "Google", date: "Dec 15, 2:00 PM", type: "Technical" },
                         { company: "Microsoft", date: "Dec 18, 4:30 PM", type: "HR Round" },
                       ].map((interview, idx) => (
-                        <motion.div
+                        <m.div
                           key={idx}
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
@@ -636,7 +628,7 @@ export default function LandingPage() {
                             </span>
                           </div>
                           <p className="text-sm text-gray-400">{interview.date}</p>
-                        </motion.div>
+                        </m.div>
                       ))}
                     </div>
                   )}
@@ -648,7 +640,7 @@ export default function LandingPage() {
                         { label: "Applications", value: "48", icon: "📧" },
                         { label: "Interviews", value: "12", icon: "📞" },
                       ].map((stat, idx) => (
-                        <motion.div
+                        <m.div
                           key={idx}
                           initial={{ opacity: 0, scale: 0.9 }}
                           animate={{ opacity: 1, scale: 1 }}
@@ -660,21 +652,21 @@ export default function LandingPage() {
                           <p className="text-2xl font-black bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] bg-clip-text text-transparent">
                             {stat.value}
                           </p>
-                        </motion.div>
+                        </m.div>
                       ))}
                     </div>
                   )}
-                </motion.div>
+                </m.div>
               </AnimatePresence>
             </div>
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
       {/* Statistics Section */}
       <section className="relative py-20 px-6">
         <div className="max-w-6xl mx-auto">
-          <motion.div
+          <m.div
             className="grid md:grid-cols-4 gap-6"
             variants={containerVariants}
             initial="hidden"
@@ -690,7 +682,6 @@ export default function LandingPage() {
               <m.div
                 <m.p
               </m.div>
-          <m.div
           <m.div
             {[
                 key={idx}
