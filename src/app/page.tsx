@@ -21,6 +21,29 @@ import {
 // Cast motion to any to avoid strict prop typing issues in this file
 const m = motion as any
 
+// Client component for time display to avoid hydration issues
+function TimeDisplay() {
+  const [time, setTime] = useState("Loading...")
+
+  useEffect(() => {
+    // Set initial time
+    setTime(new Date().toLocaleTimeString())
+
+    // Update time every second
+    const interval = setInterval(() => {
+      setTime(new Date().toLocaleTimeString())
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <div className="text-gray-400 text-sm font-mono">
+      {time}
+    </div>
+  )
+}
+
 // Main Landing Page
 export default function LandingPage() {
   const [activeTab, setActiveTab] = useState("applications")
@@ -1063,7 +1086,7 @@ export default function LandingPage() {
                   <span className="text-[#00d4ff] font-bold text-sm">SYSTEM ONLINE</span>
                 </div>
                 <div className="text-gray-400 text-sm font-mono">
-                  {typeof window !== 'undefined' ? new Date().toLocaleTimeString() : 'Loading...'}
+                  <TimeDisplay />
                 </div>
               </div>
 
