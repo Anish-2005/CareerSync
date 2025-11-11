@@ -1,38 +1,5 @@
 "use client";
 
-import { CheckCircle, Calendar, GitBranch } from "lucide-react";
-
-export default function Features() {
-  const features = [
-    { icon: CheckCircle, title: "Unified tracking", desc: "All applications, interviews and notes in one place." },
-    { icon: Calendar, title: "Smart reminders", desc: "Never miss a follow-up or interview with reminders." },
-    { icon: GitBranch, title: "Flexible workflow", desc: "Kanban, timeline and list views to fit your process." },
-  ];
-
-  return (
-    <section id="features" style={{ padding: "36px 16px", maxWidth: 1200, margin: "0 auto" }}>
-      <h2 style={{ fontSize: 22 }}>Why CareerSync</h2>
-      <div style={{ display: "flex", gap: 18, marginTop: 16, flexWrap: "wrap" }}>
-        {features.map((f) => {
-          const Icon = f.icon;
-          return (
-            <div key={f.title} style={{ flex: "1 1 260px", border: "1px solid #eef2f7", padding: 18, borderRadius: 10 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <Icon />
-                <div>
-                  <div style={{ fontWeight: 700 }}>{f.title}</div>
-                  <div style={{ color: "#6b7280", marginTop: 6 }}>{f.desc}</div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
-"use client";
-
 import { CheckCircle, Calendar, List } from "lucide-react";
 import { motion } from "framer-motion";
 
