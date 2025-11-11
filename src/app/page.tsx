@@ -292,8 +292,8 @@ export default function LandingPage() {
       className="overflow-hidden bg-gradient-to-b from-[#0a1428] via-[#1a2d4d] to-[#0a1428]"
       style={{ fontFamily: '"Geist", sans-serif' }}
     >
-      {/* Navigation */}
-      <motion.nav
+  {/* Navigation */}
+  <m.nav
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
@@ -301,6 +301,8 @@ export default function LandingPage() {
       >
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-3">
+          <m.div whileHover={{ scale: 1.05 }} className="flex items-center gap-3">
+            <m.a whileHover={{ color: "#00d4ff" }} className="text-gray-300 hover:text-[#00d4ff] transition-colors duration-300 text-sm font-medium" href="#">
             <div className="relative w-12 h-12 bg-gradient-to-br from-[#ff6b00] to-[#ff8c00] rounded-full flex items-center justify-center shadow-lg shadow-[#ff6b00]/50">
               <Trophy className="w-7 h-7 text-white" />
             </div>
@@ -324,6 +326,8 @@ export default function LandingPage() {
 
           <div className="flex items-center gap-3">
             <motion.button
+            <m.button
+            <m.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="px-6 py-2 text-white text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
@@ -348,7 +352,7 @@ export default function LandingPage() {
         </div>
 
         {/* Animated background grid */}
-        <motion.div
+  <m.div
           className="absolute inset-0"
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.1 }}
@@ -361,14 +365,14 @@ export default function LandingPage() {
         />
 
         {/* Content overlay */}
-        <motion.div
+  <m.div
           className="relative z-10 max-w-6xl mx-auto px-6 text-center"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
           {/* Badge */}
-          <motion.div
+          <m.div
             variants={itemVariants}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00d4ff]/30 bg-[#00d4ff]/5 backdrop-blur-md mb-8"
           >
@@ -377,7 +381,7 @@ export default function LandingPage() {
           </motion.div>
 
           {/* Main headline */}
-          <motion.h1
+          <m.h1
             variants={itemVariants}
             className="text-5xl md:text-7xl font-black mb-6 leading-tight"
             style={{
@@ -392,7 +396,7 @@ export default function LandingPage() {
           </motion.h1>
 
           {/* Subheading */}
-          <motion.p
+          <m.p
             variants={itemVariants}
             className="text-lg md:text-2xl text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed"
           >
@@ -401,8 +405,10 @@ export default function LandingPage() {
           </motion.p>
 
           {/* CTA Buttons */}
-          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <motion.button
+          {/* CTA Buttons */}
+          <m.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <m.button
+            <m.button
               whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(255, 107, 0, 0.6)" }}
               whileTap={{ scale: 0.95 }}
               className="px-8 py-4 text-white font-bold rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] flex items-center gap-2 hover:shadow-2xl transition-all duration-300"
@@ -420,7 +426,10 @@ export default function LandingPage() {
         </motion.div>
 
         {/* Floating cards */}
-        <motion.div
+  <m.div
+  <m.div
+          <m.div
+          <m.div
           className="absolute bottom-20 left-10 p-4 rounded-lg bg-[#1a3a52]/80 backdrop-blur-lg border border-[#00d4ff]/30"
           animate={{ y: [0, -20, 0] }}
           transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
@@ -464,6 +473,7 @@ export default function LandingPage() {
             whileInView="visible"
             viewport={{ once: true }}
           >
+            
             {[
               {
                 icon: Target,
@@ -496,7 +506,12 @@ export default function LandingPage() {
                 description: "Get AI-powered recommendations to optimize your application strategy",
               },
             ].map((feature, index) => (
-              <motion.div
+              <m.div
+                <m.div
+              </m.div>
+          <m.div
+          <m.div
+            {[
                 key={index}
                 variants={itemVariants}
                 whileHover={{ scale: 1.05, y: -5 }}
@@ -672,7 +687,12 @@ export default function LandingPage() {
               { number: "85%", label: "Success Rate" },
               { number: "24/7", label: "Support" },
             ].map((stat, idx) => (
-              <motion.div
+              <m.div
+                <m.p
+              </m.div>
+          <m.div
+          <m.div
+            {[
                 key={idx}
                 variants={itemVariants}
                 className="p-8 rounded-2xl bg-gradient-to-br from-[#1a3a52]/40 to-[#0f2540]/40 border border-[#00d4ff]/20 text-center hover:border-[#00d4ff]/50 transition-all duration-300"
@@ -736,7 +756,9 @@ export default function LandingPage() {
                 highlighted: false,
               },
             ].map((plan, idx) => (
-              <motion.div
+              <m.div
+                <m.button
+              </m.div>
                 key={idx}
                 variants={itemVariants}
                 whileHover={{
@@ -787,6 +809,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <motion.footer
+  <m.footer
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
@@ -835,7 +858,9 @@ export default function LandingPage() {
             <p className="text-gray-500 text-sm mb-4 md:mb-0">© 2025 JobField. All rights reserved.</p>
             <div className="flex gap-6">
               {["Twitter", "LinkedIn", "GitHub"].map((social) => (
-                <motion.a
+                <m.a
+  <m.div
+  <m.div
                   key={social}
                   href="#"
                   whileHover={{ scale: 1.2, color: "#00d4ff" }}
