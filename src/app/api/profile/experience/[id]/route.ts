@@ -93,9 +93,10 @@ export async function PUT(
       return NextResponse.json({ error: 'Experience not found' }, { status: 404 })
     }
 
-    // Update the experience entry
+    // Update the experience entry - explicitly preserve the ID
+    const originalId = profile.experience[experienceIndex].id
     const updatedExperience = {
-      ...profile.experience[experienceIndex],
+      id: originalId, // Explicitly preserve the ID
       company: experienceData.company.trim(),
       position: experienceData.position.trim(),
       startDate: new Date(experienceData.startDate),
@@ -107,6 +108,9 @@ export async function PUT(
 
     // Update experience in profile
     profile.experience[experienceIndex] = updatedExperience
+    
+    // Mark the array as modified to ensure Mongoose detects the change
+    profile.markModified('experience')
 
     // Save the updated profile
     await profile.save()

@@ -36,7 +36,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await dbConnect();
@@ -47,10 +47,11 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
     const body = await request.json();
 
     const application = await JobApplication.findOneAndUpdate(
-      { _id: params.id, userId: decodedToken.uid },
+      { _id: id, userId: decodedToken.uid },
       {
         ...body,
         lastUpdated: new Date(),
@@ -71,7 +72,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await dbConnect();
@@ -82,8 +83,10 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
+
     const application = await JobApplication.findOneAndDelete({
-      _id: params.id,
+      _id: id,
       userId: decodedToken.uid,
     });
 

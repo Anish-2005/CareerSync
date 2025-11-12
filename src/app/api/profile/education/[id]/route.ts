@@ -75,9 +75,10 @@ export async function PUT(
       return NextResponse.json({ error: 'Education not found' }, { status: 404 })
     }
 
-    // Update the education entry
+    // Update the education entry - explicitly preserve the ID
+    const originalId = profile.education[educationIndex].id
     const updatedEducation = {
-      ...profile.education[educationIndex],
+      id: originalId, // Explicitly preserve the ID
       institution: educationData.institution.trim(),
       degree: educationData.degree.trim(),
       field: educationData.field.trim(),
@@ -90,6 +91,9 @@ export async function PUT(
 
     // Update education in profile
     profile.education[educationIndex] = updatedEducation
+    
+    // Mark the array as modified to ensure Mongoose detects the change
+    profile.markModified('education')
 
     // Save the updated profile
     await profile.save()

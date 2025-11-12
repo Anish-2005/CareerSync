@@ -472,11 +472,13 @@ export default function ProfilePage() {
   const saveEditedExperience = async () => {
     if (!editedExperience.company.trim() || !editedExperience.position.trim() || !editedExperience.startDate) {
       setError('Please fill in all required fields')
+      setTimeout(() => setError(null), 3000)
       return
     }
 
     try {
       setSaving(true)
+      setError(null)
       const token = await getIdToken()
 
       console.log('Frontend: editingExperienceId:', editingExperienceId)
@@ -503,16 +505,19 @@ export default function ProfilePage() {
       if (!response.ok) {
         const errorText = await response.text()
         console.error('Save edited experience failed:', response.status, errorText)
-        throw new Error(`Failed to save experience: ${response.status} ${response.statusText}`)
+        throw new Error(`Failed to save experience: ${response.status} ${errorText}`)
       }
 
       const data = await response.json()
+      console.log('Experience updated successfully:', data)
       setProfile(data.profile)
       handleCancelEditExperience()
       setError(null)
     } catch (err) {
       console.error('Error saving edited experience:', err)
-      setError('Failed to save experience')
+      const errorMsg = err instanceof Error ? err.message : 'Failed to save experience'
+      setError(errorMsg)
+      setTimeout(() => setError(null), 5000)
     } finally {
       setSaving(false)
     }
@@ -554,11 +559,13 @@ export default function ProfilePage() {
   const saveEditedEducation = async () => {
     if (!editedEducation.institution.trim() || !editedEducation.degree.trim() || !editedEducation.field.trim() || !editedEducation.startDate) {
       setError('Please fill in all required fields')
+      setTimeout(() => setError(null), 3000)
       return
     }
 
     try {
       setSaving(true)
+      setError(null)
       const token = await getIdToken()
 
       const educationData = {
@@ -582,16 +589,19 @@ export default function ProfilePage() {
       if (!response.ok) {
         const errorText = await response.text()
         console.error('Save edited education failed:', response.status, errorText)
-        throw new Error(`Failed to save education: ${response.status} ${response.statusText}`)
+        throw new Error(`Failed to save education: ${response.status} ${errorText}`)
       }
 
       const data = await response.json()
+      console.log('Education updated successfully:', data)
       setProfile(data.profile)
       handleCancelEditEducation()
       setError(null)
     } catch (err) {
       console.error('Error saving edited education:', err)
-      setError('Failed to save education')
+      const errorMsg = err instanceof Error ? err.message : 'Failed to save education'
+      setError(errorMsg)
+      setTimeout(() => setError(null), 5000)
     } finally {
       setSaving(false)
     }
@@ -923,6 +933,29 @@ export default function ProfilePage() {
         className="min-h-screen overflow-hidden bg-gradient-to-b from-[#0a1428] via-[#1a2d4d] to-[#0a1428]"
         style={{ fontFamily: '"Geist", sans-serif' }}
       >
+      {/* Error Notification */}
+      <AnimatePresence>
+        {error && (
+          <m.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full mx-4"
+          >
+            <div className="p-4 rounded-xl bg-gradient-to-br from-[#ff4444]/90 to-[#ff6b00]/90 backdrop-blur-md border border-[#ff4444]/50 shadow-lg flex items-center gap-3">
+              <X className="w-5 h-5 text-white flex-shrink-0" />
+              <p className="text-white font-semibold flex-1">{error}</p>
+              <button
+                onClick={() => setError(null)}
+                className="p-1 rounded-full hover:bg-white/20 transition-all"
+              >
+                <X className="w-4 h-4 text-white" />
+              </button>
+            </div>
+          </m.div>
+        )}
+      </AnimatePresence>
+
       {/* Navigation */}
       <m.nav
         initial={{ opacity: 0, y: -20 }}
