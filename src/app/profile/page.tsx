@@ -560,7 +560,7 @@ export default function ProfilePage() {
                       <m.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        onClick={() => setIsEditing(true)}
+                        onClick={handleEditProfile}
                         className="px-6 py-3 bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] rounded-xl font-bold hover:bg-[#00d4ff]/30 transition-all duration-300 flex items-center gap-2"
                       >
                         <Edit className="w-4 h-4" />
