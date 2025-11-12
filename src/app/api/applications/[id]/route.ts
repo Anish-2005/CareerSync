@@ -5,7 +5,7 @@ import { verifyFirebaseToken } from '@/lib/auth-middleware';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await dbConnect();
@@ -16,8 +16,10 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
+
     const application = await JobApplication.findOne({
-      _id: params.id,
+      _id: id,
       userId: decodedToken.uid,
     });
 

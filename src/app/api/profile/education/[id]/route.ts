@@ -5,7 +5,7 @@ import { verifyFirebaseToken } from '@/lib/auth-middleware'
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await dbConnect()
@@ -16,7 +16,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const educationId = params.id
+    const { id: educationId } = await params
 
     console.log('PUT Education API called with ID:', educationId)
     console.log('ID type:', typeof educationId)
@@ -111,7 +111,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await dbConnect()
@@ -122,7 +122,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const educationId = params.id
+    const { id: educationId } = await params
 
     // Find the user's profile
     const profile = await Profile.findOne({ userId: decodedToken.uid })

@@ -162,7 +162,31 @@ export default function ProfilePage() {
     description: '',
   })
 
-  // Fetch profile data from API
+  // Migrate profile data to fix inconsistencies
+  const migrateProfileData = async () => {
+    try {
+      console.log('Frontend: Starting migration process...')
+      const token = await getIdToken()
+      const response = await fetch('/api/profile/migrate', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        console.error('Migration failed:', response.status)
+        return
+      }
+
+      const data = await response.json()
+      console.log('Migration completed:', data)
+    } catch (error) {
+      console.error('Migration error:', error)
+    }
+  }
+
+  // Fetch profile data
   const fetchProfile = async () => {
     try {
       setLoading(true)
@@ -185,7 +209,32 @@ export default function ProfilePage() {
 
       const data = await response.json()
       console.log('Profile fetch response:', data)
-      setProfile(data.profile)
+      console.log('Backend: Experience IDs in database:', data.profile?.experience?.map((exp: any) => ({ id: exp.id, type: typeof exp.id })) || [])
+
+      // Check if migration is needed
+      const needsMigration = data.profile?.experience?.some((exp: any) => !exp.id) ||
+          data.profile?.education?.some((edu: any) => !edu.id) ||
+          data.profile?.skills?.some((skill: any) => !skill.id)
+
+      console.log('Frontend: Migration needed?', needsMigration)
+
+      if (needsMigration) {
+        console.log('Running data migration...')
+        await migrateProfileData()
+        // Re-fetch profile after migration
+        const migratedResponse = await fetch('/api/profile', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        })
+        if (migratedResponse.ok) {
+          const migratedData = await migratedResponse.json()
+          setProfile(migratedData.profile)
+        }
+      } else {
+        setProfile(data.profile)
+      }
+
       setError(null)
     } catch (err) {
       console.error('Error fetching profile:', err)
@@ -430,11 +479,17 @@ export default function ProfilePage() {
       setSaving(true)
       const token = await getIdToken()
 
+      console.log('Frontend: editingExperienceId:', editingExperienceId)
+      console.log('Frontend: editingExperienceId type:', typeof editingExperienceId)
+
       const experienceData = {
         ...editedExperience,
         startDate: new Date(editedExperience.startDate),
         endDate: editedExperience.current ? undefined : editedExperience.endDate ? new Date(editedExperience.endDate) : undefined,
       }
+
+      console.log('Frontend: experienceData:', experienceData)
+      console.log('Frontend: sending PUT request to:', `/api/profile/experience/${editingExperienceId}`)
 
       const response = await fetch(`/api/profile/experience/${editingExperienceId}`, {
         method: 'PUT',
