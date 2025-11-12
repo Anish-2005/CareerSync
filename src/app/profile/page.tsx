@@ -26,6 +26,8 @@ import {
   Check,
   Star,
   Zap,
+  Linkedin,
+  Github,
 } from "lucide-react"
 import { RouteGuard } from "@/components/RouteGuard"
 import { useAuth } from "@/contexts/AuthContext"
@@ -138,6 +140,7 @@ export default function ProfilePage() {
       }
 
       const data = await response.json()
+      console.log('Profile fetch response:', data)
       setProfile(data.profile)
       setError(null)
     } catch (err) {
@@ -223,14 +226,50 @@ export default function ProfilePage() {
       })
 
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Upload failed')
+        let errorMessage = 'Upload failed'
+        try {
+          const errorData = await response.json()
+          errorMessage = errorData.error || errorData.message || 'Upload failed'
+        } catch (parseError) {
+          // If response is not JSON, try to get text
+          try {
+            const errorText = await response.text()
+            errorMessage = errorText || 'Upload failed'
+          } catch (textError) {
+            errorMessage = 'Upload failed - unable to parse error response'
+          }
+        }
+        throw new Error(errorMessage)
       }
 
       const data = await response.json()
+      console.log('Upload response data:', data)
+      console.log('Document from response:', data.document)
 
-      // Refresh profile to show new document
-      await fetchProfile()
+      // Update profile state directly
+      // Determine uploaded document(s) returned by the API and merge with existing documents
+      const uploadedDoc = data.document ?? data.uploadedDocument ?? null
+      const updatedDocuments = uploadedDoc
+        ? [...(profile!.documents || []), uploadedDoc]
+        : Array.isArray(data.documents)
+        ? data.documents
+        : [...(profile!.documents || [])]
+
+      // Create a completely new profile object to ensure re-render
+      const updatedProfile = {
+        _id: profile!._id,
+        userId: profile!.userId,
+        personalInfo: { ...profile!.personalInfo },
+        experience: [...profile!.experience],
+        education: [...profile!.education],
+        skills: [...profile!.skills],
+        certifications: [...profile!.certifications],
+        projects: [...profile!.projects],
+        documents: updatedDocuments
+      }
+
+      setProfile(updatedProfile)
+      console.log('Profile state updated, new documents:', updatedDocuments)
 
       // Reset file input
       event.target.value = ''
@@ -764,35 +803,38 @@ export default function ProfilePage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {[
-                      { label: "LinkedIn", url: profile.personalInfo.linkedinUrl, icon: "💼" },
-                      { label: "GitHub", url: profile.personalInfo.githubUrl, icon: "💻" },
-                      { label: "Portfolio", url: profile.personalInfo.portfolioUrl, icon: "🌐" },
-                    ].map((link, idx) => (
-                      <m.div
-                        key={link.label}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: idx * 0.1 }}
-                        className="p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300"
-                      >
-                        <div className="flex items-center gap-3 mb-2">
-                          <span className="text-2xl">{link.icon}</span>
-                          <span className="text-white font-semibold">{link.label}</span>
-                        </div>
-                        {link.url ? (
-                          <a
-                            href={link.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-[#00d4ff] hover:text-[#00d4ff]/80 transition-colors text-sm break-all"
-                          >
-                            {link.url}
-                          </a>
-                        ) : (
-                          <span className="text-gray-500 text-sm italic">Not provided</span>
-                        )}
-                      </m.div>
-                    ))}
+                      { label: "LinkedIn", url: profile.personalInfo.linkedinUrl, icon: Linkedin },
+                      { label: "GitHub", url: profile.personalInfo.githubUrl, icon: Github },
+                      { label: "Portfolio", url: profile.personalInfo.portfolioUrl, icon: Globe },
+                    ].map((link, idx) => {
+                      const Icon = link.icon
+                      return (
+                        <m.div
+                          key={link.label}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: idx * 0.1 }}
+                          className="p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300"
+                        >
+                          <div className="flex items-center gap-3 mb-2">
+                            <Icon className="w-6 h-6 text-[#00d4ff]" />
+                            <span className="text-white font-semibold">{link.label}</span>
+                          </div>
+                          {link.url ? (
+                            <a
+                              href={link.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[#00d4ff] hover:text-[#00d4ff]/80 transition-colors text-sm font-semibold"
+                            >
+                              Go to Profile
+                            </a>
+                          ) : (
+                            <span className="text-gray-500 text-sm italic">Not provided</span>
+                          )}
+                        </m.div>
+                      )
+                    })}
                   </div>
                 </m.div>
               </div>

@@ -76,6 +76,7 @@ export async function GET(request: NextRequest) {
     }
 
     console.log('GET: Returning profile');
+    console.log('GET: Profile documents:', profile.documents);
     return NextResponse.json({ profile });
 
     return NextResponse.json({ profile });

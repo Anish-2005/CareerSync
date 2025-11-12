@@ -7,21 +7,27 @@ import { GridFSBucket } from 'mongodb';
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('Upload request received');
     await dbConnect();
+    console.log('Database connected');
 
     // Verify Firebase token
     const decodedToken = await verifyFirebaseToken(request);
     if (!decodedToken) {
+      console.log('Token verification failed');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    console.log('Token verified for user:', decodedToken.uid);
 
     // Get the form data
     const formData = await request.formData();
     const file = formData.get('file') as File;
 
     if (!file) {
+      console.log('No file provided');
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
+    console.log('File received:', file.name, 'Size:', file.size, 'Type:', file.type);
 
     // Validate file type (only allow PDFs, DOC, DOCX, etc.)
     const allowedTypes = [
@@ -50,21 +56,26 @@ export async function POST(request: NextRequest) {
     const db = conn.db;
 
     if (!db) {
+      console.log('Database connection failed - no db object');
       return NextResponse.json({ error: 'Database connection failed' }, { status: 500 });
     }
+    console.log('Database connection OK');
 
     // Create GridFS bucket
     const bucket = new GridFSBucket(db, {
       bucketName: 'documents'
     });
+    console.log('GridFS bucket created');
 
     // Convert file to buffer
     const buffer = Buffer.from(await file.arrayBuffer());
+    console.log('File converted to buffer, size:', buffer.length);
 
     // Generate unique filename
     const timestamp = Date.now();
     const randomId = Math.random().toString(36).substring(2, 15);
     const filename = `${timestamp}_${randomId}_${file.name}`;
+    console.log('Generated filename:', filename);
 
     // Upload file to GridFS
     const uploadStream = bucket.openUploadStream(filename, {
@@ -76,19 +87,30 @@ export async function POST(request: NextRequest) {
       }
     });
 
+    console.log('Upload stream created');
+
     uploadStream.end(buffer);
 
     // Wait for upload to complete
     await new Promise((resolve, reject) => {
-      uploadStream.on('finish', resolve);
-      uploadStream.on('error', reject);
+      uploadStream.on('finish', () => {
+        console.log('Upload finished successfully');
+        resolve(void 0);
+      });
+      uploadStream.on('error', (err) => {
+        console.error('Upload stream error:', err);
+        reject(err);
+      });
     });
 
     // Get the GridFS file ID
     const gridFsId = uploadStream.id.toString();
+    console.log('GridFS ID:', gridFsId);
 
     // Find or create user profile
     let profile = await Profile.findOne({ userId: decodedToken.uid });
+    console.log('Profile found:', !!profile);
+
     if (!profile) {
       // Create new profile
       const userInfo = {
@@ -119,6 +141,7 @@ export async function POST(request: NextRequest) {
         },
       };
       profile = new Profile(userInfo);
+      console.log('Created new profile');
     }
 
     // Add document to profile
@@ -132,17 +155,21 @@ export async function POST(request: NextRequest) {
       gridFsId: gridFsId,
     };
 
+    console.log('Adding document to profile:', documentEntry);
     profile.documents.push(documentEntry);
     await profile.save();
+    console.log('Profile saved successfully, documents count:', profile.documents.length);
+    console.log('Saved documents:', profile.documents);
 
     return NextResponse.json({
       success: true,
       document: documentEntry,
       message: 'File uploaded successfully'
-    });
+    }, { status: 200 });
 
   } catch (error) {
     console.error('File upload error:', error);
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
     return NextResponse.json({
       error: 'File upload failed',
       details: error instanceof Error ? error.message : 'Unknown error'
