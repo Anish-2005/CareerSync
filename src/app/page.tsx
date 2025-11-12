@@ -15,10 +15,49 @@ import {
   Trophy,
   Play,
   Star,
+  Plus,
+  Search,
+  Filter,
+  Edit,
+  Trash2,
+  Eye,
+  Calendar,
+  Building,
+  MapPin,
+  DollarSign,
+  FileText,
+  MoreHorizontal,
+  X,
+  Save,
+  Briefcase,
+  Activity,
+  TrendingDown,
+  AlertCircle,
+  CheckCircle,
+  XCircle,
+  Clock as ClockIcon,
+  Settings,
 } from "lucide-react"
 
 // Cast motion to any to avoid strict prop typing issues in this file
 const m = motion as any
+
+// Types for job applications
+interface JobApplication {
+  id: string
+  company: string
+  position: string
+  location: string
+  salary?: string
+  status: 'saved' | 'applied' | 'interview' | 'offer' | 'rejected' | 'withdrawn'
+  appliedDate: string
+  lastUpdated: string
+  notes: string
+  url?: string
+  contact?: string
+  priority: 'low' | 'medium' | 'high'
+  tags: string[]
+}
 
 // Predefined particle positions for consistent SSR/client rendering
 const particlePositions = [
@@ -54,48 +93,33 @@ const particlePositions = [
   { left: 34.89, top: 89.23 }
 ]
 
-const particlePositions2 = [
-  { left: 15.23, top: 25.67 },
-  { left: 72.89, top: 48.12 },
-  { left: 38.45, top: 82.34 },
-  { left: 85.67, top: 61.78 },
-  { left: 42.12, top: 18.90 },
-  { left: 79.34, top: 85.23 },
-  { left: 26.78, top: 63.45 },
-  { left: 53.90, top: 31.67 },
-  { left: 94.56, top: 42.89 },
-  { left: 18.34, top: 75.12 },
-  { left: 64.78, top: 29.34 },
-  { left: 31.23, top: 86.78 },
-  { left: 87.45, top: 53.90 },
-  { left: 47.67, top: 15.23 },
-  { left: 76.89, top: 64.56 },
-  { left: 21.12, top: 37.89 },
-  { left: 58.34, top: 94.12 },
-  { left: 93.78, top: 47.45 },
-  { left: 14.56, top: 79.67 },
-  { left: 69.23, top: 26.89 },
-  { left: 36.78, top: 87.34 },
-  { left: 91.12, top: 58.67 },
-  { left: 43.45, top: 14.78 },
-  { left: 74.67, top: 69.23 },
-  { left: 27.89, top: 32.45 },
-  { left: 55.12, top: 93.67 },
-  { left: 89.34, top: 44.12 },
-  { left: 16.78, top: 76.89 },
-  { left: 63.45, top: 21.34 },
-  { left: 32.67, top: 88.56 },
-  { left: 84.23, top: 57.89 },
-  { left: 41.56, top: 13.12 },
-  { left: 77.34, top: 66.78 },
-  { left: 24.67, top: 35.23 },
-  { left: 59.89, top: 92.45 },
-  { left: 96.12, top: 46.78 },
-  { left: 11.34, top: 73.56 },
-  { left: 68.67, top: 28.12 },
-  { left: 33.89, top: 84.34 },
-  { left: 86.56, top: 52.67 }
-]
+// Status configurations
+const statusConfig = {
+  saved: { color: '#64748b', bgColor: '#64748b20', icon: FileText, label: 'Saved' },
+  applied: { color: '#00d4ff', bgColor: '#00d4ff20', icon: CheckCircle, label: 'Applied' },
+  interview: { color: '#ff6b00', bgColor: '#ff6b0020', icon: ClockIcon, label: 'Interview' },
+  offer: { color: '#00ff88', bgColor: '#00ff8820', icon: Trophy, label: 'Offer' },
+  rejected: { color: '#ef4444', bgColor: '#ef444420', icon: XCircle, label: 'Rejected' },
+  withdrawn: { color: '#8b5cf6', bgColor: '#8b5cf620', icon: AlertCircle, label: 'Withdrawn' }
+}
+
+// Priority configurations
+const priorityConfig = {
+  low: { color: '#64748b', bgColor: '#64748b20', label: 'Low' },
+  medium: { color: '#00d4ff', bgColor: '#00d4ff20', label: 'Medium' },
+  high: { color: '#ff6b00', bgColor: '#ff6b0020', label: 'High' }
+}
+
+// Helper function to get status icon component
+function getStatusIcon(status: JobApplication['status']) {
+  const IconComponent = statusConfig[status].icon
+  return IconComponent
+}
+
+// Helper function to get priority color
+function getPriorityColor(priority: JobApplication['priority']) {
+  return priorityConfig[priority].color
+}
 
 // Client component for time display to avoid hydration issues
 function TimeDisplay() {
@@ -121,8 +145,726 @@ function TimeDisplay() {
   )
 }
 
-// Main Landing Page
-export default function LandingPage() {
+// Main Dashboard Component
+export default function Dashboard() {
+  const [applications, setApplications] = useState<JobApplication[]>([])
+  const [filteredApplications, setFilteredApplications] = useState<JobApplication[]>([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [priorityFilter, setPriorityFilter] = useState<string>('all')
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [editingApplication, setEditingApplication] = useState<JobApplication | null>(null)
+  const [viewingApplication, setViewingApplication] = useState<JobApplication | null>(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  // Load applications from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('careerSync_applications')
+    if (saved) {
+      const parsed = JSON.parse(saved)
+      setApplications(parsed)
+      setFilteredApplications(parsed)
+    }
+  }, [])
+
+  // Filter applications based on search and filters
+  useEffect(() => {
+    let filtered = applications
+
+    if (searchTerm) {
+      filtered = filtered.filter(app =>
+        app.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        app.position.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        app.location.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    }
+
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter(app => app.status === statusFilter)
+    }
+
+    if (priorityFilter !== 'all') {
+      filtered = filtered.filter(app => app.priority === priorityFilter)
+    }
+
+    setFilteredApplications(filtered)
+  }, [applications, searchTerm, statusFilter, priorityFilter])
+
+  // Save to localStorage whenever applications change
+  useEffect(() => {
+    localStorage.setItem('careerSync_applications', JSON.stringify(applications))
+  }, [applications])
+
+  const addApplication = (application: Omit<JobApplication, 'id' | 'lastUpdated'>) => {
+    const newApp: JobApplication = {
+      ...application,
+      id: Date.now().toString(),
+      lastUpdated: new Date().toISOString()
+    }
+    setApplications(prev => [...prev, newApp])
+    setIsAddModalOpen(false)
+  }
+
+  const updateApplication = (updatedApp: JobApplication) => {
+    setApplications(prev => prev.map(app =>
+      app.id === updatedApp.id
+        ? { ...updatedApp, lastUpdated: new Date().toISOString() }
+        : app
+    ))
+    setEditingApplication(null)
+  }
+
+  const deleteApplication = (id: string) => {
+    setApplications(prev => prev.filter(app => app.id !== id))
+  }
+
+  const getStats = () => {
+    const total = applications.length
+    const applied = applications.filter(app => app.status === 'applied').length
+    const interviews = applications.filter(app => app.status === 'interview').length
+    const offers = applications.filter(app => app.status === 'offer').length
+    const successRate = total > 0 ? Math.round((offers / total) * 100) : 0
+
+    return { total, applied, interviews, offers, successRate }
+  }
+
+  const stats = getStats()
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-[#0a1428] via-[#1a2d4d] to-[#0a1428]" style={{ fontFamily: '"Geist", sans-serif' }}>
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[#0a1428]/80 border-b border-[#00d4ff]/20">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="relative w-12 h-12 bg-gradient-to-br from-[#ff6b00] to-[#00d4ff] rounded-full flex items-center justify-center shadow-lg shadow-[#ff6b00]/50">
+              <Zap className="w-7 h-7 text-white" />
+            </div>
+            <span className="text-xl font-bold bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] bg-clip-text text-transparent">
+              CareerSync
+            </span>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <TimeDisplay />
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="md:hidden p-2 text-gray-400 hover:text-white transition-colors"
+            >
+              <BarChart3 className="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <div className="flex pt-20">
+        {/* Sidebar */}
+        <aside className={`fixed md:static inset-y-0 left-0 z-40 w-64 bg-[#0a1428]/95 backdrop-blur-xl border-r border-[#00d4ff]/20 transform transition-transform duration-300 ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+        }`}>
+          <div className="p-6">
+            <div className="space-y-2">
+              {[
+                { icon: Briefcase, label: 'Applications', active: true },
+                { icon: BarChart3, label: 'Analytics' },
+                { icon: Users, label: 'Network' },
+                { icon: Settings, label: 'Settings' }
+              ].map((item) => (
+                <button
+                  key={item.label}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
+                    item.active
+                      ? 'bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff]'
+                      : 'text-gray-400 hover:text-white hover:bg-[#00d4ff]/10'
+                  }`}
+                >
+                  <item.icon className="w-5 h-5" />
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </aside>
+
+        {/* Overlay for mobile sidebar */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-30 md:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
+        {/* Main Content */}
+        <main className="flex-1 p-6">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-4xl font-black text-white mb-2">Job Applications Dashboard</h1>
+            <p className="text-gray-400">Track and manage your career opportunities</p>
+          </div>
+
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+            {[
+              { label: 'Total Applications', value: stats.total, icon: Briefcase, color: '#00d4ff' },
+              { label: 'Applied', value: stats.applied, icon: CheckCircle, color: '#00d4ff' },
+              { label: 'Interviews', value: stats.interviews, icon: ClockIcon, color: '#ff6b00' },
+              { label: 'Offers', value: stats.offers, icon: Trophy, color: '#00ff88' },
+              { label: 'Success Rate', value: `${stats.successRate}%`, icon: TrendingUp, color: '#ff6b00' }
+            ].map((stat, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.1 }}
+                className="bg-[#1a3a52]/50 backdrop-blur-xl border border-[#00d4ff]/20 rounded-2xl p-6"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <stat.icon className="w-8 h-8" style={{ color: stat.color }} />
+                  <span className="text-2xl font-black text-white">{stat.value}</span>
+                </div>
+                <p className="text-gray-400 text-sm">{stat.label}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Search and Filters */}
+          <div className="bg-[#1a3a52]/50 backdrop-blur-xl border border-[#00d4ff]/20 rounded-2xl p-6 mb-6">
+            <div className="flex flex-col lg:flex-row gap-4">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search applications..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 bg-[#0a1428]/50 border border-[#00d4ff]/20 rounded-xl text-white placeholder-gray-400 focus:border-[#00d4ff] focus:outline-none transition-colors"
+                />
+              </div>
+
+              <div className="flex gap-4">
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className="px-4 py-3 bg-[#0a1428]/50 border border-[#00d4ff]/20 rounded-xl text-white focus:border-[#00d4ff] focus:outline-none transition-colors"
+                >
+                  <option value="all">All Status</option>
+                  {Object.entries(statusConfig).map(([key, config]) => (
+                    <option key={key} value={key}>{config.label}</option>
+                  ))}
+                </select>
+
+                <select
+                  value={priorityFilter}
+                  onChange={(e) => setPriorityFilter(e.target.value)}
+                  className="px-4 py-3 bg-[#0a1428]/50 border border-[#00d4ff]/20 rounded-xl text-white focus:border-[#00d4ff] focus:outline-none transition-colors"
+                >
+                  <option value="all">All Priority</option>
+                  {Object.entries(priorityConfig).map(([key, config]) => (
+                    <option key={key} value={key}>{config.label}</option>
+                  ))}
+                </select>
+
+                <button
+                  onClick={() => setIsAddModalOpen(true)}
+                  className="px-6 py-3 bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] text-white font-bold rounded-xl hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300 flex items-center gap-2"
+                >
+                  <Plus className="w-5 h-5" />
+                  Add Application
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Applications List */}
+          <div className="bg-[#1a3a52]/50 backdrop-blur-xl border border-[#00d4ff]/20 rounded-2xl overflow-hidden">
+            <div className="p-6 border-b border-[#00d4ff]/20">
+              <h2 className="text-xl font-bold text-white">Your Applications ({filteredApplications.length})</h2>
+            </div>
+
+            <div className="divide-y divide-[#00d4ff]/10">
+              {filteredApplications.length === 0 ? (
+                <div className="p-12 text-center">
+                  <Briefcase className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-bold text-white mb-2">No applications found</h3>
+                  <p className="text-gray-400 mb-6">Start tracking your job applications to see them here.</p>
+                  <button
+                    onClick={() => setIsAddModalOpen(true)}
+                    className="px-6 py-3 bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] text-white font-bold rounded-xl hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
+                  >
+                    Add Your First Application
+                  </button>
+                </div>
+              ) : (
+                filteredApplications.map((app) => (
+                  <motion.div
+                    key={app.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-6 hover:bg-[#00d4ff]/5 transition-colors group"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-gradient-to-br from-[#ff6b00]/20 to-[#00d4ff]/20 rounded-xl flex items-center justify-center">
+                          <span className="text-white font-bold text-lg">
+                            {app.company.charAt(0).toUpperCase()}
+                          </span>
+                        </div>
+
+                        <div>
+                          <h3 className="text-lg font-bold text-white group-hover:text-[#00d4ff] transition-colors">
+                            {app.position}
+                          </h3>
+                          <p className="text-gray-400">{app.company} • {app.location}</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2">
+                          <div
+                            className="px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1"
+                            style={{
+                              backgroundColor: statusConfig[app.status].bgColor,
+                              color: statusConfig[app.status].color
+                            }}
+                          >
+                            {(() => {
+                              const IconComponent = statusConfig[app.status].icon
+                              return <IconComponent className="w-3 h-3" />
+                            })()}
+                            {statusConfig[app.status].label}
+                          </div>
+
+                          <div
+                            className="px-2 py-1 rounded-full text-xs font-bold"
+                            style={{
+                              backgroundColor: priorityConfig[app.priority].bgColor,
+                              color: priorityConfig[app.priority].color
+                            }}
+                          >
+                            {priorityConfig[app.priority].label}
+                          </div>
+                        </div>
+
+                        <div className="text-sm text-gray-400">
+                          {new Date(app.appliedDate).toLocaleDateString()}
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => setViewingApplication(app)}
+                            className="p-2 text-gray-400 hover:text-[#00d4ff] transition-colors"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => setEditingApplication(app)}
+                            className="p-2 text-gray-400 hover:text-[#00d4ff] transition-colors"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => deleteApplication(app.id)}
+                            className="p-2 text-gray-400 hover:text-red-400 transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))
+              )}
+            </div>
+          </div>
+        </main>
+      </div>
+
+      {/* Add/Edit Application Modal */}
+      <AnimatePresence>
+        {(isAddModalOpen || editingApplication) && (
+          <ApplicationModal
+            application={editingApplication}
+            onSave={editingApplication ? updateApplication : addApplication}
+            onClose={() => {
+              setIsAddModalOpen(false)
+              setEditingApplication(null)
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* View Application Modal */}
+      <AnimatePresence>
+        {viewingApplication && (
+          <ViewApplicationModal
+            application={viewingApplication}
+            onClose={() => setViewingApplication(null)}
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
+
+// Application Modal Component
+function ApplicationModal({
+  application,
+  onSave,
+  onClose
+}: {
+  application?: JobApplication | null
+  onSave: (app: any) => void
+  onClose: () => void
+}) {
+  const [formData, setFormData] = useState({
+    company: application?.company || '',
+    position: application?.position || '',
+    location: application?.location || '',
+    salary: application?.salary || '',
+    status: application?.status || 'saved',
+    appliedDate: application?.appliedDate || new Date().toISOString().split('T')[0],
+    notes: application?.notes || '',
+    url: application?.url || '',
+    contact: application?.contact || '',
+    priority: application?.priority || 'medium',
+    tags: application?.tags || []
+  })
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    onSave({ ...formData, ...(application && { id: application.id }) })
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        className="bg-[#1a3a52]/95 backdrop-blur-xl border border-[#00d4ff]/20 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="p-6 border-b border-[#00d4ff]/20 flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-white">
+            {application ? 'Edit Application' : 'Add New Application'}
+          </h2>
+          <button
+            onClick={onClose}
+            className="p-2 text-gray-400 hover:text-white transition-colors"
+          >
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Company *</label>
+              <input
+                type="text"
+                required
+                value={formData.company}
+                onChange={(e) => setFormData(prev => ({ ...prev, company: e.target.value }))}
+                className="w-full px-4 py-3 bg-[#0a1428]/50 border border-[#00d4ff]/20 rounded-xl text-white placeholder-gray-400 focus:border-[#00d4ff] focus:outline-none transition-colors"
+                placeholder="e.g. Google"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Position *</label>
+              <input
+                type="text"
+                required
+                value={formData.position}
+                onChange={(e) => setFormData(prev => ({ ...prev, position: e.target.value }))}
+                className="w-full px-4 py-3 bg-[#0a1428]/50 border border-[#00d4ff]/20 rounded-xl text-white placeholder-gray-400 focus:border-[#00d4ff] focus:outline-none transition-colors"
+                placeholder="e.g. Software Engineer"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Location</label>
+              <input
+                type="text"
+                value={formData.location}
+                onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+                className="w-full px-4 py-3 bg-[#0a1428]/50 border border-[#00d4ff]/20 rounded-xl text-white placeholder-gray-400 focus:border-[#00d4ff] focus:outline-none transition-colors"
+                placeholder="e.g. San Francisco, CA"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Salary Range</label>
+              <input
+                type="text"
+                value={formData.salary}
+                onChange={(e) => setFormData(prev => ({ ...prev, salary: e.target.value }))}
+                className="w-full px-4 py-3 bg-[#0a1428]/50 border border-[#00d4ff]/20 rounded-xl text-white placeholder-gray-400 focus:border-[#00d4ff] focus:outline-none transition-colors"
+                placeholder="e.g. $120k - $150k"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Status</label>
+              <select
+                value={formData.status}
+                onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value as JobApplication['status'] }))}
+                className="w-full px-4 py-3 bg-[#0a1428]/50 border border-[#00d4ff]/20 rounded-xl text-white focus:border-[#00d4ff] focus:outline-none transition-colors"
+              >
+                {Object.entries(statusConfig).map(([key, config]) => (
+                  <option key={key} value={key}>{config.label}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Priority</label>
+              <select
+                value={formData.priority}
+                onChange={(e) => setFormData(prev => ({ ...prev, priority: e.target.value as JobApplication['priority'] }))}
+                className="w-full px-4 py-3 bg-[#0a1428]/50 border border-[#00d4ff]/20 rounded-xl text-white focus:border-[#00d4ff] focus:outline-none transition-colors"
+              >
+                {Object.entries(priorityConfig).map(([key, config]) => (
+                  <option key={key} value={key}>{config.label}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Application Date</label>
+              <input
+                type="date"
+                value={formData.appliedDate}
+                onChange={(e) => setFormData(prev => ({ ...prev, appliedDate: e.target.value }))}
+                className="w-full px-4 py-3 bg-[#0a1428]/50 border border-[#00d4ff]/20 rounded-xl text-white focus:border-[#00d4ff] focus:outline-none transition-colors"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Job URL</label>
+              <input
+                type="url"
+                value={formData.url}
+                onChange={(e) => setFormData(prev => ({ ...prev, url: e.target.value }))}
+                className="w-full px-4 py-3 bg-[#0a1428]/50 border border-[#00d4ff]/20 rounded-xl text-white placeholder-gray-400 focus:border-[#00d4ff] focus:outline-none transition-colors"
+                placeholder="https://..."
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Contact Information</label>
+            <input
+              type="text"
+              value={formData.contact}
+              onChange={(e) => setFormData(prev => ({ ...prev, contact: e.target.value }))}
+              className="w-full px-4 py-3 bg-[#0a1428]/50 border border-[#00d4ff]/20 rounded-xl text-white placeholder-gray-400 focus:border-[#00d4ff] focus:outline-none transition-colors"
+              placeholder="e.g. john.doe@company.com"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Notes</label>
+            <textarea
+              value={formData.notes}
+              onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
+              rows={4}
+              className="w-full px-4 py-3 bg-[#0a1428]/50 border border-[#00d4ff]/20 rounded-xl text-white placeholder-gray-400 focus:border-[#00d4ff] focus:outline-none transition-colors resize-none"
+              placeholder="Add any additional notes about this application..."
+            />
+          </div>
+
+          <div className="flex justify-end gap-4 pt-6 border-t border-[#00d4ff]/20">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-6 py-3 text-gray-400 hover:text-white transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-6 py-3 bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] text-white font-bold rounded-xl hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300 flex items-center gap-2"
+            >
+              <Save className="w-5 h-5" />
+              {application ? 'Update Application' : 'Save Application'}
+            </button>
+          </div>
+        </form>
+      </motion.div>
+    </motion.div>
+  )
+}
+
+// View Application Modal Component
+function ViewApplicationModal({
+  application,
+  onClose
+}: {
+  application: JobApplication
+  onClose: () => void
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        className="bg-[#1a3a52]/95 backdrop-blur-xl border border-[#00d4ff]/20 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="p-6 border-b border-[#00d4ff]/20 flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-white">Application Details</h2>
+          <button
+            onClick={onClose}
+            className="p-2 text-gray-400 hover:text-white transition-colors"
+          >
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-6">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-[#ff6b00]/20 to-[#00d4ff]/20 rounded-xl flex items-center justify-center">
+              <span className="text-white font-bold text-2xl">
+                {application.company.charAt(0).toUpperCase()}
+              </span>
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold text-white">{application.position}</h3>
+              <p className="text-gray-400 text-lg">{application.company}</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-1">Status</label>
+                <div
+                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-bold"
+                  style={{
+                    backgroundColor: statusConfig[application.status].bgColor,
+                    color: statusConfig[application.status].color
+                  }}
+                >
+                  {(() => {
+                    const IconComponent = statusConfig[application.status].icon
+                    return <IconComponent className="w-4 h-4" />
+                  })()}
+                  {statusConfig[application.status].label}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-1">Priority</label>
+                <div
+                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold"
+                  style={{
+                    backgroundColor: priorityConfig[application.priority].bgColor,
+                    color: priorityConfig[application.priority].color
+                  }}
+                >
+                  {priorityConfig[application.priority].label}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-1">Location</label>
+                <p className="text-white flex items-center gap-2">
+                  <MapPin className="w-4 h-4" />
+                  {application.location || 'Not specified'}
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-1">Salary Range</label>
+                <p className="text-white flex items-center gap-2">
+                  <DollarSign className="w-4 h-4" />
+                  {application.salary || 'Not specified'}
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-1">Applied Date</label>
+                <p className="text-white flex items-center gap-2">
+                  <Calendar className="w-4 h-4" />
+                  {new Date(application.appliedDate).toLocaleDateString()}
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-400 mb-1">Last Updated</label>
+                <p className="text-gray-300 flex items-center gap-2">
+                  <Clock className="w-4 h-4" />
+                  {new Date(application.lastUpdated).toLocaleDateString()}
+                </p>
+              </div>
+
+              {application.url && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-1">Job URL</label>
+                  <a
+                    href={application.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#00d4ff] hover:text-[#00d4ff]/80 transition-colors"
+                  >
+                    View Job Posting
+                  </a>
+                </div>
+              )}
+
+              {application.contact && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-1">Contact</label>
+                  <p className="text-white">{application.contact}</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {application.notes && (
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2">Notes</label>
+              <div className="bg-[#0a1428]/50 border border-[#00d4ff]/20 rounded-xl p-4">
+                <p className="text-white whitespace-pre-wrap">{application.notes}</p>
+              </div>
+            </div>
+          )}
+
+          {application.tags.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2">Tags</label>
+              <div className="flex flex-wrap gap-2">
+                {application.tags.map((tag, idx) => (
+                  <span
+                    key={idx}
+                    className="px-3 py-1 bg-[#00d4ff]/20 text-[#00d4ff] rounded-full text-sm"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
   const [activeTab, setActiveTab] = useState("applications")
   const [scrollY, setScrollY] = useState(0)
 
