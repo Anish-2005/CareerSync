@@ -16,6 +16,7 @@ import {
   Play,
   Star,
 } from "lucide-react"
+import { useAuth } from "@/contexts/AuthContext"
 
 // Cast motion to any to avoid strict prop typing issues in this file
 const m = motion as any
@@ -125,6 +126,7 @@ function TimeDisplay() {
 export default function LandingPage() {
   const [activeTab, setActiveTab] = useState("applications")
   const [scrollY, setScrollY] = useState(0)
+  const { user, logout } = useAuth()
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -208,21 +210,45 @@ export default function LandingPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <m.a
-              href="/dashboard"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-6 py-2 text-white text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
-            >
-              Dashboard
-            </m.a>
-            <m.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
-            >
-              Get Started
-            </m.button>
+            {user ? (
+              <>
+                <m.a
+                  href="/dashboard"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-6 py-2 text-white text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+                >
+                  Dashboard
+                </m.a>
+                <m.button
+                  onClick={logout}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
+                >
+                  Logout
+                </m.button>
+              </>
+            ) : (
+              <>
+                <m.a
+                  href="/login"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-6 py-2 text-white text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+                >
+                  Login
+                </m.a>
+                <m.a
+                  href="/login"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
+                >
+                  Sign Up
+                </m.a>
+              </>
+            )}
           </div>
         </div>
       </m.nav>      {/* Hero Section */}
@@ -452,6 +478,7 @@ export default function LandingPage() {
           {/* Innovative CTA buttons with morphing effects */}
           <m.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-8">
             <m.button
+              onClick={() => user ? window.location.href = '/dashboard' : window.location.href = '/login'}
               whileHover={{
                 scale: 1.05,
                 boxShadow: "0 0 40px rgba(255, 107, 0, 0.6)",

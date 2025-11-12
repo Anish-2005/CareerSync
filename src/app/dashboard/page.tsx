@@ -32,6 +32,7 @@ import {
   ArrowDownRight,
 } from "lucide-react"
 import { RouteGuard } from "@/components/RouteGuard"
+import { useAuth } from "@/contexts/AuthContext"
 
 const m = motion as any
 
@@ -115,63 +116,7 @@ const mockApplications: Application[] = [
 ]
 
 export default function DashboardPage() {
-  const [applications, setApplications] = useState<Application[]>(mockApplications)
-  const [selectedTab, setSelectedTab] = useState<"all" | "applied" | "interviewing" | "offer" | "rejected">("all")
-  const [searchQuery, setSearchQuery] = useState("")
-  const [showAddModal, setShowAddModal] = useState(false)
-
-  // Calculate stats
-  const stats = {
-    total: applications.length,
-    applied: applications.filter((a) => a.status === "applied").length,
-    interviewing: applications.filter((a) => a.status === "interviewing").length,
-    offers: applications.filter((a) => a.status === "offer").length,
-    rejected: applications.filter((a) => a.status === "rejected").length,
-    responseRate: Math.round(
-      ((applications.length - applications.filter((a) => a.status === "applied").length) / applications.length) * 100
-    ),
-  }
-
-  // Filter applications
-  const filteredApplications = applications.filter((app) => {
-    const matchesTab = selectedTab === "all" || app.status === selectedTab
-    const matchesSearch =
-      app.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      app.position.toLowerCase().includes(searchQuery.toLowerCase())
-    return matchesTab && matchesSearch
-  })
-
-  const getStatusColor = (status: Application["status"]) => {
-    switch (status) {
-      case "applied":
-        return "#00d4ff"
-      case "interviewing":
-        return "#ff6b00"
-      case "offer":
-        return "#00ff88"
-      case "rejected":
-        return "#ff4444"
-      default:
-        return "#666"
-    }
-  }
-
-  const getStatusIcon = (status: Application["status"]) => {
-    switch (status) {
-      case "applied":
-        return Send
-      case "interviewing":
-        return Users
-      case "offer":
-        return CheckCircle2
-      case "rejected":
-        return XCircle
-      default:
-        return AlertCircle
-    }
-  }
-
-export default function DashboardPage() {
+  const { user, logout } = useAuth()
   const [applications, setApplications] = useState<Application[]>(mockApplications)
   const [selectedTab, setSelectedTab] = useState<"all" | "applied" | "interviewing" | "offer" | "rejected">("all")
   const [searchQuery, setSearchQuery] = useState("")
@@ -263,11 +208,10 @@ export default function DashboardPage() {
             <m.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setShowAddModal(true)}
-              className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300 flex items-center gap-2"
+              onClick={() => logout()}
+              className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
             >
-              <Plus className="w-4 h-4" />
-              New Application
+              Sign Out
             </m.button>
           </div>
         </div>

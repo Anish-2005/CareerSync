@@ -27,6 +27,8 @@ import {
   Star,
   Zap,
 } from "lucide-react"
+import { RouteGuard } from "@/components/RouteGuard"
+import { useAuth } from "@/contexts/AuthContext"
 
 const m = motion as any
 
@@ -134,6 +136,7 @@ const mockEducation: Education[] = [
 ]
 
 export default function ProfilePage() {
+  const { user, logout } = useAuth()
   const [profile, setProfile] = useState<UserProfile>(mockProfile)
   const [experience, setExperience] = useState<Experience[]>(mockExperience)
   const [education, setEducation] = useState<Education[]>(mockEducation)
@@ -168,10 +171,11 @@ export default function ProfilePage() {
   }
 
   return (
-    <div
-      className="min-h-screen overflow-hidden bg-gradient-to-b from-[#0a1428] via-[#1a2d4d] to-[#0a1428]"
-      style={{ fontFamily: '"Geist", sans-serif' }}
-    >
+    <RouteGuard>
+      <div
+        className="min-h-screen overflow-hidden bg-gradient-to-b from-[#0a1428] via-[#1a2d4d] to-[#0a1428]"
+        style={{ fontFamily: '"Geist", sans-serif' }}
+      >
       {/* Navigation */}
       <m.nav
         initial={{ opacity: 0, y: -20 }}
@@ -201,6 +205,7 @@ export default function ProfilePage() {
             <m.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={() => logout()}
               className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
             >
               Sign Out
@@ -945,5 +950,6 @@ export default function ProfilePage() {
         )}
       </AnimatePresence>
     </div>
+  </RouteGuard>
   )
 }
