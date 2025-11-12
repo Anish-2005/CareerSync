@@ -9,6 +9,7 @@ export interface IProfile extends mongoose.Document {
     phone: string;
     location: string;
     linkedinUrl: string;
+    githubUrl: string;
     portfolioUrl: string;
     summary: string;
   };
@@ -88,6 +89,7 @@ const ProfileSchema = new mongoose.Schema<IProfile>({
     phone: { type: String, default: '' },
     location: { type: String, default: '' },
     linkedinUrl: { type: String, default: '' },
+    githubUrl: { type: String, default: '' },
     portfolioUrl: { type: String, default: '' },
     summary: { type: String, default: '' },
   },

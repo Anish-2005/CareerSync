@@ -43,6 +43,7 @@ interface Profile {
     phone: string
     location: string
     linkedinUrl: string
+    githubUrl: string
     portfolioUrl: string
     summary: string
   }
@@ -173,13 +174,17 @@ export default function ProfilePage() {
       })
 
       if (!response.ok) {
-        throw new Error('Failed to save profile')
+        const errorText = await response.text()
+        console.error('Save failed:', response.status, errorText)
+        throw new Error(`Failed to save profile: ${response.status} ${response.statusText}`)
       }
 
       const data = await response.json()
       setProfile(data.profile)
       setIsEditing(false)
       setError(null)
+      // Switch to profile tab to show the updated links
+      setActiveTab('profile')
     } catch (err) {
       console.error('Error saving profile:', err)
       setError('Failed to save profile')
@@ -653,7 +658,7 @@ export default function ProfilePage() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {[
                       { label: "LinkedIn", url: profile.personalInfo.linkedinUrl, icon: "💼" },
-                      { label: "GitHub", url: profile.personalInfo.portfolioUrl, icon: "💻" },
+                      { label: "GitHub", url: profile.personalInfo.githubUrl, icon: "💻" },
                       { label: "Portfolio", url: profile.personalInfo.portfolioUrl, icon: "🌐" },
                     ].map((link, idx) => (
                       <m.div
@@ -667,14 +672,18 @@ export default function ProfilePage() {
                           <span className="text-2xl">{link.icon}</span>
                           <span className="text-white font-semibold">{link.label}</span>
                         </div>
-                        <a
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[#00d4ff] hover:text-[#00d4ff]/80 transition-colors text-sm break-all"
-                        >
-                          {link.url}
-                        </a>
+                        {link.url ? (
+                          <a
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#00d4ff] hover:text-[#00d4ff]/80 transition-colors text-sm break-all"
+                          >
+                            {link.url}
+                          </a>
+                        ) : (
+                          <span className="text-gray-500 text-sm italic">Not provided</span>
+                        )}
                       </m.div>
                     ))}
                   </div>
@@ -1090,7 +1099,7 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Social Links */}
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm font-bold text-gray-400 mb-2">LinkedIn</label>
                     <input
@@ -1099,6 +1108,18 @@ export default function ProfilePage() {
                       onChange={(e) => setEditForm(editForm ? {
                         ...editForm,
                         personalInfo: { ...editForm.personalInfo, linkedinUrl: e.target.value }
+                      } : null)}
+                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-400 mb-2">GitHub</label>
+                    <input
+                      type="url"
+                      value={editForm?.personalInfo.githubUrl || ''}
+                      onChange={(e) => setEditForm(editForm ? {
+                        ...editForm,
+                        personalInfo: { ...editForm.personalInfo, githubUrl: e.target.value }
                       } : null)}
                       className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
                     />
