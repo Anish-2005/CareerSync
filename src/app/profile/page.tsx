@@ -117,6 +117,16 @@ export default function ProfilePage() {
   const [editForm, setEditForm] = useState<Profile | null>(null)
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
+  const [isAddingExperience, setIsAddingExperience] = useState(false)
+  const [newExperience, setNewExperience] = useState({
+    company: '',
+    position: '',
+    startDate: '',
+    endDate: '',
+    current: false,
+    description: '',
+    location: '',
+  })
 
   // Fetch profile data from API
   const fetchProfile = async () => {
@@ -203,6 +213,75 @@ export default function ProfilePage() {
   const handleCancelEdit = () => {
     setEditForm(null)
     setIsEditing(false)
+  }
+
+  const handleAddExperience = () => {
+    setIsAddingExperience(true)
+  }
+
+  const handleCancelAddExperience = () => {
+    setIsAddingExperience(false)
+    setNewExperience({
+      company: '',
+      position: '',
+      startDate: '',
+      endDate: '',
+      current: false,
+      description: '',
+      location: '',
+    })
+  }
+
+  const saveNewExperience = async () => {
+    if (!newExperience.company.trim() || !newExperience.position.trim() || !newExperience.startDate) {
+      setError('Please fill in all required fields')
+      return
+    }
+
+    try {
+      setSaving(true)
+      const token = await getIdToken()
+
+      const experienceData = {
+        ...newExperience,
+        startDate: new Date(newExperience.startDate),
+        endDate: newExperience.current ? undefined : newExperience.endDate ? new Date(newExperience.endDate) : undefined,
+      }
+
+      const response = await fetch('/api/profile/experience', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(experienceData),
+      })
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('Save experience failed:', response.status, errorText)
+        throw new Error(`Failed to save experience: ${response.status} ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      setProfile(data.profile)
+      setIsAddingExperience(false)
+      setNewExperience({
+        company: '',
+        position: '',
+        startDate: '',
+        endDate: '',
+        current: false,
+        description: '',
+        location: '',
+      })
+      setError(null)
+    } catch (err) {
+      console.error('Error saving experience:', err)
+      setError('Failed to save experience')
+    } finally {
+      setSaving(false)
+    }
   }
 
   // Handle file upload
@@ -897,7 +976,7 @@ export default function ProfilePage() {
                   transition={{ delay: profile.experience.length * 0.1 }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={addExperience}
+                  onClick={handleAddExperience}
                   className="w-full p-8 rounded-3xl border-2 border-dashed border-[#00d4ff]/50 text-[#00d4ff] hover:border-[#00d4ff] hover:bg-[#00d4ff]/5 transition-all duration-300 flex items-center justify-center gap-3 font-bold"
                 >
                   <Plus className="w-6 h-6" />
@@ -1306,6 +1385,146 @@ export default function ProfilePage() {
                     className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {saving ? 'Saving...' : 'Save Changes'}
+                  </m.button>
+                </div>
+              </div>
+            </m.div>
+          </m.div>
+        )}
+      </AnimatePresence>
+
+      {/* Add Experience Modal */}
+      <AnimatePresence>
+        {isAddingExperience && (
+          <m.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm"
+            onClick={handleCancelAddExperience}
+          >
+            <m.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+              className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52] to-[#0f2540] border border-[#00d4ff]/30 shadow-2xl"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-3xl font-bold text-white">Add New Experience</h2>
+                <m.button
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={handleCancelAddExperience}
+                  className="p-2 rounded-full bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444]"
+                >
+                  <X className="w-6 h-6" />
+                </m.button>
+              </div>
+
+              <div className="space-y-6">
+                {/* Company and Position */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-bold text-gray-400 mb-2">Company *</label>
+                    <input
+                      type="text"
+                      value={newExperience.company}
+                      onChange={(e) => setNewExperience({ ...newExperience, company: e.target.value })}
+                      placeholder="e.g. Google, Microsoft"
+                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-400 mb-2">Position *</label>
+                    <input
+                      type="text"
+                      value={newExperience.position}
+                      onChange={(e) => setNewExperience({ ...newExperience, position: e.target.value })}
+                      placeholder="e.g. Software Engineer"
+                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                    />
+                  </div>
+                </div>
+
+                {/* Location */}
+                <div>
+                  <label className="block text-sm font-bold text-gray-400 mb-2">Location</label>
+                  <input
+                    type="text"
+                    value={newExperience.location}
+                    onChange={(e) => setNewExperience({ ...newExperience, location: e.target.value })}
+                    placeholder="e.g. San Francisco, CA"
+                    className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                  />
+                </div>
+
+                {/* Dates */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-bold text-gray-400 mb-2">Start Date *</label>
+                    <input
+                      type="date"
+                      value={newExperience.startDate}
+                      onChange={(e) => setNewExperience({ ...newExperience, startDate: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-400 mb-2">End Date</label>
+                    <input
+                      type="date"
+                      value={newExperience.endDate}
+                      onChange={(e) => setNewExperience({ ...newExperience, endDate: e.target.value })}
+                      disabled={newExperience.current}
+                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                </div>
+
+                {/* Current Position Checkbox */}
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    id="current"
+                    checked={newExperience.current}
+                    onChange={(e) => setNewExperience({ ...newExperience, current: e.target.checked, endDate: e.target.checked ? '' : newExperience.endDate })}
+                    className="w-4 h-4 text-[#00d4ff] bg-[#0f2540] border-[#00d4ff]/20 rounded focus:ring-[#00d4ff] focus:ring-2"
+                  />
+                  <label htmlFor="current" className="text-white font-semibold">I currently work here</label>
+                </div>
+
+                {/* Description */}
+                <div>
+                  <label className="block text-sm font-bold text-gray-400 mb-2">Description</label>
+                  <textarea
+                    rows={4}
+                    value={newExperience.description}
+                    onChange={(e) => setNewExperience({ ...newExperience, description: e.target.value })}
+                    placeholder="Describe your responsibilities, achievements, and key contributions..."
+                    className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all resize-none"
+                  />
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <m.button
+                    type="button"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleCancelAddExperience}
+                    className="flex-1 px-6 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white font-bold hover:border-[#00d4ff]/50 transition-all"
+                  >
+                    Cancel
+                  </m.button>
+                  <m.button
+                    type="button"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={saveNewExperience}
+                    disabled={saving}
+                    className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {saving ? 'Saving...' : 'Add Experience'}
                   </m.button>
                 </div>
               </div>
