@@ -284,6 +284,50 @@ export default function DashboardPage() {
     return Math.round(totalDays / responded.length)
   }
 
+  // Check and unlock achievements based on current stats
+  useEffect(() => {
+    if (applications.length > 0 && unlockedAchievementIds.length >= 0) {
+      // Check each achievement condition
+      if (stats.total >= 1 && !unlockedAchievementIds.includes(1)) {
+        unlockAchievement(1) // First Step
+      }
+      if (stats.total >= 5 && !unlockedAchievementIds.includes(2)) {
+        unlockAchievement(2) // Getting Started
+      }
+      if (stats.total >= 10 && !unlockedAchievementIds.includes(3)) {
+        unlockAchievement(3) // Job Hunter
+      }
+      if (stats.total >= 25 && !unlockedAchievementIds.includes(4)) {
+        unlockAchievement(4) // Persistent
+      }
+      if (stats.total >= 50 && !unlockedAchievementIds.includes(5)) {
+        unlockAchievement(5) // Dedicated
+      }
+      if (stats.interviewing >= 1 && !unlockedAchievementIds.includes(6)) {
+        unlockAchievement(6) // Interview Ready
+      }
+      if (stats.offers >= 1 && !unlockedAchievementIds.includes(7)) {
+        unlockAchievement(7) // Offer Received!
+      }
+      if (streak >= 3 && !unlockedAchievementIds.includes(8)) {
+        unlockAchievement(8) // On Fire
+      }
+      if (stats.highPriority >= 5 && !unlockedAchievementIds.includes(9)) {
+        unlockAchievement(9) // Focused
+      }
+      if (stats.successRate >= 10 && !unlockedAchievementIds.includes(10)) {
+        unlockAchievement(10) // Success Rate
+      }
+      
+      // Update user stats
+      updateUserStats({
+        totalApplications: stats.total,
+        currentStreak: streak,
+        lastApplicationDate: applications[0]?.applicationDate,
+      })
+    }
+  }, [applications.length, stats.total, stats.interviewing, stats.offers, stats.highPriority, stats.successRate, streak, unlockedAchievementIds])
+
   // Filter and sort applications
   const filteredApplications = applications
     .filter((app) => {
