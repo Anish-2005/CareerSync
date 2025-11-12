@@ -70,14 +70,14 @@ export default function DashboardPage() {
 
   // Motivational Quotes
   const quotes = [
-    "Every application is a step closer to your dream job! 🚀",
-    "You're not just applying, you're building your future! 💪",
-    "Rejection is redirection to something better! ✨",
-    "Your next opportunity is waiting! Keep going! 🌟",
-    "Success is the sum of small efforts repeated! 🎯",
-    "The only way to do great work is to love what you do! ❤️",
-    "Believe you can and you're halfway there! 🌈",
-    "Dream big, work hard, stay focused! 🔥",
+    "Every application is a step closer to your dream job!",
+    "You're not just applying, you're building your future!",
+    "Rejection is redirection to something better!",
+    "Your next opportunity is waiting! Keep going!",
+    "Success is the sum of small efforts repeated!",
+    "The only way to do great work is to love what you do!",
+    "Believe you can and you're halfway there!",
+    "Dream big, work hard, stay focused!",
   ]
 
   // Form state for adding applications
@@ -446,11 +446,11 @@ export default function DashboardPage() {
     }
   }
 
-  const getPriorityEmoji = (priority: Application["priority"]) => {
+  const getPriorityIcon = (priority: Application["priority"]) => {
     switch (priority) {
-      case "high": return "🔥"
-      case "medium": return "⚡"
-      case "low": return "📌"
+      case "high": return <Flame className="w-4 h-4 text-red-500 inline" />
+      case "medium": return <Zap className="w-4 h-4 text-yellow-500 inline" />
+      case "low": return <Target className="w-4 h-4 text-blue-500 inline" />
     }
   }
 
@@ -519,7 +519,10 @@ export default function DashboardPage() {
                   <Trophy className="w-8 h-8 text-white" />
                 </div>
                 <div>
-                  <div className="text-white font-bold text-lg mb-1">🎉 Achievement Unlocked!</div>
+                  <div className="text-white font-bold text-lg mb-1 flex items-center gap-2">
+                    <PartyPopper className="w-5 h-5" />
+                    Achievement Unlocked!
+                  </div>
                   <div className="text-white/90 text-sm">
                     {unlockedAchievements[unlockedAchievements.length - 1]?.name}
                   </div>
@@ -567,8 +570,8 @@ export default function DashboardPage() {
             className="flex items-center gap-3 cursor-pointer"
             onClick={handleLogoClick}
           >
-            <div className={`relative w-12 h-12 bg-gradient-to-br from-[#ff6b00] to-[#00d4ff] rounded-full flex items-center justify-center shadow-lg shadow-[#ff6b00]/50 ${partyMode ? 'animate-bounce' : ''}`}>
-              <Zap className="w-7 h-7 text-white" />
+            <div className={`relative w-12 h-12 flex items-center justify-center ${partyMode ? 'animate-bounce' : ''}`}>
+              <img src="/csync.png" alt="CareerSync" className="w-full h-full object-contain" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] bg-clip-text text-transparent">
               CareerSync
@@ -748,7 +751,7 @@ export default function DashboardPage() {
             { label: "Total Apps", value: stats.total, icon: Briefcase, color: "#00d4ff", subtitle: "All time" },
             { label: "Active", value: stats.applied, icon: Send, color: "#00d4ff", subtitle: "Awaiting response" },
             { label: "Interviews", value: stats.interviewing, icon: Users, color: "#ff6b00", subtitle: "In progress" },
-            { label: "Offers", value: stats.offers, icon: Trophy, color: "#00ff88", subtitle: "🎉 Success!" },
+            { label: "Offers", value: stats.offers, icon: Trophy, color: "#00ff88", subtitle: "Success!" },
             { label: "Response Rate", value: `${stats.responseRate}%`, icon: TrendingUp, color: "#00ff88", subtitle: "Companies replied" },
           ].map((stat, idx) => (
             <m.div
@@ -789,7 +792,8 @@ export default function DashboardPage() {
             >
               <div className="flex items-center gap-3 mb-4">
                 <Sparkles className="w-6 h-6 text-[#00ff88]" />
-                <h3 className="text-xl font-bold text-white">🎉 Secret Stats Unlocked!</h3>
+                <PartyPopper className="w-6 h-6 text-[#00ff88]" />
+                <h3 className="text-xl font-bold text-white">Secret Stats Unlocked!</h3>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center">
@@ -975,7 +979,7 @@ export default function DashboardPage() {
                           </div>
                         </div>
 
-                        <span className="text-2xl flex-shrink-0">{getPriorityEmoji(app.priority)}</span>
+                        <span className="flex-shrink-0">{getPriorityIcon(app.priority)}</span>
                       </div>
 
                       {/* Status Badge */}
@@ -1223,9 +1227,9 @@ export default function DashboardPage() {
                       onChange={(e) => setFormData({...formData, priority: e.target.value as Application['priority']})}
                       className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all"
                     >
-                      <option value="high">🔥 High</option>
-                      <option value="medium">⚡ Medium</option>
-                      <option value="low">📌 Low</option>
+                      <option value="high">High</option>
+                      <option value="medium">Medium</option>
+                      <option value="low">Low</option>
                     </select>
                   </div>
                 </div>
@@ -1325,7 +1329,9 @@ export default function DashboardPage() {
                     <h3 className="text-2xl font-bold text-white mb-2">{selectedApp.company}</h3>
                     <p className="text-xl text-gray-300">{selectedApp.position}</p>
                   </div>
-                  <span className="text-5xl">{getPriorityEmoji(selectedApp.priority)}</span>
+                  <div className="p-4 bg-white/5 rounded-lg flex items-center justify-center">
+                    <div className="scale-150">{getPriorityIcon(selectedApp.priority)}</div>
+                  </div>
                 </div>
 
                 {/* Status */}
@@ -1564,11 +1570,11 @@ export default function DashboardPage() {
                         }`} />
                       </div>
                       <div className="flex-1">
-                        <h3 className={`text-lg font-bold mb-1 ${
+                        <h3 className={`text-lg font-bold mb-1 flex items-center gap-2 ${
                           achievement.unlocked ? 'text-white' : 'text-gray-500'
                         }`}>
                           {achievement.name}
-                          {achievement.unlocked && <span className="ml-2">✨</span>}
+                          {achievement.unlocked && <Sparkles className="w-4 h-4 text-[#00ff88]" />}
                         </h3>
                         <p className={achievement.unlocked ? 'text-gray-300' : 'text-gray-600'}>
                           {achievement.description}

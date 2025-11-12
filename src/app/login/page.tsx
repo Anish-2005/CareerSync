@@ -128,8 +128,8 @@ export default function LoginPage() {
             whileHover={{ scale: 1.05 }}
             className="inline-flex items-center gap-3 mb-6"
           >
-            <div className="relative w-16 h-16 bg-gradient-to-br from-[#ff6b00] to-[#00d4ff] rounded-full flex items-center justify-center shadow-lg shadow-[#ff6b00]/50">
-              <Zap className="w-8 h-8 text-white" />
+            <div className="relative w-16 h-16 flex items-center justify-center">
+              <img src="/csync.png" alt="CareerSync" className="w-full h-full object-contain" />
             </div>
             <span className="text-3xl font-bold bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] bg-clip-text text-transparent">
               CareerSync

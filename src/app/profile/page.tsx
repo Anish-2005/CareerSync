@@ -965,8 +965,8 @@ export default function ProfilePage() {
       >
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <m.div whileHover={{ scale: 1.05 }} className="flex items-center gap-3">
-            <div className="relative w-12 h-12 bg-gradient-to-br from-[#ff6b00] to-[#00d4ff] rounded-full flex items-center justify-center shadow-lg shadow-[#ff6b00]/50">
-              <Zap className="w-7 h-7 text-white" />
+            <div className="relative w-12 h-12 flex items-center justify-center">
+              <img src="/csync.png" alt="CareerSync" className="w-full h-full object-contain" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] bg-clip-text text-transparent">
               CareerSync
