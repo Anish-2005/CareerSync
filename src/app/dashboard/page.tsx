@@ -1,35 +1,15 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import React, { useEffect, useState, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
-  Target,
-  TrendingUp,
-  Calendar,
-  Briefcase,
-  Clock,
-  CheckCircle2,
-  XCircle,
-  AlertCircle,
-  Plus,
-  Search,
-  Filter,
-  BarChart3,
-  FileText,
-  Link as LinkIcon,
-  MapPin,
-  DollarSign,
-  Users,
-  Building2,
-  Send,
-  Eye,
-  Edit,
-  Trash2,
-  ChevronRight,
-  Activity,
-  Zap,
-  ArrowUpRight,
-  ArrowDownRight,
+  Target, TrendingUp, Calendar, Briefcase, Clock, CheckCircle2, XCircle, AlertCircle,
+  Plus, Search, Filter, BarChart3, FileText, Link as LinkIcon, MapPin, DollarSign,
+  Users, Building2, Send, Eye, Edit, Trash2, ChevronRight, Activity, Zap,
+  ArrowUpRight, ArrowDownRight, Star, Trophy, Flame, Coffee, Sparkles, Rocket,
+  Timer, Download, Upload, Share2, Bell, Settings, Award, TrendingDown,
+  ChevronLeft, ExternalLink, MessageSquare, Phone, Mail, Linkedin, Github,
+  PartyPopper, Moon, Sun, Volume2, VolumeX, Palette, Glasses,
 } from "lucide-react"
 import { RouteGuard } from "@/components/RouteGuard"
 import { useAuth } from "@/contexts/AuthContext"
@@ -56,6 +36,9 @@ interface Application {
   updatedAt: Date
 }
 
+// Easter Egg: Konami Code
+const KONAMI_CODE = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']
+
 export default function DashboardPage() {
   const { user, logout, getIdToken } = useAuth()
   const [applications, setApplications] = useState<Application[]>([])
@@ -64,6 +47,45 @@ export default function DashboardPage() {
   const [selectedTab, setSelectedTab] = useState<"all" | "applied" | "interview" | "offer" | "rejected" | "withdrawn">("all")
   const [searchQuery, setSearchQuery] = useState("")
   const [showAddModal, setShowAddModal] = useState(false)
+  const [showDetailModal, setShowDetailModal] = useState(false)
+  const [selectedApp, setSelectedApp] = useState<Application | null>(null)
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list")
+  const [sortBy, setSortBy] = useState<"date" | "company" | "priority">("date")
+  const [showAchievements, setShowAchievements] = useState(false)
+  
+  // Easter Eggs State
+  const [konamiProgress, setKonamiProgress] = useState(0)
+  const [partyMode, setPartyMode] = useState(false)
+  const [clickCount, setClickCount] = useState(0)
+  const [showSecretStats, setShowSecretStats] = useState(false)
+  const [motivationalQuote, setMotivationalQuote] = useState("")
+  const [streak, setStreak] = useState(0)
+  const [soundEnabled, setSoundEnabled] = useState(false)
+
+  // Motivational Quotes
+  const quotes = [
+    "Every application is a step closer to your dream job! 🚀",
+    "You're not just applying, you're building your future! 💪",
+    "Rejection is redirection to something better! ✨",
+    "Your next opportunity is waiting! Keep going! 🌟",
+    "Success is the sum of small efforts repeated! 🎯",
+    "The only way to do great work is to love what you do! ❤️",
+    "Believe you can and you're halfway there! 🌈",
+    "Dream big, work hard, stay focused! 🔥",
+  ]
+
+  // Form state for adding applications
+  const [formData, setFormData] = useState({
+    company: '',
+    position: '',
+    location: '',
+    salary: '',
+    status: 'applied' as Application['status'],
+    priority: 'medium' as Application['priority'],
+    notes: '',
+    jobUrl: '',
+    contactInfo: '',
+  })
 
   // Fetch applications from API
   const fetchApplications = async () => {
@@ -82,6 +104,7 @@ export default function DashboardPage() {
 
       const data = await response.json()
       setApplications(data.applications || [])
+      calculateStreak(data.applications || [])
       setError(null)
     } catch (err) {
       console.error('Error fetching applications:', err)
@@ -94,8 +117,69 @@ export default function DashboardPage() {
   useEffect(() => {
     if (user) {
       fetchApplications()
+      setMotivationalQuote(quotes[Math.floor(Math.random() * quotes.length)])
     }
   }, [user])
+
+  // Calculate application streak
+  const calculateStreak = (apps: Application[]) => {
+    const sortedApps = [...apps].sort((a, b) => 
+      new Date(b.applicationDate).getTime() - new Date(a.applicationDate).getTime()
+    )
+    
+    let currentStreak = 0
+    let lastDate: Date | null = null
+    
+    for (const app of sortedApps) {
+      const appDate = new Date(app.applicationDate)
+      appDate.setHours(0, 0, 0, 0)
+      
+      if (!lastDate) {
+        currentStreak = 1
+        lastDate = appDate
+      } else {
+        const diffDays = Math.floor((lastDate.getTime() - appDate.getTime()) / (1000 * 60 * 60 * 24))
+        if (diffDays <= 1) {
+          currentStreak++
+          lastDate = appDate
+        } else {
+          break
+        }
+      }
+    }
+    
+    setStreak(currentStreak)
+  }
+
+  // Konami Code Easter Egg
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === KONAMI_CODE[konamiProgress]) {
+        const newProgress = konamiProgress + 1
+        setKonamiProgress(newProgress)
+        
+        if (newProgress === KONAMI_CODE.length) {
+          setPartyMode(true)
+          setKonamiProgress(0)
+          setTimeout(() => setPartyMode(false), 10000)
+        }
+      } else {
+        setKonamiProgress(0)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [konamiProgress])
+
+  // Logo click Easter Egg
+  const handleLogoClick = () => {
+    setClickCount(prev => prev + 1)
+    if (clickCount + 1 === 10) {
+      setShowSecretStats(true)
+      setClickCount(0)
+    }
+  }
 
   // Calculate stats
   const stats = {
@@ -104,53 +188,176 @@ export default function DashboardPage() {
     interviewing: applications.filter((a) => a.status === "interview").length,
     offers: applications.filter((a) => a.status === "offer").length,
     rejected: applications.filter((a) => a.status === "rejected").length,
-    responseRate: Math.round(
-      ((applications.length - applications.filter((a) => a.status === "applied").length) / applications.length) * 100
-    ),
+    withdrawn: applications.filter((a) => a.status === "withdrawn").length,
+    responseRate: applications.length > 0 
+      ? Math.round(((applications.length - applications.filter((a) => a.status === "applied").length) / applications.length) * 100)
+      : 0,
+    highPriority: applications.filter((a) => a.priority === "high").length,
+    avgDaysToResponse: calculateAvgDaysToResponse(),
+    successRate: applications.length > 0
+      ? Math.round((applications.filter((a) => a.status === "offer").length / applications.length) * 100)
+      : 0,
   }
 
-  // Filter applications
-  const filteredApplications = applications.filter((app) => {
-    const matchesTab = selectedTab === "all" || app.status === selectedTab
-    const matchesSearch =
-      app.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      app.position.toLowerCase().includes(searchQuery.toLowerCase())
-    return matchesTab && matchesSearch
-  })
+  function calculateAvgDaysToResponse() {
+    const responded = applications.filter(a => a.status !== 'applied')
+    if (responded.length === 0) return 0
+    
+    const totalDays = responded.reduce((sum, app) => {
+      const applied = new Date(app.applicationDate).getTime()
+      const updated = new Date(app.lastUpdated).getTime()
+      return sum + Math.floor((updated - applied) / (1000 * 60 * 60 * 24))
+    }, 0)
+    
+    return Math.round(totalDays / responded.length)
+  }
 
+  // Filter and sort applications
+  const filteredApplications = applications
+    .filter((app) => {
+      const matchesTab = selectedTab === "all" || app.status === selectedTab
+      const matchesSearch =
+        app.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        app.position.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (app.location && app.location.toLowerCase().includes(searchQuery.toLowerCase()))
+      return matchesTab && matchesSearch
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'company':
+          return a.company.localeCompare(b.company)
+        case 'priority':
+          const priorityOrder = { high: 0, medium: 1, low: 2 }
+          return priorityOrder[a.priority] - priorityOrder[b.priority]
+        case 'date':
+        default:
+          return new Date(b.applicationDate).getTime() - new Date(a.applicationDate).getTime()
+      }
+    })
+
+  // Add new application
+  const handleAddApplication = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    try {
+      const token = await getIdToken()
+      const response = await fetch('/api/applications', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          applicationDate: new Date(),
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to add application')
+      }
+
+      await fetchApplications()
+      setShowAddModal(false)
+      setFormData({
+        company: '',
+        position: '',
+        location: '',
+        salary: '',
+        status: 'applied',
+        priority: 'medium',
+        notes: '',
+        jobUrl: '',
+        contactInfo: '',
+      })
+      
+      // Play success sound if enabled
+      if (soundEnabled) {
+        playSound('success')
+      }
+    } catch (err) {
+      console.error('Error adding application:', err)
+      setError('Failed to add application')
+      setTimeout(() => setError(null), 3000)
+    }
+  }
+
+  // Delete application
+  const handleDeleteApplication = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this application?')) return
+
+    try {
+      const token = await getIdToken()
+      const response = await fetch(`/api/applications/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to delete application')
+      }
+
+      await fetchApplications()
+    } catch (err) {
+      console.error('Error deleting application:', err)
+      setError('Failed to delete application')
+      setTimeout(() => setError(null), 3000)
+    }
+  }
+
+  // Utility functions
   const getStatusColor = (status: Application["status"]) => {
     switch (status) {
-      case "applied":
-        return "#00d4ff"
-      case "interview":
-        return "#ff6b00"
-      case "offer":
-        return "#00ff88"
-      case "rejected":
-        return "#ff4444"
-      case "withdrawn":
-        return "#666"
-      default:
-        return "#666"
+      case "applied": return "#00d4ff"
+      case "interview": return "#ff6b00"
+      case "offer": return "#00ff88"
+      case "rejected": return "#ff4444"
+      case "withdrawn": return "#666"
+      default: return "#666"
     }
   }
 
   const getStatusIcon = (status: Application["status"]) => {
     switch (status) {
-      case "applied":
-        return Send
-      case "interview":
-        return Users
-      case "offer":
-        return CheckCircle2
-      case "rejected":
-        return XCircle
-      case "withdrawn":
-        return AlertCircle
-      default:
-        return AlertCircle
+      case "applied": return Send
+      case "interview": return Users
+      case "offer": return CheckCircle2
+      case "rejected": return XCircle
+      case "withdrawn": return AlertCircle
+      default: return AlertCircle
     }
   }
+
+  const getPriorityEmoji = (priority: Application["priority"]) => {
+    switch (priority) {
+      case "high": return "🔥"
+      case "medium": return "⚡"
+      case "low": return "📌"
+    }
+  }
+
+  const playSound = (type: 'success' | 'error') => {
+    // In a real app, you'd play actual sound files
+    console.log(`🔊 Playing ${type} sound`)
+  }
+
+  // Achievements system
+  const achievements = [
+    { id: 1, name: "First Step", description: "Applied to your first job", unlocked: applications.length >= 1, icon: Rocket },
+    { id: 2, name: "Getting Started", description: "Applied to 5 jobs", unlocked: applications.length >= 5, icon: Target },
+    { id: 3, name: "Job Hunter", description: "Applied to 10 jobs", unlocked: applications.length >= 10, icon: Briefcase },
+    { id: 4, name: "Persistent", description: "Applied to 25 jobs", unlocked: applications.length >= 25, icon: Trophy },
+    { id: 5, name: "Dedicated", description: "Applied to 50 jobs", unlocked: applications.length >= 50, icon: Award },
+    { id: 6, name: "Interview Ready", description: "Got your first interview", unlocked: stats.interviewing >= 1, icon: Users },
+    { id: 7, name: "Offer Received!", description: "Got your first offer", unlocked: stats.offers >= 1, icon: Star },
+    { id: 8, name: "On Fire", description: "3-day application streak", unlocked: streak >= 3, icon: Flame },
+    { id: 9, name: "Focused", description: "5 high priority applications", unlocked: stats.highPriority >= 5, icon: Zap },
+    { id: 10, name: "Success Rate", description: "Achieved 10% offer rate", unlocked: stats.successRate >= 10, icon: TrendingUp },
+  ]
+
+  const unlockedAchievements = achievements.filter(a => a.unlocked)
 
   return (
     <RouteGuard>
@@ -158,6 +365,53 @@ export default function DashboardPage() {
         className="min-h-screen overflow-hidden bg-gradient-to-b from-[#0a1428] via-[#1a2d4d] to-[#0a1428]"
         style={{ fontFamily: '"Geist", sans-serif' }}
       >
+      {/* Error Notification */}
+      <AnimatePresence>
+        {error && (
+          <m.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full mx-4"
+          >
+            <div className="p-4 rounded-xl bg-gradient-to-br from-[#ff4444]/90 to-[#ff6b00]/90 backdrop-blur-md border border-[#ff4444]/50 shadow-lg flex items-center gap-3">
+              <XCircle className="w-5 h-5 text-white flex-shrink-0" />
+              <p className="text-white font-semibold flex-1">{error}</p>
+              <button
+                onClick={() => setError(null)}
+                className="p-1 rounded-full hover:bg-white/20 transition-all"
+              >
+                <XCircle className="w-4 h-4 text-white" />
+              </button>
+            </div>
+          </m.div>
+        )}
+      </AnimatePresence>
+
+      {/* Party Mode Confetti */}
+      <AnimatePresence>
+        {partyMode && (
+          <div className="fixed inset-0 pointer-events-none z-50">
+            {[...Array(50)].map((_, i) => (
+              <m.div
+                key={i}
+                initial={{ y: -100, x: Math.random() * window.innerWidth, opacity: 1 }}
+                animate={{ 
+                  y: window.innerHeight + 100,
+                  rotate: Math.random() * 360,
+                  opacity: 0
+                }}
+                transition={{ duration: 2 + Math.random() * 2, delay: Math.random() * 0.5 }}
+                className="absolute w-3 h-3 rounded-full"
+                style={{
+                  background: ['#ff6b00', '#00d4ff', '#00ff88', '#ff4444'][Math.floor(Math.random() * 4)]
+                }}
+              />
+            ))}
+          </div>
+        )}
+      </AnimatePresence>
+
       {/* Navigation */}
       <m.nav
         initial={{ opacity: 0, y: -20 }}
@@ -166,8 +420,12 @@ export default function DashboardPage() {
         className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[#0a1428]/80 border-b border-[#00d4ff]/20"
       >
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <m.div whileHover={{ scale: 1.05 }} className="flex items-center gap-3">
-            <div className="relative w-12 h-12 bg-gradient-to-br from-[#ff6b00] to-[#00d4ff] rounded-full flex items-center justify-center shadow-lg shadow-[#ff6b00]/50">
+          <m.div 
+            whileHover={{ scale: 1.05 }} 
+            className="flex items-center gap-3 cursor-pointer"
+            onClick={handleLogoClick}
+          >
+            <div className={`relative w-12 h-12 bg-gradient-to-br from-[#ff6b00] to-[#00d4ff] rounded-full flex items-center justify-center shadow-lg shadow-[#ff6b00]/50 ${partyMode ? 'animate-bounce' : ''}`}>
               <Zap className="w-7 h-7 text-white" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] bg-clip-text text-transparent">
@@ -176,6 +434,26 @@ export default function DashboardPage() {
           </m.div>
 
           <div className="flex items-center gap-3">
+            <m.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setSoundEnabled(!soundEnabled)}
+              className="p-2 text-white rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+              title={soundEnabled ? "Sound On" : "Sound Off"}
+            >
+              {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+            </m.button>
+            
+            <m.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowAchievements(true)}
+              className="px-4 py-2 text-white text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+            >
+              <Trophy className="w-4 h-4" />
+              <span className="hidden md:inline">{unlockedAchievements.length}/{achievements.length}</span>
+            </m.button>
+
             <m.a
               href="/profile"
               whileHover={{ scale: 1.05 }}
@@ -198,7 +476,6 @@ export default function DashboardPage() {
 
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Morphing shapes */}
         <m.div
           className="absolute top-1/4 left-1/4 w-96 h-96 opacity-20"
           animate={{
@@ -237,25 +514,85 @@ export default function DashboardPage() {
 
       {/* Main Content */}
       <div className="relative z-10 pt-24 pb-12 px-6 max-w-7xl mx-auto">
-        {/* Header */}
+        {/* Header with Motivational Quote */}
         <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="mb-12"
+          className="mb-8"
         >
-          <h1
-            className="text-6xl md:text-7xl font-black mb-4 leading-none"
-            style={{
-              background: "linear-gradient(135deg, #ffffff 0%, #00d4ff 30%, #ff6b00 60%, #00ff88 90%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
+          <div className="flex items-center justify-between mb-4">
+            <h1
+              className="text-5xl md:text-6xl font-black leading-none"
+              style={{
+                background: "linear-gradient(135deg, #ffffff 0%, #00d4ff 30%, #ff6b00 60%, #00ff88 90%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              Dashboard
+            </h1>
+            
+            {streak > 0 && (
+              <m.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#ff6b00]/20 to-[#00ff88]/20 border border-[#ff6b00]/50"
+              >
+                <Flame className="w-5 h-5 text-[#ff6b00]" />
+                <span className="text-white font-bold">{streak} day streak!</span>
+              </m.div>
+            )}
+          </div>
+          
+          <m.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="text-lg text-gray-300 italic flex items-center gap-2"
           >
-            Dashboard
-          </h1>
-          <p className="text-xl text-gray-400">Track and manage your career opportunities</p>
+            <Sparkles className="w-5 h-5 text-[#00ff88]" />
+            {motivationalQuote}
+          </m.p>
+        </m.div>
+
+        {/* Quick Actions Bar */}
+        <m.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="mb-6 flex flex-wrap gap-3"
+        >
+          <m.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setShowAddModal(true)}
+            className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold flex items-center gap-2 hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all"
+          >
+            <Plus className="w-5 h-5" />
+            Add Application
+          </m.button>
+
+          <m.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
+            className="px-6 py-3 rounded-xl bg-[#1a3a52]/60 border border-[#00d4ff]/20 text-white font-bold flex items-center gap-2 hover:border-[#00d4ff]/50 transition-all"
+          >
+            <BarChart3 className="w-5 h-5" />
+            {viewMode === 'grid' ? 'List View' : 'Grid View'}
+          </m.button>
+
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as any)}
+            className="px-6 py-3 rounded-xl bg-[#1a3a52]/60 border border-[#00d4ff]/20 text-white font-bold hover:border-[#00d4ff]/50 transition-all focus:outline-none focus:border-[#00d4ff]/50"
+          >
+            <option value="date">Sort by Date</option>
+            <option value="company">Sort by Company</option>
+            <option value="priority">Sort by Priority</option>
+          </select>
         </m.div>
 
         {/* Stats Cards */}
@@ -263,21 +600,14 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8"
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8"
         >
           {[
-            { label: "Total", value: stats.total, icon: Briefcase, color: "#00d4ff", trend: "+3" },
-            { label: "Applied", value: stats.applied, icon: Send, color: "#00d4ff", trend: "+2" },
-            { label: "Interviewing", value: stats.interviewing, icon: Users, color: "#ff6b00", trend: "+1" },
-            { label: "Offers", value: stats.offers, icon: CheckCircle2, color: "#00ff88", trend: "+1" },
-            { label: "Rejected", value: stats.rejected, icon: XCircle, color: "#ff4444", trend: "0" },
-            {
-              label: "Response Rate",
-              value: `${stats.responseRate}%`,
-              icon: TrendingUp,
-              color: "#00ff88",
-              trend: "+5%",
-            },
+            { label: "Total Apps", value: stats.total, icon: Briefcase, color: "#00d4ff", subtitle: "All time" },
+            { label: "Active", value: stats.applied, icon: Send, color: "#00d4ff", subtitle: "Awaiting response" },
+            { label: "Interviews", value: stats.interviewing, icon: Users, color: "#ff6b00", subtitle: "In progress" },
+            { label: "Offers", value: stats.offers, icon: Trophy, color: "#00ff88", subtitle: "🎉 Success!" },
+            { label: "Response Rate", value: `${stats.responseRate}%`, icon: TrendingUp, color: "#00ff88", subtitle: "Companies replied" },
           ].map((stat, idx) => (
             <m.div
               key={idx}
@@ -287,7 +617,6 @@ export default function DashboardPage() {
               whileHover={{ scale: 1.05, y: -5 }}
               className="relative p-6 rounded-2xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300 overflow-hidden group cursor-pointer"
             >
-              {/* Background glow */}
               <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-xl"
                 style={{ background: `linear-gradient(135deg, ${stat.color}40, transparent)` }}
@@ -295,30 +624,58 @@ export default function DashboardPage() {
 
               <div className="relative z-10">
                 <div className="flex items-center justify-between mb-3">
-                  <stat.icon className="w-5 h-5" style={{ color: stat.color }} />
-                  <div
-                    className="flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full"
-                    style={{
-                      backgroundColor: `${stat.color}20`,
-                      color: stat.color,
-                    }}
-                  >
-                    {stat.trend.startsWith("+") ? (
-                      <ArrowUpRight className="w-3 h-3" />
-                    ) : (
-                      <ArrowDownRight className="w-3 h-3" />
-                    )}
-                    {stat.trend}
-                  </div>
+                  <stat.icon className="w-6 h-6" style={{ color: stat.color }} />
                 </div>
-                <div className="text-3xl font-black mb-1" style={{ color: stat.color }}>
+                <div className="text-4xl font-black mb-2" style={{ color: stat.color }}>
                   {stat.value}
                 </div>
-                <div className="text-sm text-gray-400">{stat.label}</div>
+                <div className="text-sm font-bold text-white mb-1">{stat.label}</div>
+                <div className="text-xs text-gray-400">{stat.subtitle}</div>
               </div>
             </m.div>
           ))}
         </m.div>
+
+        {/* Secret Stats (Easter Egg) */}
+        <AnimatePresence>
+          {showSecretStats && (
+            <m.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mb-8 p-6 rounded-2xl bg-gradient-to-br from-[#ff6b00]/20 to-[#00d4ff]/20 border-2 border-[#00ff88] overflow-hidden"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <Sparkles className="w-6 h-6 text-[#00ff88]" />
+                <h3 className="text-xl font-bold text-white">🎉 Secret Stats Unlocked!</h3>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="text-center">
+                  <div className="text-3xl font-black text-[#00ff88]">{stats.avgDaysToResponse}</div>
+                  <div className="text-sm text-gray-300">Avg Days to Response</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-black text-[#ff6b00]">{stats.successRate}%</div>
+                  <div className="text-sm text-gray-300">Success Rate</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-black text-[#00d4ff]">{stats.highPriority}</div>
+                  <div className="text-sm text-gray-300">High Priority</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-black text-[#00ff88]">{stats.withdrawn}</div>
+                  <div className="text-sm text-gray-300">Withdrawn</div>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowSecretStats(false)}
+                className="mt-4 text-gray-400 hover:text-white transition-colors text-sm"
+              >
+                Hide Stats
+              </button>
+            </m.div>
+          )}
+        </AnimatePresence>
 
         {/* Filters and Search */}
         <m.div
@@ -332,7 +689,7 @@ export default function DashboardPage() {
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type="text"
-              placeholder="Search companies or positions..."
+              placeholder="Search companies, positions, or locations..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-12 pr-4 py-4 rounded-2xl bg-[#1a3a52]/60 border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all duration-300"
@@ -342,11 +699,11 @@ export default function DashboardPage() {
           {/* Tab Filters */}
           <div className="flex gap-3 overflow-x-auto pb-2">
             {[
-              { label: "All", value: "all", count: stats.total },
-              { label: "Applied", value: "applied", count: stats.applied },
-              { label: "Interviewing", value: "interview", count: stats.interviewing },
-              { label: "Offers", value: "offer", count: stats.offers },
-              { label: "Rejected", value: "rejected", count: stats.rejected },
+              { label: "All", value: "all", count: stats.total, icon: Briefcase },
+              { label: "Applied", value: "applied", count: stats.applied, icon: Send },
+              { label: "Interviewing", value: "interview", count: stats.interviewing, icon: Users },
+              { label: "Offers", value: "offer", count: stats.offers, icon: Trophy },
+              { label: "Rejected", value: "rejected", count: stats.rejected, icon: XCircle },
             ].map((tab) => (
               <m.button
                 key={tab.value}
@@ -359,6 +716,7 @@ export default function DashboardPage() {
                     : "bg-[#1a3a52]/60 border border-[#00d4ff]/20 text-gray-400 hover:text-white hover:border-[#00d4ff]/50"
                 }`}
               >
+                <tab.icon className="w-4 h-4" />
                 {tab.label}
                 <span
                   className={`px-2 py-0.5 rounded-full text-xs font-bold ${
@@ -372,19 +730,19 @@ export default function DashboardPage() {
           </div>
         </m.div>
 
-        {/* Applications List */}
+        {/* Applications List/Grid */}
         <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="space-y-4"
+          className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' : 'space-y-4'}
         >
           {/* Loading State */}
           {loading && (
             <m.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-center py-20"
+              className="col-span-full text-center py-20"
             >
               <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#00d4ff]/20 to-[#ff6b00]/20 flex items-center justify-center">
                 <div className="w-8 h-8 border-4 border-[#00d4ff] border-t-transparent rounded-full animate-spin"></div>
@@ -399,7 +757,7 @@ export default function DashboardPage() {
             <m.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="text-center py-20"
+              className="col-span-full text-center py-20"
             >
               <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#ff4444]/20 to-[#ff6b00]/20 flex items-center justify-center">
                 <XCircle className="w-10 h-10 text-[#ff4444]" />
@@ -421,59 +779,66 @@ export default function DashboardPage() {
           {!loading && !error && (
             <AnimatePresence mode="popLayout">
               {filteredApplications.map((app, idx) => {
-              const StatusIcon = getStatusIcon(app.status)
-              const statusColor = getStatusColor(app.status)
+                const StatusIcon = getStatusIcon(app.status)
+                const statusColor = getStatusColor(app.status)
 
-              return (
-                <m.div
-                  key={app._id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ delay: idx * 0.05 }}
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  className="group relative p-6 rounded-2xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300 overflow-hidden cursor-pointer"
-                >
-                  {/* Priority indicator */}
-                  <div
-                    className={`absolute left-0 top-0 bottom-0 w-1 ${
-                      app.priority === "high"
-                        ? "bg-[#ff6b00]"
-                        : app.priority === "medium"
-                        ? "bg-[#00d4ff]"
-                        : "bg-gray-500"
-                    }`}
-                  />
+                return (
+                  <m.div
+                    key={app._id}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ delay: idx * 0.03 }}
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    className="group relative p-6 rounded-2xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300 overflow-hidden cursor-pointer"
+                    onClick={() => {
+                      setSelectedApp(app)
+                      setShowDetailModal(true)
+                    }}
+                  >
+                    {/* Priority indicator */}
+                    <div
+                      className={`absolute left-0 top-0 bottom-0 w-1 ${
+                        app.priority === "high"
+                          ? "bg-[#ff6b00]"
+                          : app.priority === "medium"
+                          ? "bg-[#00d4ff]"
+                          : "bg-gray-500"
+                      }`}
+                    />
 
-                  {/* Background glow on hover */}
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300 blur-xl"
-                    style={{ background: `linear-gradient(135deg, ${statusColor}40, transparent)` }}
-                  />
+                    {/* Background glow on hover */}
+                    <div
+                      className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300 blur-xl"
+                      style={{ background: `linear-gradient(135deg, ${statusColor}40, transparent)` }}
+                    />
 
-                  <div className="relative z-10">
-                    {/* Header */}
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center gap-4">
-                        <div
-                          className="w-14 h-14 rounded-xl flex items-center justify-center text-white font-bold text-lg"
-                          style={{
-                            background: `linear-gradient(135deg, ${statusColor}40, ${statusColor}20)`,
-                          }}
-                        >
-                          {app.company.charAt(0)}
+                    <div className="relative z-10">
+                      {/* Header */}
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-center gap-4">
+                          <div
+                            className="w-14 h-14 rounded-xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0"
+                            style={{
+                              background: `linear-gradient(135deg, ${statusColor}40, ${statusColor}20)`,
+                            }}
+                          >
+                            {app.company.charAt(0)}
+                          </div>
+                          <div className="min-w-0">
+                            <h3 className="text-xl font-bold text-white group-hover:text-[#00d4ff] transition-colors truncate">
+                              {app.company}
+                            </h3>
+                            <p className="text-gray-400 text-sm truncate">{app.position}</p>
+                          </div>
                         </div>
-                        <div>
-                          <h3 className="text-xl font-bold text-white group-hover:text-[#00d4ff] transition-colors">
-                            {app.company}
-                          </h3>
-                          <p className="text-gray-400">{app.position}</p>
-                        </div>
+
+                        <span className="text-2xl flex-shrink-0">{getPriorityEmoji(app.priority)}</span>
                       </div>
 
                       {/* Status Badge */}
                       <div
-                        className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold mb-4"
                         style={{
                           backgroundColor: `${statusColor}20`,
                           color: statusColor,
@@ -483,78 +848,95 @@ export default function DashboardPage() {
                         <StatusIcon className="w-4 h-4" />
                         {app.status.charAt(0).toUpperCase() + app.status.slice(1)}
                       </div>
-                    </div>
 
-                    {/* Details */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                      <div className="flex items-center gap-2 text-gray-400 text-sm">
-                        <Calendar className="w-4 h-4 text-[#00d4ff]" />
-                        <span>{new Date(app.applicationDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
-                      </div>
-                      {app.salary && (
-                        <div className="flex items-center gap-2 text-gray-400 text-sm">
-                          <DollarSign className="w-4 h-4 text-[#00ff88]" />
-                          <span>{app.salary}</span>
+                      {/* Details */}
+                      <div className="space-y-2 mb-4 text-sm">
+                        <div className="flex items-center gap-2 text-gray-400">
+                          <Calendar className="w-4 h-4 text-[#00d4ff]" />
+                          <span>{new Date(app.applicationDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
                         </div>
-                      )}
-                      <div className="flex items-center gap-2 text-gray-400 text-sm">
-                        <MapPin className="w-4 h-4 text-[#ff6b00]" />
-                        <span>{app.location || 'Remote'}</span>
+                        {app.location && (
+                          <div className="flex items-center gap-2 text-gray-400">
+                            <MapPin className="w-4 h-4 text-[#ff6b00]" />
+                            <span className="truncate">{app.location}</span>
+                          </div>
+                        )}
+                        {app.salary && (
+                          <div className="flex items-center gap-2 text-gray-400">
+                            <DollarSign className="w-4 h-4 text-[#00ff88]" />
+                            <span>{app.salary}</span>
+                          </div>
+                        )}
                       </div>
-                    </div>
 
-                    {/* Progress Bar */}
-                    <div className="mb-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-gray-400">Progress</span>
-                        <span className="text-sm font-bold" style={{ color: statusColor }}>
-                          {app.progress}%
-                        </span>
+                      {/* Progress Bar */}
+                      <div className="mb-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-xs text-gray-400">Progress</span>
+                          <span className="text-xs font-bold" style={{ color: statusColor }}>
+                            {app.progress}%
+                          </span>
+                        </div>
+                        <div className="h-2 bg-[#0f2540] rounded-full overflow-hidden">
+                          <m.div
+                            initial={{ width: 0 }}
+                            animate={{ width: `${app.progress}%` }}
+                            transition={{ duration: 1, delay: idx * 0.05 }}
+                            className="h-full rounded-full"
+                            style={{
+                              background: `linear-gradient(90deg, ${statusColor}, ${statusColor}80)`,
+                            }}
+                          />
+                        </div>
                       </div>
-                      <div className="h-2 bg-[#0f2540] rounded-full overflow-hidden">
-                        <m.div
-                          initial={{ width: 0 }}
-                          animate={{ width: `${app.progress}%` }}
-                          transition={{ duration: 1, delay: idx * 0.1 }}
-                          className="h-full rounded-full"
-                          style={{
-                            background: `linear-gradient(90deg, ${statusColor}, ${statusColor}80)`,
-                          }}
-                        />
-                      </div>
-                    </div>
 
-                    {/* Actions */}
-                    <div className="flex items-center justify-end">
-                      <div className="flex items-center gap-2">
+                      {/* Actions */}
+                      <div className="flex items-center justify-end gap-2">
                         <m.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
+                          onClick={(e: React.MouseEvent) => {
+                            e.stopPropagation()
+                            setSelectedApp(app)
+                            setShowDetailModal(true)
+                          }}
                           className="p-2 rounded-lg bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] hover:bg-[#00d4ff]/30 transition-all"
+                          title="View Details"
                         >
                           <Eye className="w-4 h-4" />
                         </m.button>
+                        {app.jobUrl && (
+                          <m.a
+                            href={app.jobUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                            className="p-2 rounded-lg bg-[#ff6b00]/20 border border-[#ff6b00]/50 text-[#ff6b00] hover:bg-[#ff6b00]/30 transition-all"
+                            title="View Job Posting"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                          </m.a>
+                        )}
                         <m.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
-                          className="p-2 rounded-lg bg-[#ff6b00]/20 border border-[#ff6b00]/50 text-[#ff6b00] hover:bg-[#ff6b00]/30 transition-all"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </m.button>
-                        <m.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
+                          onClick={(e: React.MouseEvent) => {
+                            e.stopPropagation()
+                            handleDeleteApplication(app._id)
+                          }}
                           className="p-2 rounded-lg bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444] hover:bg-[#ff4444]/30 transition-all"
+                          title="Delete"
                         >
                           <Trash2 className="w-4 h-4" />
                         </m.button>
                       </div>
                     </div>
-                  </div>
-                </m.div>
-              )
-            })}
-          </AnimatePresence>
+                  </m.div>
+                )
+              })}
+            </AnimatePresence>
           )}
 
           {/* Empty State */}
@@ -562,7 +944,7 @@ export default function DashboardPage() {
             <m.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="text-center py-20"
+              className="col-span-full text-center py-20"
             >
               <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#00d4ff]/20 to-[#ff6b00]/20 flex items-center justify-center">
                 <Briefcase className="w-10 h-10 text-gray-500" />
@@ -575,8 +957,9 @@ export default function DashboardPage() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setShowAddModal(true)}
-                className="px-8 py-3 text-white font-bold rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
+                className="px-8 py-3 text-white font-bold rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300 flex items-center gap-2 mx-auto"
               >
+                <Plus className="w-5 h-5" />
                 Add Your First Application
               </m.button>
             </m.div>
@@ -599,10 +982,13 @@ export default function DashboardPage() {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
               onClick={(e: React.MouseEvent) => e.stopPropagation()}
-              className="relative w-full max-w-2xl p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52] to-[#0f2540] border border-[#00d4ff]/30 shadow-2xl"
+              className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52] to-[#0f2540] border border-[#00d4ff]/30 shadow-2xl"
             >
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-3xl font-bold text-white">New Application</h2>
+                <h2 className="text-3xl font-bold text-white flex items-center gap-3">
+                  <Rocket className="w-8 h-8 text-[#00d4ff]" />
+                  New Application
+                </h2>
                 <m.button
                   whileHover={{ scale: 1.1, rotate: 90 }}
                   whileTap={{ scale: 0.9 }}
@@ -613,13 +999,16 @@ export default function DashboardPage() {
                 </m.button>
               </div>
 
-              <form className="space-y-4">
+              <form onSubmit={handleAddApplication} className="space-y-4">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-bold text-gray-400 mb-2">Company *</label>
                     <input
                       type="text"
+                      value={formData.company}
+                      onChange={(e) => setFormData({...formData, company: e.target.value})}
                       placeholder="Google, Microsoft..."
+                      required
                       className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
                     />
                   </div>
@@ -627,7 +1016,10 @@ export default function DashboardPage() {
                     <label className="block text-sm font-bold text-gray-400 mb-2">Position *</label>
                     <input
                       type="text"
+                      value={formData.position}
+                      onChange={(e) => setFormData({...formData, position: e.target.value})}
                       placeholder="Software Engineer..."
+                      required
                       className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
                     />
                   </div>
@@ -638,7 +1030,9 @@ export default function DashboardPage() {
                     <label className="block text-sm font-bold text-gray-400 mb-2">Location</label>
                     <input
                       type="text"
-                      placeholder="San Francisco, CA"
+                      value={formData.location}
+                      onChange={(e) => setFormData({...formData, location: e.target.value})}
+                      placeholder="San Francisco, CA / Remote"
                       className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
                     />
                   </div>
@@ -646,37 +1040,72 @@ export default function DashboardPage() {
                     <label className="block text-sm font-bold text-gray-400 mb-2">Salary Range</label>
                     <input
                       type="text"
+                      value={formData.salary}
+                      onChange={(e) => setFormData({...formData, salary: e.target.value})}
                       placeholder="$100k - $150k"
                       className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
                     />
                   </div>
                 </div>
 
+                <div>
+                  <label className="block text-sm font-bold text-gray-400 mb-2">Job URL</label>
+                  <input
+                    type="url"
+                    value={formData.jobUrl}
+                    onChange={(e) => setFormData({...formData, jobUrl: e.target.value})}
+                    placeholder="https://example.com/job"
+                    className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                  />
+                </div>
+
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-bold text-gray-400 mb-2">Status *</label>
-                    <select className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all">
+                    <select 
+                      value={formData.status}
+                      onChange={(e) => setFormData({...formData, status: e.target.value as Application['status']})}
+                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                    >
                       <option value="applied">Applied</option>
-                      <option value="interviewing">Interviewing</option>
+                      <option value="interview">Interviewing</option>
                       <option value="offer">Offer</option>
                       <option value="rejected">Rejected</option>
+                      <option value="withdrawn">Withdrawn</option>
                     </select>
                   </div>
                   <div>
                     <label className="block text-sm font-bold text-gray-400 mb-2">Priority</label>
-                    <select className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all">
-                      <option value="high">High</option>
-                      <option value="medium">Medium</option>
-                      <option value="low">Low</option>
+                    <select 
+                      value={formData.priority}
+                      onChange={(e) => setFormData({...formData, priority: e.target.value as Application['priority']})}
+                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                    >
+                      <option value="high">🔥 High</option>
+                      <option value="medium">⚡ Medium</option>
+                      <option value="low">📌 Low</option>
                     </select>
                   </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-gray-400 mb-2">Contact Info</label>
+                  <input
+                    type="text"
+                    value={formData.contactInfo}
+                    onChange={(e) => setFormData({...formData, contactInfo: e.target.value})}
+                    placeholder="recruiter@company.com or John Doe"
+                    className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                  />
                 </div>
 
                 <div>
                   <label className="block text-sm font-bold text-gray-400 mb-2">Notes</label>
                   <textarea
                     rows={4}
-                    placeholder="Add any additional notes..."
+                    value={formData.notes}
+                    onChange={(e) => setFormData({...formData, notes: e.target.value})}
+                    placeholder="Add any additional notes about the application..."
                     className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all resize-none"
                   />
                 </div>
@@ -695,12 +1124,278 @@ export default function DashboardPage() {
                     type="submit"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all"
+                    className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all flex items-center justify-center gap-2"
                   >
+                    <Plus className="w-5 h-5" />
                     Add Application
                   </m.button>
                 </div>
               </form>
+            </m.div>
+          </m.div>
+        )}
+      </AnimatePresence>
+
+      {/* Detail Modal */}
+      <AnimatePresence>
+        {showDetailModal && selectedApp && (
+          <m.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowDetailModal(false)}
+          >
+            <m.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+              className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52] to-[#0f2540] border border-[#00d4ff]/30 shadow-2xl"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-3xl font-bold text-white flex items-center gap-3">
+                  <Building2 className="w-8 h-8 text-[#00d4ff]" />
+                  Application Details
+                </h2>
+                <m.button
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setShowDetailModal(false)}
+                  className="p-2 rounded-full bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444]"
+                >
+                  <XCircle className="w-6 h-6" />
+                </m.button>
+              </div>
+
+              <div className="space-y-6">
+                {/* Company Header */}
+                <div className="flex items-center gap-6 p-6 rounded-2xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
+                  <div 
+                    className="w-20 h-20 rounded-2xl flex items-center justify-center text-white font-bold text-3xl"
+                    style={{
+                      background: `linear-gradient(135deg, ${getStatusColor(selectedApp.status)}40, ${getStatusColor(selectedApp.status)}20)`,
+                    }}
+                  >
+                    {selectedApp.company.charAt(0)}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold text-white mb-2">{selectedApp.company}</h3>
+                    <p className="text-xl text-gray-300">{selectedApp.position}</p>
+                  </div>
+                  <span className="text-5xl">{getPriorityEmoji(selectedApp.priority)}</span>
+                </div>
+
+                {/* Status */}
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
+                    <div className="text-sm text-gray-400 mb-2">Status</div>
+                    <div 
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-lg font-bold"
+                      style={{
+                        backgroundColor: `${getStatusColor(selectedApp.status)}20`,
+                        color: getStatusColor(selectedApp.status),
+                        border: `2px solid ${getStatusColor(selectedApp.status)}50`,
+                      }}
+                    >
+                      {React.createElement(getStatusIcon(selectedApp.status), { className: "w-5 h-5" })}
+                      {selectedApp.status.charAt(0).toUpperCase() + selectedApp.status.slice(1)}
+                    </div>
+                  </div>
+
+                  <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
+                    <div className="text-sm text-gray-400 mb-2">Progress</div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex-1 h-3 bg-[#1a3a52] rounded-full overflow-hidden">
+                        <div 
+                          className="h-full rounded-full transition-all duration-500"
+                          style={{
+                            width: `${selectedApp.progress}%`,
+                            background: `linear-gradient(90deg, ${getStatusColor(selectedApp.status)}, ${getStatusColor(selectedApp.status)}80)`,
+                          }}
+                        />
+                      </div>
+                      <span className="text-lg font-bold" style={{ color: getStatusColor(selectedApp.status) }}>
+                        {selectedApp.progress}%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Details Grid */}
+                <div className="grid md:grid-cols-2 gap-4">
+                  {selectedApp.location && (
+                    <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
+                      <div className="flex items-center gap-2 text-gray-400 text-sm mb-1">
+                        <MapPin className="w-4 h-4 text-[#ff6b00]" />
+                        Location
+                      </div>
+                      <div className="text-white font-semibold">{selectedApp.location}</div>
+                    </div>
+                  )}
+
+                  {selectedApp.salary && (
+                    <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
+                      <div className="flex items-center gap-2 text-gray-400 text-sm mb-1">
+                        <DollarSign className="w-4 h-4 text-[#00ff88]" />
+                        Salary Range
+                      </div>
+                      <div className="text-white font-semibold">{selectedApp.salary}</div>
+                    </div>
+                  )}
+
+                  <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
+                    <div className="flex items-center gap-2 text-gray-400 text-sm mb-1">
+                      <Calendar className="w-4 h-4 text-[#00d4ff]" />
+                      Applied On
+                    </div>
+                    <div className="text-white font-semibold">
+                      {new Date(selectedApp.applicationDate).toLocaleDateString("en-US", { 
+                        month: "long", 
+                        day: "numeric", 
+                        year: "numeric" 
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
+                    <div className="flex items-center gap-2 text-gray-400 text-sm mb-1">
+                      <Clock className="w-4 h-4 text-[#00d4ff]" />
+                      Last Updated
+                    </div>
+                    <div className="text-white font-semibold">
+                      {new Date(selectedApp.lastUpdated).toLocaleDateString("en-US", { 
+                        month: "long", 
+                        day: "numeric", 
+                        year: "numeric" 
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Contact Info */}
+                {selectedApp.contactInfo && (
+                  <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
+                    <div className="flex items-center gap-2 text-gray-400 text-sm mb-2">
+                      <Users className="w-4 h-4 text-[#00d4ff]" />
+                      Contact Information
+                    </div>
+                    <div className="text-white font-semibold">{selectedApp.contactInfo}</div>
+                  </div>
+                )}
+
+                {/* Notes */}
+                {selectedApp.notes && (
+                  <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
+                    <div className="flex items-center gap-2 text-gray-400 text-sm mb-2">
+                      <FileText className="w-4 h-4 text-[#00d4ff]" />
+                      Notes
+                    </div>
+                    <div className="text-white whitespace-pre-wrap">{selectedApp.notes}</div>
+                  </div>
+                )}
+
+                {/* Actions */}
+                <div className="flex gap-3">
+                  {selectedApp.jobUrl && (
+                    <m.a
+                      href={selectedApp.jobUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="flex-1 px-6 py-3 rounded-xl bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] font-bold hover:bg-[#00d4ff]/30 transition-all flex items-center justify-center gap-2"
+                    >
+                      <ExternalLink className="w-5 h-5" />
+                      View Job Posting
+                    </m.a>
+                  )}
+                  <m.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setShowDetailModal(false)}
+                    className="px-8 py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all"
+                  >
+                    Close
+                  </m.button>
+                </div>
+              </div>
+            </m.div>
+          </m.div>
+        )}
+      </AnimatePresence>
+
+      {/* Achievements Modal */}
+      <AnimatePresence>
+        {showAchievements && (
+          <m.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowAchievements(false)}
+          >
+            <m.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+              className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52] to-[#0f2540] border border-[#00d4ff]/30 shadow-2xl"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-3xl font-bold text-white flex items-center gap-3">
+                  <Trophy className="w-8 h-8 text-[#00ff88]" />
+                  Achievements
+                  <span className="text-lg text-gray-400">({unlockedAchievements.length}/{achievements.length})</span>
+                </h2>
+                <m.button
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setShowAchievements(false)}
+                  className="p-2 rounded-full bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444]"
+                >
+                  <XCircle className="w-6 h-6" />
+                </m.button>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                {achievements.map((achievement) => (
+                  <m.div
+                    key={achievement.id}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: achievement.id * 0.05 }}
+                    className={`p-6 rounded-2xl border-2 transition-all ${
+                      achievement.unlocked
+                        ? 'bg-gradient-to-br from-[#00ff88]/20 to-[#00d4ff]/20 border-[#00ff88]/50'
+                        : 'bg-[#0f2540]/60 border-gray-700 opacity-50'
+                    }`}
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className={`p-3 rounded-xl ${
+                        achievement.unlocked 
+                          ? 'bg-gradient-to-br from-[#00ff88]/40 to-[#00d4ff]/40' 
+                          : 'bg-gray-800'
+                      }`}>
+                        <achievement.icon className={`w-8 h-8 ${
+                          achievement.unlocked ? 'text-[#00ff88]' : 'text-gray-600'
+                        }`} />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className={`text-lg font-bold mb-1 ${
+                          achievement.unlocked ? 'text-white' : 'text-gray-500'
+                        }`}>
+                          {achievement.name}
+                          {achievement.unlocked && <span className="ml-2">✨</span>}
+                        </h3>
+                        <p className={achievement.unlocked ? 'text-gray-300' : 'text-gray-600'}>
+                          {achievement.description}
+                        </p>
+                      </div>
+                    </div>
+                  </m.div>
+                ))}
+              </div>
             </m.div>
           </m.div>
         )}
