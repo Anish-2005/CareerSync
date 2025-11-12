@@ -6,86 +6,39 @@ import { verifyFirebaseToken } from '@/lib/auth-middleware';
 
 export async function GET(request: NextRequest) {
   try {
+    console.log('GET: Starting profile fetch');
     await dbConnect();
+    console.log('GET: Database connected');
 
     // Verify Firebase token
     const decodedToken = await verifyFirebaseToken(request);
     if (!decodedToken) {
+      console.log('GET: No valid token found');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    console.log('GET: Token verified for user:', decodedToken.uid);
+
     let profile = await Profile.findOne({ userId: decodedToken.uid });
+    console.log('GET: Profile found:', !!profile);
 
-    // If profile doesn't exist, create a default one
+    // TEMPORARILY DISABLE PROFILE CREATION/UPDATE TO DEBUG
     if (!profile) {
-      // Get user info from Firebase token
-      const userInfo = {
-        userId: decodedToken.uid,
-        personalInfo: {
-          email: decodedToken.email || '',
-          firstName: decodedToken.name?.split(' ')[0] || '',
-          lastName: decodedToken.name?.split(' ').slice(1).join(' ') || '',
-          phone: '',
-          location: '',
-          linkedinUrl: '',
-          githubUrl: '',
-          portfolioUrl: '',
-          summary: '',
-        },
-        experience: [],
-        education: [],
-        skills: [],
-        certifications: [],
-        projects: [],
-        preferences: {
-          jobTypes: [],
-          locations: [],
-          salaryRange: {
-            min: 0,
-            max: 0,
-            currency: 'USD',
-          },
-          remoteWork: false,
-          relocation: false,
-        },
-      };
-
-      profile = new Profile(userInfo);
-      await profile.save();
-
-      // Also create/update user record
-      await User.findOneAndUpdate(
-        { firebaseUid: decodedToken.uid },
-        {
-          firebaseUid: decodedToken.uid,
-          email: decodedToken.email || '',
-          displayName: decodedToken.name || '',
-          photoURL: decodedToken.picture || '',
-        },
-        { upsert: true, new: true }
-      );
-    } else {
-      // Ensure all required fields are present for existing profiles
-      const updatedPersonalInfo = {
-        firstName: profile.personalInfo?.firstName || '',
-        lastName: profile.personalInfo?.lastName || '',
-        email: profile.personalInfo?.email || '',
-        phone: profile.personalInfo?.phone || '',
-        location: profile.personalInfo?.location || '',
-        linkedinUrl: profile.personalInfo?.linkedinUrl || '',
-        githubUrl: profile.personalInfo?.githubUrl || '',
-        portfolioUrl: profile.personalInfo?.portfolioUrl || '',
-        summary: profile.personalInfo?.summary || '',
-      };
-
-      profile.personalInfo = updatedPersonalInfo;
-      await profile.save();
+      console.log('GET: No profile found, returning null');
+      return NextResponse.json({ profile: null });
     }
+
+    console.log('GET: Returning existing profile');
+    return NextResponse.json({ profile });
 
     return NextResponse.json({ profile });
   } catch (error) {
-    console.error('Error fetching profile:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('GET: Error fetching profile:', error);
+    console.error('GET: Error stack:', error instanceof Error ? error.stack : 'Unknown error');
+    return NextResponse.json({
+      error: 'Internal server error',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 });
   }
 }
 
@@ -106,44 +59,76 @@ export async function PUT(request: NextRequest) {
 
     // Remove MongoDB internal fields from the update
     const { _id, createdAt, updatedAt, __v, ...updateData } = body;
-    console.log('PUT: updateData.personalInfo:', updateData.personalInfo);
 
     // Ensure the profile exists and has all required fields
     let profile = await Profile.findOne({ userId: decodedToken.uid });
     if (!profile) {
-      // Create new profile
+      // Create new profile with explicit personalInfo fields
+      const defaultPersonalInfo = {
+        firstName: updateData.personalInfo?.firstName || '',
+        lastName: updateData.personalInfo?.lastName || '',
+        email: updateData.personalInfo?.email || '',
+        phone: updateData.personalInfo?.phone || '',
+        location: updateData.personalInfo?.location || '',
+        linkedinUrl: updateData.personalInfo?.linkedinUrl || '',
+        githubUrl: updateData.personalInfo?.githubUrl || '', // Explicitly include githubUrl
+        portfolioUrl: updateData.personalInfo?.portfolioUrl || '',
+        summary: updateData.personalInfo?.summary || '',
+      };
+
       profile = new Profile({
         userId: decodedToken.uid,
-        ...updateData
+        personalInfo: defaultPersonalInfo,
+        experience: updateData.experience || [],
+        education: updateData.education || [],
+        skills: updateData.skills || [],
+        certifications: updateData.certifications || [],
+        projects: updateData.projects || [],
+        preferences: updateData.preferences || {
+          jobTypes: [],
+          locations: [],
+          salaryRange: { min: 0, max: 0, currency: 'USD' },
+          remoteWork: false,
+          relocation: false,
+        },
       });
       await profile.save();
+      console.log('Created new profile via PUT with githubUrl:', profile.personalInfo.githubUrl);
     } else {
-      // Update existing profile by setting individual fields
+      // Update existing profile by directly modifying and saving
       if (updateData.personalInfo) {
-        console.log('PUT: Setting personalInfo:', updateData.personalInfo);
-        profile.set('personalInfo', updateData.personalInfo);
+        // Update each field individually to ensure Mongoose detects changes
+        profile.personalInfo.firstName = updateData.personalInfo.firstName || '';
+        profile.personalInfo.lastName = updateData.personalInfo.lastName || '';
+        profile.personalInfo.email = updateData.personalInfo.email || '';
+        profile.personalInfo.phone = updateData.personalInfo.phone || '';
+        profile.personalInfo.location = updateData.personalInfo.location || '';
+        profile.personalInfo.linkedinUrl = updateData.personalInfo.linkedinUrl || '';
+        profile.personalInfo.githubUrl = updateData.personalInfo.githubUrl || '';
+        profile.personalInfo.portfolioUrl = updateData.personalInfo.portfolioUrl || '';
+        profile.personalInfo.summary = updateData.personalInfo.summary || '';
+        // Mark the personalInfo subdocument as modified
+        profile.markModified('personalInfo');
       }
       if (updateData.experience !== undefined) {
-        profile.set('experience', updateData.experience);
+        profile.experience = updateData.experience;
       }
       if (updateData.education !== undefined) {
-        profile.set('education', updateData.education);
+        profile.education = updateData.education;
       }
       if (updateData.skills !== undefined) {
-        profile.set('skills', updateData.skills);
+        profile.skills = updateData.skills;
       }
       if (updateData.certifications !== undefined) {
-        profile.set('certifications', updateData.certifications);
+        profile.certifications = updateData.certifications;
       }
       if (updateData.projects !== undefined) {
-        profile.set('projects', updateData.projects);
+        profile.projects = updateData.projects;
       }
       if (updateData.preferences) {
-        profile.set('preferences', updateData.preferences);
+        profile.preferences = updateData.preferences;
       }
-      console.log('PUT: Profile before save:', profile.personalInfo);
       await profile.save();
-      console.log('PUT: Profile after save:', profile.personalInfo);
     }
 
     return NextResponse.json({ profile });
