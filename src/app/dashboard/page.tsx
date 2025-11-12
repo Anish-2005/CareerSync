@@ -379,8 +379,48 @@ export default function DashboardPage() {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="space-y-4"
         >
-          <AnimatePresence mode="popLayout">
-            {filteredApplications.map((app, idx) => {
+          {/* Loading State */}
+          {loading && (
+            <m.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-center py-20"
+            >
+              <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#00d4ff]/20 to-[#ff6b00]/20 flex items-center justify-center">
+                <div className="w-8 h-8 border-4 border-[#00d4ff] border-t-transparent rounded-full animate-spin"></div>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-400 mb-2">Loading applications...</h3>
+              <p className="text-gray-500">Fetching your job applications</p>
+            </m.div>
+          )}
+
+          {/* Error State */}
+          {error && !loading && (
+            <m.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center py-20"
+            >
+              <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#ff4444]/20 to-[#ff6b00]/20 flex items-center justify-center">
+                <XCircle className="w-10 h-10 text-[#ff4444]" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-400 mb-2">Failed to load applications</h3>
+              <p className="text-gray-500 mb-6">{error}</p>
+              <m.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={fetchApplications}
+                className="px-8 py-3 text-white font-bold rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
+              >
+                Try Again
+              </m.button>
+            </m.div>
+          )}
+
+          {/* Applications */}
+          {!loading && !error && (
+            <AnimatePresence mode="popLayout">
+              {filteredApplications.map((app, idx) => {
               const StatusIcon = getStatusIcon(app.status)
               const statusColor = getStatusColor(app.status)
 
@@ -515,9 +555,10 @@ export default function DashboardPage() {
               )
             })}
           </AnimatePresence>
+          )}
 
           {/* Empty State */}
-          {filteredApplications.length === 0 && (
+          {!loading && !error && filteredApplications.length === 0 && (
             <m.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
