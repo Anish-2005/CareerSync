@@ -69,6 +69,17 @@ export interface IProfile extends mongoose.Document {
     uploadedAt: Date;
     gridFsId: string; // Reference to GridFS file
   }>;
+  preferences?: {
+    jobTypes: string[];
+    locations: string[];
+    salaryRange: {
+      min: number;
+      max: number;
+      currency: string;
+    };
+    remoteWork: boolean;
+    relocation: boolean;
+  };
 }
 
 const ProfileSchema = new mongoose.Schema<IProfile>({

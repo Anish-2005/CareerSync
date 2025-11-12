@@ -138,6 +138,29 @@ export default function ProfilePage() {
     gpa: '',
     description: '',
   })
+  const [isEditingExperience, setIsEditingExperience] = useState(false)
+  const [editingExperienceId, setEditingExperienceId] = useState<string | null>(null)
+  const [editedExperience, setEditedExperience] = useState({
+    company: '',
+    position: '',
+    startDate: '',
+    endDate: '',
+    current: false,
+    description: '',
+    location: '',
+  })
+  const [isEditingEducation, setIsEditingEducation] = useState(false)
+  const [editingEducationId, setEditingEducationId] = useState<string | null>(null)
+  const [editedEducation, setEditedEducation] = useState({
+    institution: '',
+    degree: '',
+    field: '',
+    startDate: '',
+    endDate: '',
+    current: false,
+    gpa: '',
+    description: '',
+  })
 
   // Fetch profile data from API
   const fetchProfile = async () => {
@@ -360,6 +383,156 @@ export default function ProfilePage() {
       setError(null)
     } catch (err) {
       console.error('Error saving education:', err)
+      setError('Failed to save education')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleEditExperience = (experienceId: string) => {
+    const experience = profile?.experience.find(exp => exp.id === experienceId)
+    if (experience) {
+      setEditedExperience({
+        company: experience.company,
+        position: experience.position,
+        startDate: experience.startDate ? new Date(experience.startDate).toISOString().split('T')[0] : '',
+        endDate: experience.endDate ? new Date(experience.endDate).toISOString().split('T')[0] : '',
+        current: experience.current || false,
+        description: experience.description || '',
+        location: experience.location || '',
+      })
+      setEditingExperienceId(experienceId)
+      setIsEditingExperience(true)
+    }
+  }
+
+  const handleCancelEditExperience = () => {
+    setIsEditingExperience(false)
+    setEditingExperienceId(null)
+    setEditedExperience({
+      company: '',
+      position: '',
+      startDate: '',
+      endDate: '',
+      current: false,
+      description: '',
+      location: '',
+    })
+  }
+
+  const saveEditedExperience = async () => {
+    if (!editedExperience.company.trim() || !editedExperience.position.trim() || !editedExperience.startDate) {
+      setError('Please fill in all required fields')
+      return
+    }
+
+    try {
+      setSaving(true)
+      const token = await getIdToken()
+
+      const experienceData = {
+        ...editedExperience,
+        startDate: new Date(editedExperience.startDate),
+        endDate: editedExperience.current ? undefined : editedExperience.endDate ? new Date(editedExperience.endDate) : undefined,
+      }
+
+      const response = await fetch(`/api/profile/experience/${editingExperienceId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(experienceData),
+      })
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('Save edited experience failed:', response.status, errorText)
+        throw new Error(`Failed to save experience: ${response.status} ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      setProfile(data.profile)
+      handleCancelEditExperience()
+      setError(null)
+    } catch (err) {
+      console.error('Error saving edited experience:', err)
+      setError('Failed to save experience')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleEditEducation = (educationId: string) => {
+    const education = profile?.education.find(edu => edu.id === educationId)
+    if (education) {
+      setEditedEducation({
+        institution: education.institution,
+        degree: education.degree,
+        field: education.field,
+        startDate: education.startDate ? new Date(education.startDate).toISOString().split('T')[0] : '',
+        endDate: education.endDate ? new Date(education.endDate).toISOString().split('T')[0] : '',
+        current: education.current || false,
+        gpa: education.gpa || '',
+        description: education.description || '',
+      })
+      setEditingEducationId(educationId)
+      setIsEditingEducation(true)
+    }
+  }
+
+  const handleCancelEditEducation = () => {
+    setIsEditingEducation(false)
+    setEditingEducationId(null)
+    setEditedEducation({
+      institution: '',
+      degree: '',
+      field: '',
+      startDate: '',
+      endDate: '',
+      current: false,
+      gpa: '',
+      description: '',
+    })
+  }
+
+  const saveEditedEducation = async () => {
+    if (!editedEducation.institution.trim() || !editedEducation.degree.trim() || !editedEducation.field.trim() || !editedEducation.startDate) {
+      setError('Please fill in all required fields')
+      return
+    }
+
+    try {
+      setSaving(true)
+      const token = await getIdToken()
+
+      const educationData = {
+        ...editedEducation,
+        startDate: new Date(editedEducation.startDate),
+        endDate: editedEducation.current ? undefined : editedEducation.endDate ? new Date(editedEducation.endDate) : undefined,
+      }
+
+      const response = await fetch(`/api/profile/education/${editingEducationId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(educationData),
+      })
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('Save edited education failed:', response.status, errorText)
+        throw new Error(`Failed to save education: ${response.status} ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      setProfile(data.profile)
+      handleCancelEditEducation()
+      setError(null)
+    } catch (err) {
+      console.error('Error saving edited education:', err)
       setError('Failed to save education')
     } finally {
       setSaving(false)
@@ -1034,6 +1207,7 @@ export default function ProfilePage() {
                         <m.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
+                          onClick={() => handleEditExperience(exp.id)}
                           className="p-2 rounded-lg bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] hover:bg-[#00d4ff]/30 transition-all"
                         >
                           <Edit className="w-4 h-4" />
@@ -1100,6 +1274,7 @@ export default function ProfilePage() {
                         <m.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
+                          onClick={() => handleEditEducation(edu.id)}
                           className="p-2 rounded-lg bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] hover:bg-[#00d4ff]/30 transition-all"
                         >
                           <Edit className="w-4 h-4" />
@@ -1759,6 +1934,298 @@ export default function ProfilePage() {
                     className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {saving ? 'Saving...' : 'Add Education'}
+                  </m.button>
+                </div>
+              </div>
+            </m.div>
+          </m.div>
+        )}
+      </AnimatePresence>
+
+      {/* Edit Experience Modal */}
+      <AnimatePresence>
+        {isEditingExperience && (
+          <m.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm"
+            onClick={handleCancelEditExperience}
+          >
+            <m.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+              className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52] to-[#0f2540] border border-[#00d4ff]/30 shadow-2xl"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-3xl font-bold text-white">Edit Experience</h2>
+                <m.button
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={handleCancelEditExperience}
+                  className="p-2 rounded-full bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444]"
+                >
+                  <X className="w-6 h-6" />
+                </m.button>
+              </div>
+
+              <div className="space-y-6">
+                {/* Company and Position */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-bold text-gray-400 mb-2">Company *</label>
+                    <input
+                      type="text"
+                      value={editedExperience.company}
+                      onChange={(e) => setEditedExperience({ ...editedExperience, company: e.target.value })}
+                      placeholder="e.g. Google, Microsoft"
+                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-400 mb-2">Position *</label>
+                    <input
+                      type="text"
+                      value={editedExperience.position}
+                      onChange={(e) => setEditedExperience({ ...editedExperience, position: e.target.value })}
+                      placeholder="e.g. Software Engineer"
+                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                    />
+                  </div>
+                </div>
+
+                {/* Location */}
+                <div>
+                  <label className="block text-sm font-bold text-gray-400 mb-2">Location</label>
+                  <input
+                    type="text"
+                    value={editedExperience.location}
+                    onChange={(e) => setEditedExperience({ ...editedExperience, location: e.target.value })}
+                    placeholder="e.g. San Francisco, CA"
+                    className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                  />
+                </div>
+
+                {/* Dates */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-bold text-gray-400 mb-2">Start Date *</label>
+                    <input
+                      type="date"
+                      value={editedExperience.startDate}
+                      onChange={(e) => setEditedExperience({ ...editedExperience, startDate: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-400 mb-2">End Date</label>
+                    <input
+                      type="date"
+                      value={editedExperience.endDate}
+                      onChange={(e) => setEditedExperience({ ...editedExperience, endDate: e.target.value })}
+                      disabled={editedExperience.current}
+                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                </div>
+
+                {/* Current Position Checkbox */}
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    id="editCurrent"
+                    checked={editedExperience.current}
+                    onChange={(e) => setEditedExperience({ ...editedExperience, current: e.target.checked, endDate: e.target.checked ? '' : editedExperience.endDate })}
+                    className="w-4 h-4 text-[#00d4ff] bg-[#0f2540] border-[#00d4ff]/20 rounded focus:ring-[#00d4ff] focus:ring-2"
+                  />
+                  <label htmlFor="editCurrent" className="text-white font-semibold">I currently work here</label>
+                </div>
+
+                {/* Description */}
+                <div>
+                  <label className="block text-sm font-bold text-gray-400 mb-2">Description</label>
+                  <textarea
+                    rows={4}
+                    value={editedExperience.description}
+                    onChange={(e) => setEditedExperience({ ...editedExperience, description: e.target.value })}
+                    placeholder="Describe your responsibilities, achievements, and key contributions..."
+                    className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all resize-none"
+                  />
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <m.button
+                    type="button"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleCancelEditExperience}
+                    className="flex-1 px-6 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white font-bold hover:border-[#00d4ff]/50 transition-all"
+                  >
+                    Cancel
+                  </m.button>
+                  <m.button
+                    type="button"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={saveEditedExperience}
+                    disabled={saving}
+                    className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {saving ? 'Saving...' : 'Save Changes'}
+                  </m.button>
+                </div>
+              </div>
+            </m.div>
+          </m.div>
+        )}
+      </AnimatePresence>
+
+      {/* Edit Education Modal */}
+      <AnimatePresence>
+        {isEditingEducation && (
+          <m.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm"
+            onClick={handleCancelEditEducation}
+          >
+            <m.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+              className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52] to-[#0f2540] border border-[#00d4ff]/30 shadow-2xl"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-3xl font-bold text-white">Edit Education</h2>
+                <m.button
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={handleCancelEditEducation}
+                  className="p-2 rounded-full bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444]"
+                >
+                  <X className="w-6 h-6" />
+                </m.button>
+              </div>
+
+              <div className="space-y-6">
+                {/* Institution and Degree */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-bold text-gray-400 mb-2">Institution *</label>
+                    <input
+                      type="text"
+                      value={editedEducation.institution}
+                      onChange={(e) => setEditedEducation({ ...editedEducation, institution: e.target.value })}
+                      placeholder="e.g. Harvard University"
+                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-400 mb-2">Degree *</label>
+                    <input
+                      type="text"
+                      value={editedEducation.degree}
+                      onChange={(e) => setEditedEducation({ ...editedEducation, degree: e.target.value })}
+                      placeholder="e.g. Bachelor of Science"
+                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                    />
+                  </div>
+                </div>
+
+                {/* Field of Study */}
+                <div>
+                  <label className="block text-sm font-bold text-gray-400 mb-2">Field of Study *</label>
+                  <input
+                    type="text"
+                    value={editedEducation.field}
+                    onChange={(e) => setEditedEducation({ ...editedEducation, field: e.target.value })}
+                    placeholder="e.g. Computer Science"
+                    className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                  />
+                </div>
+
+                {/* GPA */}
+                <div>
+                  <label className="block text-sm font-bold text-gray-400 mb-2">GPA (Optional)</label>
+                  <input
+                    type="text"
+                    value={editedEducation.gpa}
+                    onChange={(e) => setEditedEducation({ ...editedEducation, gpa: e.target.value })}
+                    placeholder="e.g. 3.8"
+                    className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                  />
+                </div>
+
+                {/* Dates */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-bold text-gray-400 mb-2">Start Date *</label>
+                    <input
+                      type="date"
+                      value={editedEducation.startDate}
+                      onChange={(e) => setEditedEducation({ ...editedEducation, startDate: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-400 mb-2">End Date</label>
+                    <input
+                      type="date"
+                      value={editedEducation.endDate}
+                      onChange={(e) => setEditedEducation({ ...editedEducation, endDate: e.target.value })}
+                      disabled={editedEducation.current}
+                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                </div>
+
+                {/* Currently Studying Checkbox */}
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    id="editCurrentEducation"
+                    checked={editedEducation.current}
+                    onChange={(e) => setEditedEducation({ ...editedEducation, current: e.target.checked, endDate: e.target.checked ? '' : editedEducation.endDate })}
+                    className="w-4 h-4 text-[#00d4ff] bg-[#0f2540] border-[#00d4ff]/20 rounded focus:ring-[#00d4ff] focus:ring-2"
+                  />
+                  <label htmlFor="editCurrentEducation" className="text-white font-semibold">I am currently studying here</label>
+                </div>
+
+                {/* Description */}
+                <div>
+                  <label className="block text-sm font-bold text-gray-400 mb-2">Description (Optional)</label>
+                  <textarea
+                    rows={4}
+                    value={editedEducation.description}
+                    onChange={(e) => setEditedEducation({ ...editedEducation, description: e.target.value })}
+                    placeholder="Describe your academic achievements, relevant coursework, or extracurricular activities..."
+                    className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all resize-none"
+                  />
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <m.button
+                    type="button"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleCancelEditEducation}
+                    className="flex-1 px-6 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white font-bold hover:border-[#00d4ff]/50 transition-all"
+                  >
+                    Cancel
+                  </m.button>
+                  <m.button
+                    type="button"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={saveEditedEducation}
+                    disabled={saving}
+                    className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {saving ? 'Saving...' : 'Save Changes'}
                   </m.button>
                 </div>
               </div>
