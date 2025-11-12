@@ -193,13 +193,14 @@ export default function DashboardPage() {
           </m.div>
 
           <div className="flex items-center gap-3">
-            <m.button
+            <m.a
+              href="/profile"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="px-6 py-2 text-white text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
             >
               Profile
-            </m.button>
+            </m.a>
             <m.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
