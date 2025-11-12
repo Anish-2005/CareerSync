@@ -44,6 +44,7 @@ export async function GET(request: NextRequest) {
         skills: [],
         certifications: [],
         projects: [],
+        documents: [], // Initialize documents array
         preferences: {
           jobTypes: [],
           locations: [],
@@ -64,6 +65,13 @@ export async function GET(request: NextRequest) {
       } catch (saveError) {
         console.error('GET: Error saving new profile:', saveError);
         throw saveError;
+      }
+    } else {
+      // Ensure documents field exists for existing profiles
+      if (!profile.documents) {
+        profile.documents = [];
+        await profile.save();
+        console.log('GET: Added documents field to existing profile');
       }
     }
 
@@ -123,6 +131,7 @@ export async function PUT(request: NextRequest) {
         skills: updateData.skills || [],
         certifications: updateData.certifications || [],
         projects: updateData.projects || [],
+        documents: updateData.documents || [], // Include documents
         preferences: updateData.preferences || {
           jobTypes: [],
           locations: [],
@@ -163,6 +172,9 @@ export async function PUT(request: NextRequest) {
       }
       if (updateData.projects !== undefined) {
         profile.projects = updateData.projects;
+      }
+      if (updateData.documents !== undefined) {
+        profile.documents = updateData.documents;
       }
       if (updateData.preferences) {
         profile.preferences = updateData.preferences;

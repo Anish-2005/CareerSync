@@ -681,35 +681,72 @@ export default function ProfilePage() {
                 >
                   <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
                     <FileText className="w-6 h-6 text-[#00ff88]" />
-                    Resume & Documents
+                    Documents & Files
                   </h3>
 
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20">
-                      <div className="flex items-center gap-4">
-                        <FileText className="w-8 h-8 text-[#00d4ff]" />
-                        <div>
-                          <p className="text-white font-semibold">Resume_Alex_Johnson.pdf</p>
-                          <p className="text-gray-400 text-sm">Last updated: Nov 10, 2024</p>
+                  {/* Upload Section */}
+                  <div className="mb-6">
+                    <label className="block">
+                      <div className="flex items-center justify-center w-full p-6 border-2 border-dashed border-[#00d4ff]/50 rounded-xl hover:border-[#00d4ff] transition-colors cursor-pointer bg-[#0f2540]/50">
+                        <div className="text-center">
+                          <Upload className="w-8 h-8 text-[#00d4ff] mx-auto mb-2" />
+                          <p className="text-white font-semibold mb-1">
+                            {uploading ? 'Uploading...' : 'Upload Document'}
+                          </p>
+                          <p className="text-gray-400 text-sm">
+                            PDF, DOC, DOCX, TXT up to 10MB
+                          </p>
                         </div>
+                        <input
+                          type="file"
+                          className="hidden"
+                          accept=".pdf,.doc,.docx,.txt"
+                          onChange={handleFileUpload}
+                          disabled={uploading}
+                        />
                       </div>
-                      <div className="flex gap-2">
-                        <m.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          className="px-4 py-2 bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] rounded-lg font-bold hover:bg-[#00d4ff]/30 transition-all"
-                        >
-                          View
-                        </m.button>
-                        <m.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          className="px-4 py-2 bg-[#ff6b00]/20 border border-[#ff6b00]/50 text-[#ff6b00] rounded-lg font-bold hover:bg-[#ff6b00]/30 transition-all"
-                        >
-                          Update
-                        </m.button>
+                    </label>
+                  </div>
+
+                  {/* Documents List */}
+                  <div className="space-y-4">
+                    {(profile.documents || []).map((doc, idx) => (
+                      <m.div
+                        key={doc.id}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: idx * 0.1 }}
+                        className="flex items-center justify-between p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20"
+                      >
+                        <div className="flex items-center gap-4">
+                          <FileText className="w-8 h-8 text-[#00d4ff]" />
+                          <div>
+                            <p className="text-white font-semibold">{doc.originalName}</p>
+                            <p className="text-gray-400 text-sm">
+                              {(doc.size / 1024 / 1024).toFixed(2)} MB • {new Date(doc.uploadedAt).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <m.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => handleFileDownload(doc.id, doc.originalName)}
+                            className="px-4 py-2 bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] rounded-lg font-bold hover:bg-[#00d4ff]/30 transition-all"
+                          >
+                            Download
+                          </m.button>
+                        </div>
+                      </m.div>
+                    ))}
+
+                    {(!profile.documents || profile.documents.length === 0) && (
+                      <div className="text-center py-8">
+                        <FileText className="w-12 h-12 text-gray-500 mx-auto mb-4" />
+                        <p className="text-gray-400">No documents uploaded yet</p>
+                        <p className="text-gray-500 text-sm">Upload your resume, certificates, or other documents</p>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </m.div>
 

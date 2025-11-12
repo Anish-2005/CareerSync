@@ -23,18 +23,46 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Document ID is required' }, { status: 400 });
     }
 
-    // Find the document in user's profile
-    const profile = await Profile.findOne({
-      userId: decodedToken.uid,
-      'documents.id': documentId
-    });
+    // Find the user's profile
+    const profile = await Profile.findOne({ userId: decodedToken.uid });
 
     if (!profile) {
-      return NextResponse.json({ error: 'Document not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
     }
 
-    // Get the document entry
-    const document = profile.documents.find(doc => doc.id === documentId);
+    // Find the document in the profile's documents array
+    interface DecodedToken {
+        uid: string;
+        [key: string]: any;
+    }
+
+    interface DocumentItem {
+        id: string;
+        gridFsId: string | mongoose.Types.ObjectId;
+        mimeType?: string;
+        originalName?: string;
+        [key: string]: any;
+    }
+
+    interface ProfileDocumentType {
+        userId: string;
+        documents: DocumentItem[];
+        [key: string]: any;
+    }
+
+    interface GridFSFile {
+        _id: mongoose.Types.ObjectId;
+        length: number;
+        contentType?: string;
+        filename?: string;
+        [key: string]: any;
+    }
+
+    // Locate the document in the profile's documents array
+    const document = (profile as ProfileDocumentType).documents?.find(
+      (d) => d.id === documentId
+    ) as DocumentItem | undefined;
+
     if (!document) {
       return NextResponse.json({ error: 'Document not found' }, { status: 404 });
     }
@@ -52,8 +80,10 @@ export async function GET(request: NextRequest) {
       bucketName: 'documents'
     });
 
-    // Convert GridFS ID to ObjectId
-    const gridFsId = new mongoose.Types.ObjectId(document.gridFsId);
+    // Convert GridFS ID to ObjectId (handle both string and ObjectId stored types)
+    const gridFsId = typeof document.gridFsId === 'string'
+      ? new mongoose.Types.ObjectId(document.gridFsId)
+      : (document.gridFsId as mongoose.Types.ObjectId);
 
     // Check if file exists
     const files = await bucket.find({ _id: gridFsId }).toArray();
@@ -61,27 +91,21 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'File not found in storage' }, { status: 404 });
     }
 
-    // Create download stream
+    const file = files[0];
+
+    // Create readable stream from GridFS
     const downloadStream = bucket.openDownloadStream(gridFsId);
 
-    // Convert stream to buffer
-    const chunks: Buffer[] = [];
-    await new Promise((resolve, reject) => {
-      downloadStream.on('data', (chunk) => chunks.push(chunk));
-      downloadStream.on('end', resolve);
-      downloadStream.on('error', reject);
-    });
-
-    const buffer = Buffer.concat(chunks);
-
-    // Return file with appropriate headers
-    return new NextResponse(buffer, {
+    // Convert stream to Response
+    const response = new Response(downloadStream as any, {
       headers: {
-        'Content-Type': document.mimeType,
+        'Content-Type': document.mimeType || file.contentType || 'application/octet-stream',
         'Content-Disposition': `attachment; filename="${document.originalName}"`,
-        'Content-Length': buffer.length.toString(),
+        'Content-Length': file.length.toString(),
       },
     });
+
+    return response;
 
   } catch (error) {
     console.error('File download error:', error);
