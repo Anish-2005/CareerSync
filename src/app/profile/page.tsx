@@ -130,7 +130,13 @@ export default function ProfilePage() {
       })
 
       if (!response.ok) {
-        throw new Error('Failed to fetch profile')
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Profile fetch failed:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorData
+        });
+        throw new Error(`Failed to fetch profile: ${response.status} ${response.statusText}`)
       }
 
       const data = await response.json()
