@@ -865,69 +865,6 @@ function ViewApplicationModal({
     </motion.div>
   )
 }
-
-  const [scrollY, setScrollY] = useState(0)
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const handleScroll = () => setScrollY(window.scrollY)
-      // set initial value
-      handleScroll()
-      window.addEventListener("scroll", handleScroll)
-      return () => window.removeEventListener("scroll", handleScroll)
-    }
-  }, [])
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
-    },
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut" },
-    },
-  }
-
-  const floatingVariants = {
-    float: {
-      y: [0, -15, 0],
-      transition: {
-        duration: 3,
-        ease: "easeInOut",
-        repeat: Number.POSITIVE_INFINITY,
-      },
-    },
-  }
-
-  const scaleVariants = {
-    hover: {
-      scale: 1.05,
-      transition: { duration: 0.3 },
-    },
-  }
-
-  return (
-    <div
-      className="overflow-hidden bg-gradient-to-b from-[#0a1428] via-[#1a2d4d] to-[#0a1428]"
-      style={{ fontFamily: '"Geist", sans-serif' }}
-    >
-      {/* Navigation */}
-      <m.nav
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[#0a1428]/80 border-b border-[#00d4ff]/20"
-      >
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <m.div whileHover={{ scale: 1.05 }} className="flex items-center gap-3">
             <div className="relative w-12 h-12 bg-gradient-to-br from-[#ff6b00] to-[#00d4ff] rounded-full flex items-center justify-center shadow-lg shadow-[#ff6b00]/50">
