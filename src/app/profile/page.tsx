@@ -32,142 +32,311 @@ import { useAuth } from "@/contexts/AuthContext"
 
 const m = motion as any
 
-// Types
-interface UserProfile {
-  name: string
-  email: string
-  phone: string
-  location: string
-  bio: string
-  avatar: string
-  title: string
-  experience: number
-  skills: string[]
-  resumeUrl?: string
-  linkedin?: string
-  github?: string
-  portfolio?: string
+// Types matching MongoDB schema
+interface Profile {
+  _id: string
+  userId: string
+  personalInfo: {
+    firstName: string
+    lastName: string
+    email: string
+    phone: string
+    location: string
+    linkedinUrl: string
+    portfolioUrl: string
+    summary: string
+  }
+  experience: Array<{
+    id: string
+    company: string
+    position: string
+    startDate: Date
+    endDate?: Date
+    current: boolean
+    description: string
+    location: string
+  }>
+  education: Array<{
+    id: string
+    institution: string
+    degree: string
+    field: string
+    startDate: Date
+    endDate?: Date
+    current: boolean
+    gpa?: string
+    description: string
+  }>
+  skills: Array<{
+    id: string
+    name: string
+    level: 'beginner' | 'intermediate' | 'advanced' | 'expert'
+    category: string
+  }>
+  certifications: Array<{
+    id: string
+    name: string
+    issuer: string
+    issueDate: Date
+    expiryDate?: Date
+    credentialId: string
+    credentialUrl: string
+  }>
+  projects: Array<{
+    id: string
+    name: string
+    description: string
+    technologies: string[]
+    startDate: Date
+    endDate?: Date
+    current: boolean
+    projectUrl: string
+    githubUrl: string
+  }>
+  preferences: {
+    jobTypes: string[]
+    locations: string[]
+    salaryRange: {
+      min: number
+      max: number
+      currency: string
+    }
+    remoteWork: boolean
+    relocation: boolean
+  }
+  createdAt: Date
+  updatedAt: Date
 }
-
-interface Experience {
-  id: string
-  company: string
-  position: string
-  startDate: string
-  endDate?: string
-  current: boolean
-  description: string
-}
-
-interface Education {
-  id: string
-  institution: string
-  degree: string
-  field: string
-  startDate: string
-  endDate?: string
-  current: boolean
-}
-
-// Mock data
-const mockProfile: UserProfile = {
-  name: "Alex Johnson",
-  email: "alex.johnson@email.com",
-  phone: "+1 (555) 123-4567",
-  location: "San Francisco, CA",
-  bio: "Passionate software engineer with 5+ years of experience in full-stack development. Specialized in React, Node.js, and cloud technologies. Always eager to learn and tackle new challenges.",
-  avatar: "",
-  title: "Senior Software Engineer",
-  experience: 5,
-  skills: ["JavaScript", "TypeScript", "React", "Node.js", "Python", "AWS", "Docker", "MongoDB", "PostgreSQL"],
-  linkedin: "https://linkedin.com/in/alexjohnson",
-  github: "https://github.com/alexjohnson",
-  portfolio: "https://alexjohnson.dev",
-}
-
-const mockExperience: Experience[] = [
-  {
-    id: "1",
-    company: "Google",
-    position: "Senior Software Engineer",
-    startDate: "2022-03-01",
-    current: true,
-    description: "Leading development of scalable web applications using React and Node.js. Managing a team of 4 developers and mentoring junior engineers.",
-  },
-  {
-    id: "2",
-    company: "Microsoft",
-    position: "Software Engineer",
-    startDate: "2020-06-01",
-    endDate: "2022-02-28",
-    current: false,
-    description: "Developed and maintained Azure cloud services. Implemented CI/CD pipelines and improved deployment efficiency by 40%.",
-  },
-  {
-    id: "3",
-    company: "StartupXYZ",
-    position: "Full Stack Developer",
-    startDate: "2019-01-01",
-    endDate: "2020-05-31",
-    current: false,
-    description: "Built the entire product from scratch using MERN stack. Handled both frontend and backend development for a team of 10.",
-  },
-]
-
-const mockEducation: Education[] = [
-  {
-    id: "1",
-    institution: "Stanford University",
-    degree: "Master of Science",
-    field: "Computer Science",
-    startDate: "2017-09-01",
-    endDate: "2019-05-31",
-    current: false,
-  },
-  {
-    id: "2",
-    institution: "UC Berkeley",
-    degree: "Bachelor of Science",
-    field: "Computer Science",
-    startDate: "2013-09-01",
-    endDate: "2017-05-31",
-    current: false,
-  },
-]
 
 export default function ProfilePage() {
-  const { user, logout } = useAuth()
-  const [profile, setProfile] = useState<UserProfile>(mockProfile)
-  const [experience, setExperience] = useState<Experience[]>(mockExperience)
-  const [education, setEducation] = useState<Education[]>(mockEducation)
+  const { user, logout, getIdToken } = useAuth()
+  const [profile, setProfile] = useState<Profile | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<"profile" | "experience" | "education" | "settings">("profile")
   const [isEditing, setIsEditing] = useState(false)
-  const [editForm, setEditForm] = useState<UserProfile>(mockProfile)
+  const [editForm, setEditForm] = useState<Profile | null>(null)
+  const [saving, setSaving] = useState(false)
 
-  const handleSaveProfile = () => {
-    setProfile(editForm)
-    setIsEditing(false)
-  }
-
-  const handleCancelEdit = () => {
-    setEditForm(profile)
-    setIsEditing(false)
-  }
-
-  const addSkill = (skill: string) => {
-    if (skill.trim() && !editForm.skills.includes(skill.trim())) {
-      setEditForm({
-        ...editForm,
-        skills: [...editForm.skills, skill.trim()],
+  // Fetch profile data from API
+  const fetchProfile = async () => {
+    try {
+      setLoading(true)
+      const token = await getIdToken()
+      const response = await fetch('/api/profile', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
       })
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch profile')
+      }
+
+      const data = await response.json()
+      setProfile(data.profile)
+      setError(null)
+    } catch (err) {
+      console.error('Error fetching profile:', err)
+      setError('Failed to load profile')
+    } finally {
+      setLoading(false)
     }
   }
 
-  const removeSkill = (skillToRemove: string) => {
+  useEffect(() => {
+    if (user) {
+      fetchProfile()
+    }
+  }, [user])
+
+  // Save profile to API
+  const saveProfile = async () => {
+    if (!editForm) return
+
+    try {
+      setSaving(true)
+      const token = await getIdToken()
+      const response = await fetch('/api/profile', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(editForm),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to save profile')
+      }
+
+      const data = await response.json()
+      setProfile(data.profile)
+      setIsEditing(false)
+      setError(null)
+    } catch (err) {
+      console.error('Error saving profile:', err)
+      setError('Failed to save profile')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleEditProfile = () => {
+    if (profile) {
+      setEditForm({ ...profile })
+      setIsEditing(true)
+    }
+  }
+
+  const handleCancelEdit = () => {
+    setEditForm(null)
+    setIsEditing(false)
+  }
+
+  const addSkill = (skillName: string, category: string = 'Other') => {
+    if (!editForm || !skillName.trim()) return
+
+    const newSkill = {
+      id: Date.now().toString(),
+      name: skillName.trim(),
+      level: 'beginner' as const,
+      category,
+    }
+
     setEditForm({
       ...editForm,
-      skills: editForm.skills.filter(skill => skill !== skillToRemove),
+      skills: [...editForm.skills, newSkill],
     })
+  }
+
+  const removeSkill = (skillId: string) => {
+    if (!editForm) return
+
+    setEditForm({
+      ...editForm,
+      skills: editForm.skills.filter(skill => skill.id !== skillId),
+    })
+  }
+
+  const addExperience = () => {
+    if (!editForm) return
+
+    const newExperience = {
+      id: Date.now().toString(),
+      company: '',
+      position: '',
+      startDate: new Date(),
+      current: false,
+      description: '',
+      location: '',
+    }
+
+    setEditForm({
+      ...editForm,
+      experience: [...editForm.experience, newExperience],
+    })
+  }
+
+  const updateExperience = (id: string, updates: Partial<Profile['experience'][0]>) => {
+    if (!editForm) return
+
+    setEditForm({
+      ...editForm,
+      experience: editForm.experience.map(exp =>
+        exp.id === id ? { ...exp, ...updates } : exp
+      ),
+    })
+  }
+
+  const removeExperience = (id: string) => {
+    if (!editForm) return
+
+    setEditForm({
+      ...editForm,
+      experience: editForm.experience.filter(exp => exp.id !== id),
+    })
+  }
+
+  const addEducation = () => {
+    if (!editForm) return
+
+    const newEducation = {
+      id: Date.now().toString(),
+      institution: '',
+      degree: '',
+      field: '',
+      startDate: new Date(),
+      current: false,
+      description: '',
+    }
+
+    setEditForm({
+      ...editForm,
+      education: [...editForm.education, newEducation],
+    })
+  }
+
+  const updateEducation = (id: string, updates: Partial<Profile['education'][0]>) => {
+    if (!editForm) return
+
+    setEditForm({
+      ...editForm,
+      education: editForm.education.map(edu =>
+        edu.id === id ? { ...edu, ...updates } : edu
+      ),
+    })
+  }
+
+  const removeEducation = (id: string) => {
+    if (!editForm) return
+
+    setEditForm({
+      ...editForm,
+      education: editForm.education.filter(edu => edu.id !== id),
+    })
+  }
+
+  if (loading) {
+    return (
+      <RouteGuard>
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#0a1428] via-[#1a2d4d] to-[#0a1428]">
+          <div className="text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#00d4ff]/20 to-[#ff6b00]/20 flex items-center justify-center">
+              <div className="w-8 h-8 border-4 border-[#00d4ff] border-t-transparent rounded-full animate-spin"></div>
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">Loading Profile...</h3>
+            <p className="text-gray-400">Fetching your profile data</p>
+          </div>
+        </div>
+      </RouteGuard>
+    )
+  }
+
+  if (error && !profile) {
+    return (
+      <RouteGuard>
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#0a1428] via-[#1a2d4d] to-[#0a1428]">
+          <div className="text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#ff4444]/20 to-[#ff6b00]/20 flex items-center justify-center">
+              <X className="w-8 h-8 text-[#ff4444]" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">Failed to Load Profile</h3>
+            <p className="text-gray-400 mb-6">{error}</p>
+            <button
+              onClick={fetchProfile}
+              className="px-6 py-3 text-white font-bold rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </RouteGuard>
+    )
+  }
+
+  if (!profile) {
+    return null
   }
 
   return (
@@ -339,7 +508,7 @@ export default function ProfilePage() {
                     {/* Avatar */}
                     <div className="relative">
                       <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-[#ff6b00] to-[#00d4ff] flex items-center justify-center text-white text-4xl font-bold shadow-lg">
-                        {profile.name.split(" ").map(n => n[0]).join("")}
+                        {(profile.personalInfo.firstName + ' ' + profile.personalInfo.lastName).split(" ").map((n: string) => n[0]).join("")}
                       </div>
                       <m.button
                         whileHover={{ scale: 1.1 }}
@@ -353,31 +522,31 @@ export default function ProfilePage() {
                     {/* Profile Info */}
                     <div className="flex-1 space-y-4">
                       <div>
-                        <h2 className="text-3xl font-bold text-white mb-2">{profile.name}</h2>
-                        <p className="text-xl text-[#00d4ff] font-semibold">{profile.title}</p>
-                        <p className="text-gray-400">{profile.location}</p>
+                        <h2 className="text-3xl font-bold text-white mb-2">{profile.personalInfo.firstName} {profile.personalInfo.lastName}</h2>
+                        <p className="text-xl text-[#00d4ff] font-semibold">Software Engineer</p>
+                        <p className="text-gray-400">{profile.personalInfo.location}</p>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="flex items-center gap-3 text-gray-400">
                           <Mail className="w-5 h-5 text-[#00d4ff]" />
-                          <span>{profile.email}</span>
+                          <span>{profile.personalInfo.email}</span>
                         </div>
                         <div className="flex items-center gap-3 text-gray-400">
                           <Phone className="w-5 h-5 text-[#00d4ff]" />
-                          <span>{profile.phone}</span>
+                          <span>{profile.personalInfo.phone}</span>
                         </div>
                         <div className="flex items-center gap-3 text-gray-400">
                           <MapPin className="w-5 h-5 text-[#00d4ff]" />
-                          <span>{profile.location}</span>
+                          <span>{profile.personalInfo.location}</span>
                         </div>
                         <div className="flex items-center gap-3 text-gray-400">
                           <Briefcase className="w-5 h-5 text-[#00d4ff]" />
-                          <span>{profile.experience} years experience</span>
+                          <span>{profile.experience.length} positions</span>
                         </div>
                       </div>
 
-                      <p className="text-gray-300 leading-relaxed">{profile.bio}</p>
+                      <p className="text-gray-300 leading-relaxed">{profile.personalInfo.summary}</p>
                     </div>
 
                     {/* Edit Button */}
@@ -410,13 +579,13 @@ export default function ProfilePage() {
                   <div className="flex flex-wrap gap-3">
                     {profile.skills.map((skill, idx) => (
                       <m.span
-                        key={skill}
+                        key={skill.id}
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: idx * 0.05 }}
                         className="px-4 py-2 bg-gradient-to-r from-[#00d4ff]/20 to-[#ff6b00]/20 border border-[#00d4ff]/30 rounded-full text-[#00d4ff] font-semibold text-sm"
                       >
-                        {skill}
+                        {skill.name}
                       </m.span>
                     ))}
                   </div>
@@ -477,9 +646,9 @@ export default function ProfilePage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {[
-                      { label: "LinkedIn", url: profile.linkedin, icon: "💼" },
-                      { label: "GitHub", url: profile.github, icon: "💻" },
-                      { label: "Portfolio", url: profile.portfolio, icon: "🌐" },
+                      { label: "LinkedIn", url: profile.personalInfo.linkedinUrl, icon: "💼" },
+                      { label: "GitHub", url: profile.personalInfo.portfolioUrl, icon: "💻" },
+                      { label: "Portfolio", url: profile.personalInfo.portfolioUrl, icon: "🌐" },
                     ].map((link, idx) => (
                       <m.div
                         key={link.label}
@@ -510,7 +679,7 @@ export default function ProfilePage() {
             {/* Experience Tab */}
             {activeTab === "experience" && (
               <div className="space-y-6">
-                {experience.map((exp, idx) => (
+                {profile.experience.map((exp, idx) => (
                   <m.div
                     key={exp.id}
                     initial={{ opacity: 0, x: -30 }}
@@ -526,7 +695,7 @@ export default function ProfilePage() {
                           <span className="flex items-center gap-2">
                             <Calendar className="w-4 h-4" />
                             {new Date(exp.startDate).toLocaleDateString("en-US", { month: "short", year: "numeric" })} - {
-                              exp.current ? "Present" : new Date(exp.endDate!).toLocaleDateString("en-US", { month: "short", year: "numeric" })
+                              exp.current ? "Present" : exp.endDate ? new Date(exp.endDate).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "Present"
                             }
                           </span>
                           {exp.current && (
@@ -561,9 +730,10 @@ export default function ProfilePage() {
                 <m.button
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: experience.length * 0.1 }}
+                  transition={{ delay: profile.experience.length * 0.1 }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  onClick={addExperience}
                   className="w-full p-8 rounded-3xl border-2 border-dashed border-[#00d4ff]/50 text-[#00d4ff] hover:border-[#00d4ff] hover:bg-[#00d4ff]/5 transition-all duration-300 flex items-center justify-center gap-3 font-bold"
                 >
                   <Plus className="w-6 h-6" />
@@ -575,7 +745,7 @@ export default function ProfilePage() {
             {/* Education Tab */}
             {activeTab === "education" && (
               <div className="space-y-6">
-                {education.map((edu, idx) => (
+                {profile.education.map((edu, idx) => (
                   <m.div
                     key={edu.id}
                     initial={{ opacity: 0, x: -30 }}
@@ -591,7 +761,7 @@ export default function ProfilePage() {
                           <span className="flex items-center gap-2">
                             <Calendar className="w-4 h-4" />
                             {new Date(edu.startDate).toLocaleDateString("en-US", { month: "short", year: "numeric" })} - {
-                              edu.current ? "Present" : new Date(edu.endDate!).toLocaleDateString("en-US", { month: "short", year: "numeric" })
+                              edu.current ? "Present" : edu.endDate ? new Date(edu.endDate).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "Present"
                             }
                           </span>
                           {edu.current && (
@@ -624,9 +794,10 @@ export default function ProfilePage() {
                 <m.button
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: education.length * 0.1 }}
+                  transition={{ delay: profile.education.length * 0.1 }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  onClick={addEducation}
                   className="w-full p-8 rounded-3xl border-2 border-dashed border-[#00d4ff]/50 text-[#00d4ff] hover:border-[#00d4ff] hover:bg-[#00d4ff]/5 transition-all duration-300 flex items-center justify-center gap-3 font-bold"
                 >
                   <Plus className="w-6 h-6" />
@@ -789,20 +960,26 @@ export default function ProfilePage() {
                 {/* Basic Info */}
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-bold text-gray-400 mb-2">Full Name *</label>
+                    <label className="block text-sm font-bold text-gray-400 mb-2">First Name *</label>
                     <input
                       type="text"
-                      value={editForm.name}
-                      onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                      value={editForm?.personalInfo.firstName || ''}
+                      onChange={(e) => setEditForm(editForm ? {
+                        ...editForm,
+                        personalInfo: { ...editForm.personalInfo, firstName: e.target.value }
+                      } : null)}
                       className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-gray-400 mb-2">Job Title</label>
+                    <label className="block text-sm font-bold text-gray-400 mb-2">Last Name *</label>
                     <input
                       type="text"
-                      value={editForm.title}
-                      onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+                      value={editForm?.personalInfo.lastName || ''}
+                      onChange={(e) => setEditForm(editForm ? {
+                        ...editForm,
+                        personalInfo: { ...editForm.personalInfo, lastName: e.target.value }
+                      } : null)}
                       className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
                     />
                   </div>
@@ -813,8 +990,11 @@ export default function ProfilePage() {
                     <label className="block text-sm font-bold text-gray-400 mb-2">Email *</label>
                     <input
                       type="email"
-                      value={editForm.email}
-                      onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                      value={editForm?.personalInfo.email || ''}
+                      onChange={(e) => setEditForm(editForm ? {
+                        ...editForm,
+                        personalInfo: { ...editForm.personalInfo, email: e.target.value }
+                      } : null)}
                       className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
                     />
                   </div>
@@ -822,8 +1002,11 @@ export default function ProfilePage() {
                     <label className="block text-sm font-bold text-gray-400 mb-2">Phone</label>
                     <input
                       type="tel"
-                      value={editForm.phone}
-                      onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                      value={editForm?.personalInfo.phone || ''}
+                      onChange={(e) => setEditForm(editForm ? {
+                        ...editForm,
+                        personalInfo: { ...editForm.personalInfo, phone: e.target.value }
+                      } : null)}
                       className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
                     />
                   </div>
@@ -833,18 +1016,24 @@ export default function ProfilePage() {
                   <label className="block text-sm font-bold text-gray-400 mb-2">Location</label>
                   <input
                     type="text"
-                    value={editForm.location}
-                    onChange={(e) => setEditForm({ ...editForm, location: e.target.value })}
+                    value={editForm?.personalInfo.location || ''}
+                    onChange={(e) => setEditForm(editForm ? {
+                      ...editForm,
+                      personalInfo: { ...editForm.personalInfo, location: e.target.value }
+                    } : null)}
                     className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-400 mb-2">Bio</label>
+                  <label className="block text-sm font-bold text-gray-400 mb-2">Summary</label>
                   <textarea
                     rows={4}
-                    value={editForm.bio}
-                    onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
+                    value={editForm?.personalInfo.summary || ''}
+                    onChange={(e) => setEditForm(editForm ? {
+                      ...editForm,
+                      personalInfo: { ...editForm.personalInfo, summary: e.target.value }
+                    } : null)}
                     className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all resize-none"
                   />
                 </div>
@@ -853,14 +1042,14 @@ export default function ProfilePage() {
                 <div>
                   <label className="block text-sm font-bold text-gray-400 mb-2">Skills</label>
                   <div className="flex flex-wrap gap-2 mb-3">
-                    {editForm.skills.map((skill) => (
+                    {editForm?.skills.map((skill) => (
                       <span
-                        key={skill}
+                        key={skill.id}
                         className="px-3 py-1 bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] rounded-full text-sm flex items-center gap-2"
                       >
-                        {skill}
+                        {skill.name}
                         <button
-                          onClick={() => removeSkill(skill)}
+                          onClick={() => removeSkill(skill.id)}
                           className="hover:text-red-400 transition-colors"
                         >
                           <X className="w-3 h-3" />
@@ -874,8 +1063,9 @@ export default function ProfilePage() {
                       placeholder="Add a skill..."
                       onKeyPress={(e) => {
                         if (e.key === 'Enter') {
-                          addSkill((e.target as HTMLInputElement).value)
-                          ;(e.target as HTMLInputElement).value = ''
+                          const input = e.target as HTMLInputElement
+                          addSkill(input.value)
+                          input.value = ''
                         }
                       }}
                       className="flex-1 px-4 py-2 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
@@ -894,22 +1084,16 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Social Links */}
-                <div className="grid md:grid-cols-3 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-bold text-gray-400 mb-2">LinkedIn</label>
                     <input
                       type="url"
-                      value={editForm.linkedin}
-                      onChange={(e) => setEditForm({ ...editForm, linkedin: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-bold text-gray-400 mb-2">GitHub</label>
-                    <input
-                      type="url"
-                      value={editForm.github}
-                      onChange={(e) => setEditForm({ ...editForm, github: e.target.value })}
+                      value={editForm?.personalInfo.linkedinUrl || ''}
+                      onChange={(e) => setEditForm(editForm ? {
+                        ...editForm,
+                        personalInfo: { ...editForm.personalInfo, linkedinUrl: e.target.value }
+                      } : null)}
                       className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
                     />
                   </div>
@@ -917,8 +1101,11 @@ export default function ProfilePage() {
                     <label className="block text-sm font-bold text-gray-400 mb-2">Portfolio</label>
                     <input
                       type="url"
-                      value={editForm.portfolio}
-                      onChange={(e) => setEditForm({ ...editForm, portfolio: e.target.value })}
+                      value={editForm?.personalInfo.portfolioUrl || ''}
+                      onChange={(e) => setEditForm(editForm ? {
+                        ...editForm,
+                        personalInfo: { ...editForm.personalInfo, portfolioUrl: e.target.value }
+                      } : null)}
                       className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
                     />
                   </div>
@@ -938,10 +1125,11 @@ export default function ProfilePage() {
                     type="button"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={handleSaveProfile}
-                    className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all"
+                    onClick={saveProfile}
+                    disabled={saving}
+                    className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Save Changes
+                    {saving ? 'Saving...' : 'Save Changes'}
                   </m.button>
                 </div>
               </div>
