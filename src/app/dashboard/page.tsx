@@ -38,89 +38,61 @@ const m = motion as any
 
 // Types
 interface Application {
-  id: string
+  _id: string
   company: string
   position: string
-  status: "applied" | "interviewing" | "offer" | "rejected"
-  appliedDate: string
+  status: "applied" | "interview" | "offer" | "rejected" | "withdrawn"
+  applicationDate: string
   salary?: string
   location: string
   progress: number
   priority: "high" | "medium" | "low"
-  nextStep?: string
-  nextStepDate?: string
+  notes?: string
+  jobUrl?: string
+  contactInfo?: string
+  lastUpdated: string
 }
 
-// Mock data
-const mockApplications: Application[] = [
-  {
-    id: "1",
-    company: "Google",
-    position: "Senior Software Engineer",
-    status: "interviewing",
-    appliedDate: "2024-11-01",
-    salary: "$150k - $200k",
-    location: "Mountain View, CA",
-    progress: 60,
-    priority: "high",
-    nextStep: "Technical Interview",
-    nextStepDate: "2024-11-15",
-  },
-  {
-    id: "2",
-    company: "Microsoft",
-    position: "Full Stack Developer",
-    status: "applied",
-    appliedDate: "2024-11-05",
-    salary: "$120k - $160k",
-    location: "Redmond, WA",
-    progress: 25,
-    priority: "medium",
-  },
-  {
-    id: "3",
-    company: "Apple",
-    position: "iOS Developer",
-    status: "offer",
-    appliedDate: "2024-10-20",
-    salary: "$160k - $210k",
-    location: "Cupertino, CA",
-    progress: 100,
-    priority: "high",
-    nextStep: "Offer Review",
-    nextStepDate: "2024-11-18",
-  },
-  {
-    id: "4",
-    company: "Amazon",
-    position: "Backend Engineer",
-    status: "rejected",
-    appliedDate: "2024-10-15",
-    location: "Seattle, WA",
-    progress: 40,
-    priority: "low",
-  },
-  {
-    id: "5",
-    company: "Meta",
-    position: "Frontend Engineer",
-    status: "interviewing",
-    appliedDate: "2024-11-08",
-    salary: "$140k - $180k",
-    location: "Menlo Park, CA",
-    progress: 50,
-    priority: "high",
-    nextStep: "System Design Round",
-    nextStepDate: "2024-11-16",
-  },
-]
-
 export default function DashboardPage() {
-  const { user, logout } = useAuth()
-  const [applications, setApplications] = useState<Application[]>(mockApplications)
-  const [selectedTab, setSelectedTab] = useState<"all" | "applied" | "interviewing" | "offer" | "rejected">("all")
+  const { user, logout, getIdToken } = useAuth()
+  const [applications, setApplications] = useState<Application[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [selectedTab, setSelectedTab] = useState<"all" | "applied" | "interview" | "offer" | "rejected" | "withdrawn">("all")
   const [searchQuery, setSearchQuery] = useState("")
   const [showAddModal, setShowAddModal] = useState(false)
+
+  // Fetch applications from API
+  const fetchApplications = async () => {
+    try {
+      setLoading(true)
+      const token = await getIdToken()
+      const response = await fetch('/api/applications', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch applications')
+      }
+
+      const data = await response.json()
+      setApplications(data.applications || [])
+      setError(null)
+    } catch (err) {
+      console.error('Error fetching applications:', err)
+      setError('Failed to load applications')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (user) {
+      fetchApplications()
+    }
+  }, [user])
 
   // Calculate stats
   const stats = {
