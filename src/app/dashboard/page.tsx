@@ -466,7 +466,7 @@ export default function DashboardPage() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                       <div className="flex items-center gap-2 text-gray-400 text-sm">
                         <Calendar className="w-4 h-4 text-[#00d4ff]" />
-                        <span>{new Date(app.appliedDate).toLocaleDateString()}</span>
+                        <span>{new Date(app.appliedDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
                       </div>
                       {app.salary && (
                         <div className="flex items-center gap-2 text-gray-400 text-sm">
