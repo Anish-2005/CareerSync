@@ -865,12 +865,14 @@ function ViewApplicationModal({
     </motion.div>
   )
 }
-  const [activeTab, setActiveTab] = useState("applications")
+
   const [scrollY, setScrollY] = useState(0)
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const handleScroll = () => setScrollY(window.scrollY)
+      // set initial value
+      handleScroll()
       window.addEventListener("scroll", handleScroll)
       return () => window.removeEventListener("scroll", handleScroll)
     }
