@@ -60,19 +60,15 @@ export interface IProfile extends mongoose.Document {
     projectUrl: string;
     githubUrl: string;
   }>;
-  preferences: {
-    jobTypes: string[];
-    locations: string[];
-    salaryRange: {
-      min: number;
-      max: number;
-      currency: string;
-    };
-    remoteWork: boolean;
-    relocation: boolean;
-  };
-  createdAt: Date;
-  updatedAt: Date;
+  documents: Array<{
+    id: string;
+    filename: string;
+    originalName: string;
+    mimeType: string;
+    size: number;
+    uploadedAt: Date;
+    gridFsId: string; // Reference to GridFS file
+  }>;
 }
 
 const ProfileSchema = new mongoose.Schema<IProfile>({
@@ -143,6 +139,15 @@ const ProfileSchema = new mongoose.Schema<IProfile>({
     current: { type: Boolean, default: false },
     projectUrl: { type: String, default: '' },
     githubUrl: { type: String, default: '' },
+  }],
+  documents: [{
+    id: { type: String, required: true },
+    filename: { type: String, required: true },
+    originalName: { type: String, required: true },
+    mimeType: { type: String, required: true },
+    size: { type: Number, required: true },
+    uploadedAt: { type: Date, default: Date.now },
+    gridFsId: { type: String, required: true },
   }],
   preferences: {
     jobTypes: [{ type: String }],

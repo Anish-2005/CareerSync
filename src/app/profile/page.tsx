@@ -94,19 +94,15 @@ interface Profile {
     projectUrl: string
     githubUrl: string
   }>
-  preferences: {
-    jobTypes: string[]
-    locations: string[]
-    salaryRange: {
-      min: number
-      max: number
-      currency: string
-    }
-    remoteWork: boolean
-    relocation: boolean
-  }
-  createdAt: Date
-  updatedAt: Date
+  documents: Array<{
+    id: string;
+    filename: string;
+    originalName: string;
+    mimeType: string;
+    size: number;
+    uploadedAt: Date;
+    gridFsId: string;
+  }>;
 }
 
 export default function ProfilePage() {
@@ -118,6 +114,7 @@ export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false)
   const [editForm, setEditForm] = useState<Profile | null>(null)
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
 
   // Fetch profile data from API
   const fetchProfile = async () => {
@@ -203,6 +200,79 @@ export default function ProfilePage() {
   const handleCancelEdit = () => {
     setEditForm(null)
     setIsEditing(false)
+  }
+
+  // Handle file upload
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    try {
+      setUploading(true)
+      const token = await getIdToken()
+
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/api/documents/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Upload failed')
+      }
+
+      const data = await response.json()
+
+      // Refresh profile to show new document
+      await fetchProfile()
+
+      // Reset file input
+      event.target.value = ''
+
+    } catch (error) {
+      console.error('Upload error:', error)
+      setError('Failed to upload file')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  // Handle file download
+  const handleFileDownload = async (documentId: string, filename: string) => {
+    try {
+      const token = await getIdToken()
+
+      const response = await fetch(`/api/documents/download?id=${documentId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error('Download failed')
+      }
+
+      // Create blob and download
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = filename
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+
+    } catch (error) {
+      console.error('Download error:', error)
+      setError('Failed to download file')
+    }
   }
 
   const addSkill = (skillName: string, category: string = 'Other') => {

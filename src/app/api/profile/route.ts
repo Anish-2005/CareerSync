@@ -22,13 +22,52 @@ export async function GET(request: NextRequest) {
     let profile = await Profile.findOne({ userId: decodedToken.uid });
     console.log('GET: Profile found:', !!profile);
 
-    // TEMPORARILY DISABLE PROFILE CREATION/UPDATE TO DEBUG
+    // If profile doesn't exist, create a default one
     if (!profile) {
-      console.log('GET: No profile found, returning null');
-      return NextResponse.json({ profile: null });
+      console.log('GET: Creating new profile');
+      // Get user info from Firebase token
+      const userInfo = {
+        userId: decodedToken.uid,
+        personalInfo: {
+          email: decodedToken.email || '',
+          firstName: decodedToken.name?.split(' ')[0] || '',
+          lastName: decodedToken.name?.split(' ').slice(1).join(' ') || '',
+          phone: '',
+          location: '',
+          linkedinUrl: '',
+          githubUrl: '',
+          portfolioUrl: '',
+          summary: '',
+        },
+        experience: [],
+        education: [],
+        skills: [],
+        certifications: [],
+        projects: [],
+        preferences: {
+          jobTypes: [],
+          locations: [],
+          salaryRange: {
+            min: 0,
+            max: 0,
+            currency: 'USD',
+          },
+          remoteWork: false,
+          relocation: false,
+        },
+      };
+
+      try {
+        profile = new Profile(userInfo);
+        await profile.save();
+        console.log('GET: Created new profile successfully');
+      } catch (saveError) {
+        console.error('GET: Error saving new profile:', saveError);
+        throw saveError;
+      }
     }
 
-    console.log('GET: Returning existing profile');
+    console.log('GET: Returning profile');
     return NextResponse.json({ profile });
 
     return NextResponse.json({ profile });
