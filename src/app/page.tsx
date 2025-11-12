@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import * as THREE from "three"
 import {
   Target,
   TrendingUp,
@@ -42,6 +43,7 @@ import {
 // Cast motion to any to avoid strict prop typing issues in this file
 const m = motion as any
 
+<<<<<<< HEAD
 // Types for job applications
 interface JobApplication {
   id: string
@@ -119,20 +121,26 @@ function getStatusIcon(status: JobApplication['status']) {
 // Helper function to get priority color
 function getPriorityColor(priority: JobApplication['priority']) {
   return priorityConfig[priority].color
+=======
+// Seeded random number generator for consistent SSR/client rendering
+function seededRandom(seed: number) {
+  const x = Math.sin(seed) * 10000
+  return x - Math.floor(x)
+}
+
+function getSeededRandom(seed: number) {
+  return seededRandom(seed)
+>>>>>>> parent of dacad16 (Update page.tsx)
 }
 
 // Client component for time display to avoid hydration issues
 function TimeDisplay() {
-  const [time, setTime] = useState("10:58 PM")
+  const [time, setTime] = useState(new Date().toLocaleTimeString())
 
   useEffect(() => {
     // Update time every second
     const interval = setInterval(() => {
-      setTime(new Date().toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true
-      }))
+      setTime(new Date().toLocaleTimeString())
     }, 1000)
 
     return () => clearInterval(interval)
@@ -906,7 +914,7 @@ function ViewApplicationModal({
           </div>
         </div>
       </m.nav>      {/* Hero Section */}
-      <section className="mt-20 relative h-screen w-full flex items-center justify-center overflow-hidden">
+      <section className="mt-18 relative h-screen w-full flex items-center justify-center overflow-hidden">
         {/* Innovative morphing background */}
         <div className="absolute inset-0 overflow-hidden">
           {/* Morphing geometric shapes */}
@@ -952,21 +960,29 @@ function ViewApplicationModal({
               key={i}
               className="absolute w-2 h-2 rounded-full"
               animate={{
-                x: [0, 50, -25, 0],
-                y: [0, -30, 15, 0],
+                x: [
+                  getSeededRandom(i * 3) * (typeof window !== 'undefined' ? window.innerWidth : 1920),
+                  getSeededRandom(i * 3 + 1) * (typeof window !== 'undefined' ? window.innerWidth : 1920),
+                  getSeededRandom(i * 3 + 2) * (typeof window !== 'undefined' ? window.innerWidth : 1920),
+                ],
+                y: [
+                  getSeededRandom(i * 3 + 10) * (typeof window !== 'undefined' ? window.innerHeight : 1080),
+                  getSeededRandom(i * 3 + 11) * (typeof window !== 'undefined' ? window.innerHeight : 1080),
+                  getSeededRandom(i * 3 + 12) * (typeof window !== 'undefined' ? window.innerHeight : 1080),
+                ],
                 scale: [0, 1, 0.5, 1, 0],
                 opacity: [0, 0.8, 0.4, 0.8, 0],
               }}
               transition={{
-                duration: 15,
+                duration: 15 + getSeededRandom(i * 5) * 10,
                 repeat: Number.POSITIVE_INFINITY,
                 ease: "easeInOut",
-                delay: i * 0.2,
+                delay: getSeededRandom(i * 7) * 5,
               }}
               style={{
                 background: i % 3 === 0 ? "#00d4ff" : i % 3 === 1 ? "#ff6b00" : "#00ff88",
-                left: `${particlePositions[i]?.left || 50}%`,
-                top: `${particlePositions[i]?.top || 50}%`,
+                left: `${getSeededRandom(i * 9) * 100}%`,
+                top: `${getSeededRandom(i * 11) * 100}%`,
                 filter: "blur(1px)",
               }}
             />
@@ -2251,21 +2267,29 @@ function ViewApplicationModal({
               key={`particle-${i}`}
               className="absolute w-1 h-1 rounded-full"
               animate={{
-                x: [0, 30, -15, 0],
-                y: [0, -25, 10, 0],
+                x: [
+                  getSeededRandom(i * 13) * (typeof window !== 'undefined' ? window.innerWidth : 1920),
+                  getSeededRandom(i * 13 + 1) * (typeof window !== 'undefined' ? window.innerWidth : 1920),
+                  getSeededRandom(i * 13 + 2) * (typeof window !== 'undefined' ? window.innerWidth : 1920),
+                ],
+                y: [
+                  getSeededRandom(i * 13 + 10) * (typeof window !== 'undefined' ? window.innerHeight : 1080),
+                  getSeededRandom(i * 13 + 11) * (typeof window !== 'undefined' ? window.innerHeight : 1080),
+                  getSeededRandom(i * 13 + 12) * (typeof window !== 'undefined' ? window.innerHeight : 1080),
+                ],
                 scale: [0, 1.5, 0.5, 1, 0],
                 opacity: [0, 0.7, 0.3, 0.7, 0],
               }}
               transition={{
-                duration: 18,
+                duration: 18 + getSeededRandom(i * 15) * 12,
                 repeat: Number.POSITIVE_INFINITY,
                 ease: "easeInOut",
-                delay: i * 0.1,
+                delay: getSeededRandom(i * 17) * 8,
               }}
               style={{
                 background: i % 5 === 0 ? "#00d4ff" : i % 5 === 1 ? "#ff6b00" : i % 5 === 2 ? "#00ff88" : i % 5 === 3 ? "#ff8c00" : "#8b5cf6",
-                left: `${particlePositions2[i]?.left || 50}%`,
-                top: `${particlePositions2[i]?.top || 50}%`,
+                left: `${getSeededRandom(i * 19) * 100}%`,
+                top: `${getSeededRandom(i * 21) * 100}%`,
                 filter: "blur(0.5px)",
               }}
             />
