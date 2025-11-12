@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { auth } from '@/lib/firebase';
+import { adminAuth } from '@/lib/firebase-admin';
 
 export async function verifyFirebaseToken(request: NextRequest) {
   try {
@@ -12,7 +12,7 @@ export async function verifyFirebaseToken(request: NextRequest) {
     const token = authHeader.substring(7); // Remove 'Bearer ' prefix
 
     // Verify the token with Firebase Admin SDK
-    const decodedToken = await auth.verifyIdToken(token);
+    const decodedToken = await adminAuth.verifyIdToken(token);
 
     return decodedToken;
   } catch (error) {
