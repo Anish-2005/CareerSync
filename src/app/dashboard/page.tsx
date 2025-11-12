@@ -61,6 +61,12 @@ export default function DashboardPage() {
   const [motivationalQuote, setMotivationalQuote] = useState("")
   const [streak, setStreak] = useState(0)
   const [soundEnabled, setSoundEnabled] = useState(false)
+  const [unlockedAchievementIds, setUnlockedAchievementIds] = useState<number[]>([])
+  const [userStats, setUserStats] = useState({
+    totalApplications: 0,
+    currentStreak: 0,
+    longestStreak: 0,
+  })
 
   // Motivational Quotes
   const quotes = [
@@ -114,9 +120,75 @@ export default function DashboardPage() {
     }
   }
 
+  // Fetch achievements from API
+  const fetchAchievements = async () => {
+    try {
+      const token = await getIdToken()
+      const response = await fetch('/api/user/achievements', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setUnlockedAchievementIds(data.achievements?.map((a: any) => a.id) || [])
+        setUserStats(data.stats || { totalApplications: 0, currentStreak: 0, longestStreak: 0 })
+      }
+    } catch (err) {
+      console.error('Error fetching achievements:', err)
+    }
+  }
+
+  // Unlock achievement
+  const unlockAchievement = async (achievementId: number) => {
+    try {
+      const token = await getIdToken()
+      const response = await fetch('/api/user/achievements', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ achievementId }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        if (data.message === 'Achievement unlocked!') {
+          setUnlockedAchievementIds(prev => [...prev, achievementId])
+          // Show celebration!
+          if (soundEnabled) {
+            playSound('success')
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error unlocking achievement:', err)
+    }
+  }
+
+  // Update user stats
+  const updateUserStats = async (newStats: any) => {
+    try {
+      const token = await getIdToken()
+      await fetch('/api/user/achievements', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ stats: newStats }),
+      })
+    } catch (err) {
+      console.error('Error updating stats:', err)
+    }
+  }
+
   useEffect(() => {
     if (user) {
       fetchApplications()
+      fetchAchievements()
       setMotivationalQuote(quotes[Math.floor(Math.random() * quotes.length)])
     }
   }, [user])
@@ -343,18 +415,18 @@ export default function DashboardPage() {
     console.log(`🔊 Playing ${type} sound`)
   }
 
-  // Achievements system
+  // Achievements system - now linked to database
   const achievements = [
-    { id: 1, name: "First Step", description: "Applied to your first job", unlocked: applications.length >= 1, icon: Rocket },
-    { id: 2, name: "Getting Started", description: "Applied to 5 jobs", unlocked: applications.length >= 5, icon: Target },
-    { id: 3, name: "Job Hunter", description: "Applied to 10 jobs", unlocked: applications.length >= 10, icon: Briefcase },
-    { id: 4, name: "Persistent", description: "Applied to 25 jobs", unlocked: applications.length >= 25, icon: Trophy },
-    { id: 5, name: "Dedicated", description: "Applied to 50 jobs", unlocked: applications.length >= 50, icon: Award },
-    { id: 6, name: "Interview Ready", description: "Got your first interview", unlocked: stats.interviewing >= 1, icon: Users },
-    { id: 7, name: "Offer Received!", description: "Got your first offer", unlocked: stats.offers >= 1, icon: Star },
-    { id: 8, name: "On Fire", description: "3-day application streak", unlocked: streak >= 3, icon: Flame },
-    { id: 9, name: "Focused", description: "5 high priority applications", unlocked: stats.highPriority >= 5, icon: Zap },
-    { id: 10, name: "Success Rate", description: "Achieved 10% offer rate", unlocked: stats.successRate >= 10, icon: TrendingUp },
+    { id: 1, name: "First Step", description: "Applied to your first job", unlocked: unlockedAchievementIds.includes(1), icon: Rocket },
+    { id: 2, name: "Getting Started", description: "Applied to 5 jobs", unlocked: unlockedAchievementIds.includes(2), icon: Target },
+    { id: 3, name: "Job Hunter", description: "Applied to 10 jobs", unlocked: unlockedAchievementIds.includes(3), icon: Briefcase },
+    { id: 4, name: "Persistent", description: "Applied to 25 jobs", unlocked: unlockedAchievementIds.includes(4), icon: Trophy },
+    { id: 5, name: "Dedicated", description: "Applied to 50 jobs", unlocked: unlockedAchievementIds.includes(5), icon: Award },
+    { id: 6, name: "Interview Ready", description: "Got your first interview", unlocked: unlockedAchievementIds.includes(6), icon: Users },
+    { id: 7, name: "Offer Received!", description: "Got your first offer", unlocked: unlockedAchievementIds.includes(7), icon: Star },
+    { id: 8, name: "On Fire", description: "3-day application streak", unlocked: unlockedAchievementIds.includes(8), icon: Flame },
+    { id: 9, name: "Focused", description: "5 high priority applications", unlocked: unlockedAchievementIds.includes(9), icon: Zap },
+    { id: 10, name: "Success Rate", description: "Achieved 10% offer rate", unlocked: unlockedAchievementIds.includes(10), icon: TrendingUp },
   ]
 
   const unlockedAchievements = achievements.filter(a => a.unlocked)
@@ -383,6 +455,32 @@ export default function DashboardPage() {
               >
                 <XCircle className="w-4 h-4 text-white" />
               </button>
+            </div>
+          </m.div>
+        )}
+      </AnimatePresence>
+
+      {/* Achievement Unlock Notification */}
+      <AnimatePresence>
+        {unlockedAchievements.length > 0 && unlockedAchievements.length !== achievements.filter(a => unlockedAchievementIds.includes(a.id)).length && (
+          <m.div
+            initial={{ opacity: 0, scale: 0.8, y: 50 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 50 }}
+            className="fixed bottom-8 right-8 z-50 max-w-sm"
+          >
+            <div className="p-6 rounded-2xl bg-gradient-to-br from-[#00ff88]/90 to-[#00d4ff]/90 backdrop-blur-md border-2 border-[#00ff88] shadow-2xl shadow-[#00ff88]/50">
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-xl bg-white/20">
+                  <Trophy className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <div className="text-white font-bold text-lg mb-1">🎉 Achievement Unlocked!</div>
+                  <div className="text-white/90 text-sm">
+                    {unlockedAchievements[unlockedAchievements.length - 1]?.name}
+                  </div>
+                </div>
+              </div>
             </div>
           </m.div>
         )}
@@ -1356,6 +1454,46 @@ export default function DashboardPage() {
                 >
                   <XCircle className="w-6 h-6" />
                 </m.button>
+              </div>
+
+              {/* Progress Bar */}
+              <div className="mb-6">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-gray-400">Overall Progress</span>
+                  <span className="text-sm font-bold text-[#00ff88]">
+                    {Math.round((unlockedAchievements.length / achievements.length) * 100)}%
+                  </span>
+                </div>
+                <div className="h-3 bg-[#0f2540] rounded-full overflow-hidden">
+                  <m.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${(unlockedAchievements.length / achievements.length) * 100}%` }}
+                    transition={{ duration: 1 }}
+                    className="h-full rounded-full bg-gradient-to-r from-[#00ff88] to-[#00d4ff]"
+                  />
+                </div>
+              </div>
+
+              {/* Stats Summary */}
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20 text-center">
+                  <div className="text-2xl font-bold text-[#00d4ff] mb-1">{userStats.totalApplications}</div>
+                  <div className="text-xs text-gray-400">Total Applications</div>
+                </div>
+                <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#ff6b00]/20 text-center">
+                  <div className="text-2xl font-bold text-[#ff6b00] mb-1 flex items-center justify-center gap-1">
+                    <Flame className="w-5 h-5" />
+                    {streak}
+                  </div>
+                  <div className="text-xs text-gray-400">Current Streak</div>
+                </div>
+                <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00ff88]/20 text-center">
+                  <div className="text-2xl font-bold text-[#00ff88] mb-1 flex items-center justify-center gap-1">
+                    <Award className="w-5 h-5" />
+                    {userStats.longestStreak}
+                  </div>
+                  <div className="text-xs text-gray-400">Longest Streak</div>
+                </div>
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
