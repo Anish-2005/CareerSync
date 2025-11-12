@@ -39,18 +39,21 @@ const m = motion as any
 // Types
 interface Application {
   _id: string
+  userId: string
   company: string
   position: string
-  status: "applied" | "interview" | "offer" | "rejected" | "withdrawn"
-  applicationDate: string
-  salary?: string
-  location: string
-  progress: number
-  priority: "high" | "medium" | "low"
+  status: 'applied' | 'interview' | 'offer' | 'rejected' | 'withdrawn'
+  applicationDate: Date
+  lastUpdated: Date
   notes?: string
+  salary?: string
+  location?: string
   jobUrl?: string
   contactInfo?: string
-  lastUpdated: string
+  priority: 'low' | 'medium' | 'high'
+  progress: number
+  createdAt: Date
+  updatedAt: Date
 }
 
 export default function DashboardPage() {
@@ -98,7 +101,7 @@ export default function DashboardPage() {
   const stats = {
     total: applications.length,
     applied: applications.filter((a) => a.status === "applied").length,
-    interviewing: applications.filter((a) => a.status === "interviewing").length,
+    interviewing: applications.filter((a) => a.status === "interview").length,
     offers: applications.filter((a) => a.status === "offer").length,
     rejected: applications.filter((a) => a.status === "rejected").length,
     responseRate: Math.round(
@@ -119,12 +122,14 @@ export default function DashboardPage() {
     switch (status) {
       case "applied":
         return "#00d4ff"
-      case "interviewing":
+      case "interview":
         return "#ff6b00"
       case "offer":
         return "#00ff88"
       case "rejected":
         return "#ff4444"
+      case "withdrawn":
+        return "#666"
       default:
         return "#666"
     }
@@ -134,12 +139,14 @@ export default function DashboardPage() {
     switch (status) {
       case "applied":
         return Send
-      case "interviewing":
+      case "interview":
         return Users
       case "offer":
         return CheckCircle2
       case "rejected":
         return XCircle
+      case "withdrawn":
+        return AlertCircle
       default:
         return AlertCircle
     }
@@ -337,7 +344,7 @@ export default function DashboardPage() {
             {[
               { label: "All", value: "all", count: stats.total },
               { label: "Applied", value: "applied", count: stats.applied },
-              { label: "Interviewing", value: "interviewing", count: stats.interviewing },
+              { label: "Interviewing", value: "interview", count: stats.interviewing },
               { label: "Offers", value: "offer", count: stats.offers },
               { label: "Rejected", value: "rejected", count: stats.rejected },
             ].map((tab) => (
@@ -379,7 +386,7 @@ export default function DashboardPage() {
 
               return (
                 <m.div
-                  key={app.id}
+                  key={app._id}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
@@ -442,7 +449,7 @@ export default function DashboardPage() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                       <div className="flex items-center gap-2 text-gray-400 text-sm">
                         <Calendar className="w-4 h-4 text-[#00d4ff]" />
-                        <span>{new Date(app.appliedDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
+                        <span>{new Date(app.applicationDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
                       </div>
                       {app.salary && (
                         <div className="flex items-center gap-2 text-gray-400 text-sm">
@@ -452,14 +459,8 @@ export default function DashboardPage() {
                       )}
                       <div className="flex items-center gap-2 text-gray-400 text-sm">
                         <MapPin className="w-4 h-4 text-[#ff6b00]" />
-                        <span>{app.location}</span>
+                        <span>{app.location || 'Remote'}</span>
                       </div>
-                      {app.nextStep && (
-                        <div className="flex items-center gap-2 text-gray-400 text-sm">
-                          <Clock className="w-4 h-4 text-[#00d4ff]" />
-                          <span>{app.nextStep}</span>
-                        </div>
-                      )}
                     </div>
 
                     {/* Progress Bar */}
@@ -484,16 +485,8 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Actions */}
-                    <div className="flex items-center justify-between">
-                      {app.nextStepDate && (
-                        <div className="flex items-center gap-2 text-sm">
-                          <AlertCircle className="w-4 h-4 text-[#ff6b00]" />
-                          <span className="text-gray-400">
-                            Next: <span className="text-white font-bold">{app.nextStepDate}</span>
-                          </span>
-                        </div>
-                      )}
-                      <div className="flex items-center gap-2 ml-auto">
+                    <div className="flex items-center justify-end">
+                      <div className="flex items-center gap-2">
                         <m.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}

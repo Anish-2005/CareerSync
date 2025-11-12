@@ -21,6 +21,7 @@ interface AuthContextType {
   signInWithGoogle: () => Promise<void>
   logout: () => Promise<void>
   resetPassword: (email: string) => Promise<void>
+  getIdToken: () => Promise<string>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -67,6 +68,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await sendPasswordResetEmail(auth, email)
   }
 
+  const getIdToken = async (): Promise<string> => {
+    if (!user) {
+      throw new Error('No user is signed in')
+    }
+    return await user.getIdToken()
+  }
+
   const value = {
     user,
     loading,
@@ -75,6 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signInWithGoogle,
     logout,
     resetPassword,
+    getIdToken,
   }
 
   return (
