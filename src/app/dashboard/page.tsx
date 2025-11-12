@@ -31,6 +31,7 @@ import {
   ArrowUpRight,
   ArrowDownRight,
 } from "lucide-react"
+import { RouteGuard } from "@/components/RouteGuard"
 
 const m = motion as any
 
@@ -170,11 +171,69 @@ export default function DashboardPage() {
     }
   }
 
+export default function DashboardPage() {
+  const [applications, setApplications] = useState<Application[]>(mockApplications)
+  const [selectedTab, setSelectedTab] = useState<"all" | "applied" | "interviewing" | "offer" | "rejected">("all")
+  const [searchQuery, setSearchQuery] = useState("")
+  const [showAddModal, setShowAddModal] = useState(false)
+
+  // Calculate stats
+  const stats = {
+    total: applications.length,
+    applied: applications.filter((a) => a.status === "applied").length,
+    interviewing: applications.filter((a) => a.status === "interviewing").length,
+    offers: applications.filter((a) => a.status === "offer").length,
+    rejected: applications.filter((a) => a.status === "rejected").length,
+    responseRate: Math.round(
+      ((applications.length - applications.filter((a) => a.status === "applied").length) / applications.length) * 100
+    ),
+  }
+
+  // Filter applications
+  const filteredApplications = applications.filter((app) => {
+    const matchesTab = selectedTab === "all" || app.status === selectedTab
+    const matchesSearch =
+      app.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      app.position.toLowerCase().includes(searchQuery.toLowerCase())
+    return matchesTab && matchesSearch
+  })
+
+  const getStatusColor = (status: Application["status"]) => {
+    switch (status) {
+      case "applied":
+        return "#00d4ff"
+      case "interviewing":
+        return "#ff6b00"
+      case "offer":
+        return "#00ff88"
+      case "rejected":
+        return "#ff4444"
+      default:
+        return "#666"
+    }
+  }
+
+  const getStatusIcon = (status: Application["status"]) => {
+    switch (status) {
+      case "applied":
+        return Send
+      case "interviewing":
+        return Users
+      case "offer":
+        return CheckCircle2
+      case "rejected":
+        return XCircle
+      default:
+        return AlertCircle
+    }
+  }
+
   return (
-    <div
-      className="min-h-screen overflow-hidden bg-gradient-to-b from-[#0a1428] via-[#1a2d4d] to-[#0a1428]"
-      style={{ fontFamily: '"Geist", sans-serif' }}
-    >
+    <RouteGuard>
+      <div
+        className="min-h-screen overflow-hidden bg-gradient-to-b from-[#0a1428] via-[#1a2d4d] to-[#0a1428]"
+        style={{ fontFamily: '"Geist", sans-serif' }}
+      >
       {/* Navigation */}
       <m.nav
         initial={{ opacity: 0, y: -20 }}
@@ -697,5 +756,6 @@ export default function DashboardPage() {
         )}
       </AnimatePresence>
     </div>
+  </RouteGuard>
   )
 }
