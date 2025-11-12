@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import * as THREE from "three"
 import {
   Target,
   TrendingUp,
@@ -21,24 +20,95 @@ import {
 // Cast motion to any to avoid strict prop typing issues in this file
 const m = motion as any
 
-// Seeded random number generator for consistent SSR/client rendering
-function seededRandom(seed: number) {
-  const x = Math.sin(seed) * 10000
-  return x - Math.floor(x)
-}
+// Predefined particle positions for consistent SSR/client rendering
+const particlePositions = [
+  { left: 12.75, top: 48.69 },
+  { left: 67.23, top: 23.45 },
+  { left: 34.89, top: 78.12 },
+  { left: 89.34, top: 56.78 },
+  { left: 45.67, top: 12.34 },
+  { left: 78.90, top: 89.01 },
+  { left: 23.45, top: 67.89 },
+  { left: 56.78, top: 34.56 },
+  { left: 91.23, top: 45.67 },
+  { left: 12.34, top: 78.90 },
+  { left: 67.89, top: 23.12 },
+  { left: 34.56, top: 89.34 },
+  { left: 89.01, top: 56.23 },
+  { left: 45.12, top: 12.78 },
+  { left: 78.45, top: 67.34 },
+  { left: 23.78, top: 34.89 },
+  { left: 56.34, top: 91.23 },
+  { left: 91.78, top: 45.12 },
+  { left: 12.89, top: 78.45 },
+  { left: 67.34, top: 23.78 },
+  { left: 34.12, top: 89.78 },
+  { left: 89.56, top: 56.89 },
+  { left: 45.78, top: 12.23 },
+  { left: 78.12, top: 67.78 },
+  { left: 23.34, top: 34.23 },
+  { left: 56.89, top: 91.78 },
+  { left: 91.34, top: 45.89 },
+  { left: 12.56, top: 78.12 },
+  { left: 67.78, top: 23.34 },
+  { left: 34.89, top: 89.23 }
+]
 
-function getSeededRandom(seed: number) {
-  return seededRandom(seed)
-}
+const particlePositions2 = [
+  { left: 15.23, top: 25.67 },
+  { left: 72.89, top: 48.12 },
+  { left: 38.45, top: 82.34 },
+  { left: 85.67, top: 61.78 },
+  { left: 42.12, top: 18.90 },
+  { left: 79.34, top: 85.23 },
+  { left: 26.78, top: 63.45 },
+  { left: 53.90, top: 31.67 },
+  { left: 94.56, top: 42.89 },
+  { left: 18.34, top: 75.12 },
+  { left: 64.78, top: 29.34 },
+  { left: 31.23, top: 86.78 },
+  { left: 87.45, top: 53.90 },
+  { left: 47.67, top: 15.23 },
+  { left: 76.89, top: 64.56 },
+  { left: 21.12, top: 37.89 },
+  { left: 58.34, top: 94.12 },
+  { left: 93.78, top: 47.45 },
+  { left: 14.56, top: 79.67 },
+  { left: 69.23, top: 26.89 },
+  { left: 36.78, top: 87.34 },
+  { left: 91.12, top: 58.67 },
+  { left: 43.45, top: 14.78 },
+  { left: 74.67, top: 69.23 },
+  { left: 27.89, top: 32.45 },
+  { left: 55.12, top: 93.67 },
+  { left: 89.34, top: 44.12 },
+  { left: 16.78, top: 76.89 },
+  { left: 63.45, top: 21.34 },
+  { left: 32.67, top: 88.56 },
+  { left: 84.23, top: 57.89 },
+  { left: 41.56, top: 13.12 },
+  { left: 77.34, top: 66.78 },
+  { left: 24.67, top: 35.23 },
+  { left: 59.89, top: 92.45 },
+  { left: 96.12, top: 46.78 },
+  { left: 11.34, top: 73.56 },
+  { left: 68.67, top: 28.12 },
+  { left: 33.89, top: 84.34 },
+  { left: 86.56, top: 52.67 }
+]
 
 // Client component for time display to avoid hydration issues
 function TimeDisplay() {
-  const [time, setTime] = useState(new Date().toLocaleTimeString())
+  const [time, setTime] = useState("10:58 PM")
 
   useEffect(() => {
     // Update time every second
     const interval = setInterval(() => {
-      setTime(new Date().toLocaleTimeString())
+      setTime(new Date().toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      }))
     }, 1000)
 
     return () => clearInterval(interval)
@@ -155,7 +225,7 @@ export default function LandingPage() {
           </div>
         </div>
       </m.nav>      {/* Hero Section */}
-      <section className="mt-18 relative h-screen w-full flex items-center justify-center overflow-hidden">
+      <section className="mt-20 relative h-screen w-full flex items-center justify-center overflow-hidden">
         {/* Innovative morphing background */}
         <div className="absolute inset-0 overflow-hidden">
           {/* Morphing geometric shapes */}
@@ -201,29 +271,21 @@ export default function LandingPage() {
               key={i}
               className="absolute w-2 h-2 rounded-full"
               animate={{
-                x: [
-                  getSeededRandom(i * 3) * (typeof window !== 'undefined' ? window.innerWidth : 1920),
-                  getSeededRandom(i * 3 + 1) * (typeof window !== 'undefined' ? window.innerWidth : 1920),
-                  getSeededRandom(i * 3 + 2) * (typeof window !== 'undefined' ? window.innerWidth : 1920),
-                ],
-                y: [
-                  getSeededRandom(i * 3 + 10) * (typeof window !== 'undefined' ? window.innerHeight : 1080),
-                  getSeededRandom(i * 3 + 11) * (typeof window !== 'undefined' ? window.innerHeight : 1080),
-                  getSeededRandom(i * 3 + 12) * (typeof window !== 'undefined' ? window.innerHeight : 1080),
-                ],
+                x: [0, 50, -25, 0],
+                y: [0, -30, 15, 0],
                 scale: [0, 1, 0.5, 1, 0],
                 opacity: [0, 0.8, 0.4, 0.8, 0],
               }}
               transition={{
-                duration: 15 + getSeededRandom(i * 5) * 10,
+                duration: 15,
                 repeat: Number.POSITIVE_INFINITY,
                 ease: "easeInOut",
-                delay: getSeededRandom(i * 7) * 5,
+                delay: i * 0.2,
               }}
               style={{
                 background: i % 3 === 0 ? "#00d4ff" : i % 3 === 1 ? "#ff6b00" : "#00ff88",
-                left: `${getSeededRandom(i * 9) * 100}%`,
-                top: `${getSeededRandom(i * 11) * 100}%`,
+                left: `${particlePositions[i]?.left || 50}%`,
+                top: `${particlePositions[i]?.top || 50}%`,
                 filter: "blur(1px)",
               }}
             />
@@ -1508,29 +1570,21 @@ export default function LandingPage() {
               key={`particle-${i}`}
               className="absolute w-1 h-1 rounded-full"
               animate={{
-                x: [
-                  getSeededRandom(i * 13) * (typeof window !== 'undefined' ? window.innerWidth : 1920),
-                  getSeededRandom(i * 13 + 1) * (typeof window !== 'undefined' ? window.innerWidth : 1920),
-                  getSeededRandom(i * 13 + 2) * (typeof window !== 'undefined' ? window.innerWidth : 1920),
-                ],
-                y: [
-                  getSeededRandom(i * 13 + 10) * (typeof window !== 'undefined' ? window.innerHeight : 1080),
-                  getSeededRandom(i * 13 + 11) * (typeof window !== 'undefined' ? window.innerHeight : 1080),
-                  getSeededRandom(i * 13 + 12) * (typeof window !== 'undefined' ? window.innerHeight : 1080),
-                ],
+                x: [0, 30, -15, 0],
+                y: [0, -25, 10, 0],
                 scale: [0, 1.5, 0.5, 1, 0],
                 opacity: [0, 0.7, 0.3, 0.7, 0],
               }}
               transition={{
-                duration: 18 + getSeededRandom(i * 15) * 12,
+                duration: 18,
                 repeat: Number.POSITIVE_INFINITY,
                 ease: "easeInOut",
-                delay: getSeededRandom(i * 17) * 8,
+                delay: i * 0.1,
               }}
               style={{
                 background: i % 5 === 0 ? "#00d4ff" : i % 5 === 1 ? "#ff6b00" : i % 5 === 2 ? "#00ff88" : i % 5 === 3 ? "#ff8c00" : "#8b5cf6",
-                left: `${getSeededRandom(i * 19) * 100}%`,
-                top: `${getSeededRandom(i * 21) * 100}%`,
+                left: `${particlePositions2[i]?.left || 50}%`,
+                top: `${particlePositions2[i]?.top || 50}%`,
                 filter: "blur(0.5px)",
               }}
             />
