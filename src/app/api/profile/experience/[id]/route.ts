@@ -72,3 +72,52 @@ export async function PUT(
     )
   }
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await dbConnect()
+
+    // Verify Firebase token
+    const decodedToken = await verifyFirebaseToken(request)
+    if (!decodedToken) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const experienceId = params.id
+
+    // Find the user's profile
+    const profile = await Profile.findOne({ userId: decodedToken.uid })
+
+    if (!profile) {
+      return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
+    }
+
+    // Find the experience to delete
+    const experienceIndex = profile.experience?.findIndex((exp: any) => exp.id === experienceId || exp.id?.toString() === experienceId?.toString())
+
+    if (experienceIndex === -1 || experienceIndex === undefined) {
+      return NextResponse.json({ error: 'Experience not found' }, { status: 404 })
+    }
+
+    // Remove the experience entry
+    profile.experience.splice(experienceIndex, 1)
+
+    // Save the updated profile
+    await profile.save()
+
+    return NextResponse.json({
+      success: true,
+      profile
+    })
+
+  } catch (error) {
+    console.error('Error deleting experience:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}

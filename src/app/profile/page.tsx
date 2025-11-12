@@ -464,9 +464,7 @@ export default function ProfilePage() {
   }
 
   const handleEditEducation = (educationId: string) => {
-    console.log('Editing education with ID:', educationId)
     const education = profile?.education.find(edu => edu.id === educationId)
-    console.log('Found education:', education)
     if (education) {
       setEditedEducation({
         institution: education.institution,
@@ -514,8 +512,8 @@ export default function ProfilePage() {
         endDate: editedEducation.current ? undefined : editedEducation.endDate ? new Date(editedEducation.endDate) : undefined,
       }
 
-      console.log('Saving edited education with ID:', editingEducationId)
-      console.log('Education data:', educationData)
+      console.log('Frontend: editingEducationId:', editingEducationId)
+      console.log('Frontend: educationData:', educationData)
 
       const response = await fetch(`/api/profile/education/${editingEducationId}`, {
         method: 'PUT',
@@ -539,6 +537,72 @@ export default function ProfilePage() {
     } catch (err) {
       console.error('Error saving edited education:', err)
       setError('Failed to save education')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleDeleteExperience = async (experienceId: string) => {
+    if (!confirm('Are you sure you want to delete this experience?')) {
+      return
+    }
+
+    try {
+      setSaving(true)
+      const token = await getIdToken()
+
+      const response = await fetch(`/api/profile/experience/${experienceId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('Delete experience failed:', response.status, errorText)
+        throw new Error(`Failed to delete experience: ${response.status} ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      setProfile(data.profile)
+      setError(null)
+    } catch (err) {
+      console.error('Error deleting experience:', err)
+      setError('Failed to delete experience')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleDeleteEducation = async (educationId: string) => {
+    if (!confirm('Are you sure you want to delete this education?')) {
+      return
+    }
+
+    try {
+      setSaving(true)
+      const token = await getIdToken()
+
+      const response = await fetch(`/api/profile/education/${educationId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('Delete education failed:', response.status, errorText)
+        throw new Error(`Failed to delete education: ${response.status} ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      setProfile(data.profile)
+      setError(null)
+    } catch (err) {
+      console.error('Error deleting education:', err)
+      setError('Failed to delete education')
     } finally {
       setSaving(false)
     }
@@ -1220,6 +1284,7 @@ export default function ProfilePage() {
                         <m.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
+                          onClick={() => handleDeleteExperience(exp.id)}
                           className="p-2 rounded-lg bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444] hover:bg-[#ff4444]/30 transition-all"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -1287,6 +1352,7 @@ export default function ProfilePage() {
                         <m.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
+                          onClick={() => handleDeleteEducation(edu.id)}
                           className="p-2 rounded-lg bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444] hover:bg-[#ff4444]/30 transition-all"
                         >
                           <Trash2 className="w-4 h-4" />

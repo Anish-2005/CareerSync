@@ -18,8 +18,13 @@ export async function PUT(
 
     const educationId = params.id
 
+    console.log('PUT Education API called with ID:', educationId)
+    console.log('ID type:', typeof educationId)
+
     // Get education data from request
     const educationData = await request.json()
+
+    console.log('Education data received:', educationData)
 
     // Validate required fields
     if (!educationData.institution?.trim() || !educationData.degree?.trim() || !educationData.field?.trim() || !educationData.startDate) {
@@ -33,14 +38,40 @@ export async function PUT(
       return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
     }
 
-    // Find the education to update
-    const educationIndex = profile.education?.findIndex((edu: any) => edu.id === educationId)
+    console.log('Profile found. Education entries:', profile.education?.map((edu: any) => ({
+      id: edu.id,
+      institution: edu.institution,
+      idType: typeof edu.id
+    })))
 
-    console.log('Education ID being searched:', educationId)
-    console.log('Education entries in profile:', profile.education?.map((edu: any) => ({ id: edu.id, institution: edu.institution })))
+    // Ensure all education entries have IDs (migration for old data)
+    if (profile.education) {
+      let needsSave = false
+      profile.education = profile.education.map((edu: any) => {
+        if (!edu.id) {
+          needsSave = true
+          return { ...edu, id: Date.now().toString() + Math.random().toString(36).substr(2, 9) }
+        }
+        return edu
+      })
+      if (needsSave) {
+        await profile.save()
+      }
+    }
+
+    // Find the education to update
+    const educationIndex = profile.education?.findIndex((edu: any) => {
+      console.log(`Comparing edu.id (${edu.id}, type: ${typeof edu.id}) with educationId (${educationId}, type: ${typeof educationId})`)
+      // Try both string and number comparison in case of type mismatch
+      const matches = edu.id === educationId || edu.id?.toString() === educationId?.toString()
+      console.log('Match result:', matches)
+      return matches
+    })
+
+    console.log('Education index found:', educationIndex)
 
     if (educationIndex === -1 || educationIndex === undefined) {
-      console.log('Education not found with ID:', educationId)
+      console.log('Education not found - returning 404')
       return NextResponse.json({ error: 'Education not found' }, { status: 404 })
     }
 
@@ -71,6 +102,55 @@ export async function PUT(
 
   } catch (error) {
     console.error('Error updating education:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await dbConnect()
+
+    // Verify Firebase token
+    const decodedToken = await verifyFirebaseToken(request)
+    if (!decodedToken) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const educationId = params.id
+
+    // Find the user's profile
+    const profile = await Profile.findOne({ userId: decodedToken.uid })
+
+    if (!profile) {
+      return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
+    }
+
+    // Find the education to delete
+    const educationIndex = profile.education?.findIndex((edu: any) => edu.id === educationId || edu.id?.toString() === educationId?.toString())
+
+    if (educationIndex === -1 || educationIndex === undefined) {
+      return NextResponse.json({ error: 'Education not found' }, { status: 404 })
+    }
+
+    // Remove the education entry
+    profile.education.splice(educationIndex, 1)
+
+    // Save the updated profile
+    await profile.save()
+
+    return NextResponse.json({
+      success: true,
+      profile
+    })
+
+  } catch (error) {
+    console.error('Error deleting education:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
