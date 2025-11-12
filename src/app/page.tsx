@@ -21,14 +21,21 @@ import {
 // Cast motion to any to avoid strict prop typing issues in this file
 const m = motion as any
 
+// Seeded random number generator for consistent SSR/client rendering
+function seededRandom(seed: number) {
+  const x = Math.sin(seed) * 10000
+  return x - Math.floor(x)
+}
+
+function getSeededRandom(seed: number) {
+  return seededRandom(seed)
+}
+
 // Client component for time display to avoid hydration issues
 function TimeDisplay() {
-  const [time, setTime] = useState("Loading...")
+  const [time, setTime] = useState(new Date().toLocaleTimeString())
 
   useEffect(() => {
-    // Set initial time
-    setTime(new Date().toLocaleTimeString())
-
     // Update time every second
     const interval = setInterval(() => {
       setTime(new Date().toLocaleTimeString())
@@ -195,28 +202,28 @@ export default function LandingPage() {
               className="absolute w-2 h-2 rounded-full"
               animate={{
                 x: [
-                  Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1920),
-                  Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1920),
-                  Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1920),
+                  getSeededRandom(i * 3) * (typeof window !== 'undefined' ? window.innerWidth : 1920),
+                  getSeededRandom(i * 3 + 1) * (typeof window !== 'undefined' ? window.innerWidth : 1920),
+                  getSeededRandom(i * 3 + 2) * (typeof window !== 'undefined' ? window.innerWidth : 1920),
                 ],
                 y: [
-                  Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1080),
-                  Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1080),
-                  Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1080),
+                  getSeededRandom(i * 3 + 10) * (typeof window !== 'undefined' ? window.innerHeight : 1080),
+                  getSeededRandom(i * 3 + 11) * (typeof window !== 'undefined' ? window.innerHeight : 1080),
+                  getSeededRandom(i * 3 + 12) * (typeof window !== 'undefined' ? window.innerHeight : 1080),
                 ],
                 scale: [0, 1, 0.5, 1, 0],
                 opacity: [0, 0.8, 0.4, 0.8, 0],
               }}
               transition={{
-                duration: 15 + Math.random() * 10,
+                duration: 15 + getSeededRandom(i * 5) * 10,
                 repeat: Number.POSITIVE_INFINITY,
                 ease: "easeInOut",
-                delay: Math.random() * 5,
+                delay: getSeededRandom(i * 7) * 5,
               }}
               style={{
                 background: i % 3 === 0 ? "#00d4ff" : i % 3 === 1 ? "#ff6b00" : "#00ff88",
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
+                left: `${getSeededRandom(i * 9) * 100}%`,
+                top: `${getSeededRandom(i * 11) * 100}%`,
                 filter: "blur(1px)",
               }}
             />
@@ -1502,28 +1509,28 @@ export default function LandingPage() {
               className="absolute w-1 h-1 rounded-full"
               animate={{
                 x: [
-                  Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1920),
-                  Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1920),
-                  Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1920),
+                  getSeededRandom(i * 13) * (typeof window !== 'undefined' ? window.innerWidth : 1920),
+                  getSeededRandom(i * 13 + 1) * (typeof window !== 'undefined' ? window.innerWidth : 1920),
+                  getSeededRandom(i * 13 + 2) * (typeof window !== 'undefined' ? window.innerWidth : 1920),
                 ],
                 y: [
-                  Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1080),
-                  Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1080),
-                  Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1080),
+                  getSeededRandom(i * 13 + 10) * (typeof window !== 'undefined' ? window.innerHeight : 1080),
+                  getSeededRandom(i * 13 + 11) * (typeof window !== 'undefined' ? window.innerHeight : 1080),
+                  getSeededRandom(i * 13 + 12) * (typeof window !== 'undefined' ? window.innerHeight : 1080),
                 ],
                 scale: [0, 1.5, 0.5, 1, 0],
                 opacity: [0, 0.7, 0.3, 0.7, 0],
               }}
               transition={{
-                duration: 18 + Math.random() * 12,
+                duration: 18 + getSeededRandom(i * 15) * 12,
                 repeat: Number.POSITIVE_INFINITY,
                 ease: "easeInOut",
-                delay: Math.random() * 8,
+                delay: getSeededRandom(i * 17) * 8,
               }}
               style={{
                 background: i % 5 === 0 ? "#00d4ff" : i % 5 === 1 ? "#ff6b00" : i % 5 === 2 ? "#00ff88" : i % 5 === 3 ? "#ff8c00" : "#8b5cf6",
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
+                left: `${getSeededRandom(i * 19) * 100}%`,
+                top: `${getSeededRandom(i * 21) * 100}%`,
                 filter: "blur(0.5px)",
               }}
             />
