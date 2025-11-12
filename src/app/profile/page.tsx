@@ -464,7 +464,9 @@ export default function ProfilePage() {
   }
 
   const handleEditEducation = (educationId: string) => {
+    console.log('Editing education with ID:', educationId)
     const education = profile?.education.find(edu => edu.id === educationId)
+    console.log('Found education:', education)
     if (education) {
       setEditedEducation({
         institution: education.institution,
@@ -511,6 +513,9 @@ export default function ProfilePage() {
         startDate: new Date(editedEducation.startDate),
         endDate: editedEducation.current ? undefined : editedEducation.endDate ? new Date(editedEducation.endDate) : undefined,
       }
+
+      console.log('Saving edited education with ID:', editingEducationId)
+      console.log('Education data:', educationData)
 
       const response = await fetch(`/api/profile/education/${editingEducationId}`, {
         method: 'PUT',

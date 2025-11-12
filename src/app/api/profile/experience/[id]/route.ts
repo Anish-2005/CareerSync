@@ -3,7 +3,10 @@ import dbConnect from '@/lib/mongodb'
 import Profile from '@/models/Profile'
 import { verifyFirebaseToken } from '@/lib/auth-middleware'
 
-export async function POST(request: NextRequest) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     await dbConnect()
 
@@ -12,6 +15,8 @@ export async function POST(request: NextRequest) {
     if (!decodedToken) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+
+    const experienceId = params.id
 
     // Get experience data from request
     const experienceData = await request.json()
@@ -28,9 +33,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
     }
 
-    // Create new experience entry
-    const newExperience = {
-      id: Date.now().toString(),
+    // Find the experience to update
+    const experienceIndex = profile.experience?.findIndex((exp: any) => exp.id === experienceId)
+
+    if (experienceIndex === -1 || experienceIndex === undefined) {
+      return NextResponse.json({ error: 'Experience not found' }, { status: 404 })
+    }
+
+    // Update the experience entry
+    const updatedExperience = {
+      ...profile.experience[experienceIndex],
       company: experienceData.company.trim(),
       position: experienceData.position.trim(),
       startDate: new Date(experienceData.startDate),
@@ -40,8 +52,8 @@ export async function POST(request: NextRequest) {
       location: experienceData.location?.trim() || '',
     }
 
-    // Add experience to profile
-    profile.experience = [...(profile.experience || []), newExperience]
+    // Update experience in profile
+    profile.experience[experienceIndex] = updatedExperience
 
     // Save the updated profile
     await profile.save()
@@ -49,11 +61,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       profile,
-      experience: newExperience
+      experience: updatedExperience
     })
 
   } catch (error) {
-    console.error('Error adding experience:', error)
+    console.error('Error updating experience:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
