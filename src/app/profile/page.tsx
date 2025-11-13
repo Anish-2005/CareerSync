@@ -28,6 +28,9 @@ import {
   Zap,
   Linkedin,
   Github,
+  Menu,
+  LogOut,
+  BarChart3,
 } from "lucide-react"
 import { RouteGuard } from "@/components/RouteGuard"
 import { useAuth } from "@/contexts/AuthContext"
@@ -161,6 +164,7 @@ export default function ProfilePage() {
     gpa: '',
     description: '',
   })
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
 
   // Migrate profile data to fix inconsistencies
   const migrateProfileData = async () => {
@@ -961,36 +965,93 @@ export default function ProfilePage() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[#0a1428]/80 border-b border-[#00d4ff]/20"
+        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[#0a1428]/90 border-b border-[#00d4ff]/20"
       >
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <m.div whileHover={{ scale: 1.05 }} className="flex items-center gap-3">
-            <div className="relative w-12 h-12 flex items-center justify-center">
-              <img src="/csync.png" alt="CareerSync" className="w-full h-full object-contain" />
-            </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] bg-clip-text text-transparent">
-              CareerSync
-            </span>
-          </m.div>
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2 sm:py-4">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <m.div
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center gap-1.5 sm:gap-3 cursor-pointer"
+              onClick={() => window.location.href = '/'}
+            >
+              <div className="relative w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center">
+                <img src="/csync.png" alt="CareerSync" className="w-full h-full object-contain" />
+              </div>
+              <span className="text-sm sm:text-xl font-bold bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] bg-clip-text text-transparent">
+                CareerSync
+              </span>
+            </m.div>
 
-          <div className="flex items-center gap-3">
-            <m.a
-              href="/dashboard"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-6 py-2 text-white text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
-            >
-              Dashboard
-            </m.a>
-            <m.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => logout()}
-              className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
-            >
-              Sign Out
-            </m.button>
+            {/* Desktop Buttons */}
+            <div className="hidden sm:flex items-center gap-3">
+              <m.a
+                href="/dashboard"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-6 py-2 text-white text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+              >
+                Dashboard
+              </m.a>
+              <m.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => logout()}
+                className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
+              >
+                Sign Out
+              </m.button>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="sm:hidden flex items-center gap-2">
+              <m.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowMobileMenu(!showMobileMenu)}
+                className="p-1.5 text-white rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+              >
+                {showMobileMenu ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+              </m.button>
+            </div>
           </div>
+
+          {/* Mobile Menu Dropdown */}
+          <AnimatePresence>
+            {showMobileMenu && (
+              <m.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="sm:hidden mt-3 pb-2"
+              >
+                <div className="flex flex-col gap-2">
+                  <m.a
+                    href="/dashboard"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full px-4 py-3 text-left text-white text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+                  >
+                    <BarChart3 className="w-4 h-4" />
+                    Dashboard
+                  </m.a>
+
+                  <m.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => {
+                      logout()
+                      setShowMobileMenu(false)
+                    }}
+                    className="w-full px-4 py-3 text-left text-white text-sm font-bold rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300 flex items-center gap-2"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Sign Out
+                  </m.button>
+                </div>
+              </m.div>
+            )}
+          </AnimatePresence>
         </div>
       </m.nav>
 
@@ -1034,16 +1095,16 @@ export default function ProfilePage() {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 pt-24 pb-12 px-6 max-w-7xl mx-auto">
+      <div className="relative z-10 pt-20 sm:pt-24 pb-12 px-4 sm:px-6 max-w-7xl mx-auto">
         {/* Header */}
         <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="mb-12"
+          className="mb-8 sm:mb-12"
         >
           <h1
-            className="text-6xl md:text-7xl font-black mb-4 leading-none"
+            className="text-4xl sm:text-6xl md:text-7xl font-black mb-4 leading-none"
             style={{
               background: "linear-gradient(135deg, #ffffff 0%, #00d4ff 30%, #ff6b00 60%, #00ff88 90%)",
               WebkitBackgroundClip: "text",
@@ -1051,9 +1112,9 @@ export default function ProfilePage() {
               backgroundClip: "text",
             }}
           >
-            Profile
+             My Profile
           </h1>
-          <p className="text-xl text-gray-400">Manage your professional profile and career information</p>
+          <p className="text-base sm:text-xl text-gray-400">Manage your professional profile and career information</p>
         </m.div>
 
         {/* Tab Navigation */}
@@ -1061,9 +1122,9 @@ export default function ProfilePage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
-          <div className="flex gap-3 overflow-x-auto pb-2">
+          <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2">
             {[
               { label: "Profile", value: "profile", icon: User },
               { label: "Experience", value: "experience", icon: Briefcase },
@@ -1077,13 +1138,13 @@ export default function ProfilePage() {
                   onClick={() => setActiveTab(tab.value as typeof activeTab)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`px-6 py-3 rounded-xl font-bold text-sm whitespace-nowrap transition-all duration-300 flex items-center gap-2 ${
+                  className={`px-3 py-2 sm:px-6 sm:py-3 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all duration-300 flex items-center gap-1 sm:gap-2 ${
                     activeTab === tab.value
                       ? "bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white shadow-lg"
                       : "bg-[#1a3a52]/60 border border-[#00d4ff]/20 text-gray-400 hover:text-white hover:border-[#00d4ff]/50"
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-3 h-3 sm:w-4 sm:h-4" />
                   {tab.label}
                 </m.button>
               )
@@ -1107,7 +1168,7 @@ export default function ProfilePage() {
                 <m.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="relative p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20 overflow-hidden"
+                  className="relative p-4 sm:p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20 overflow-hidden"
                 >
                   {/* Background glow */}
                   <div
@@ -1115,49 +1176,49 @@ export default function ProfilePage() {
                     style={{ background: "linear-gradient(135deg, rgba(0, 212, 255, 0.4), transparent)" }}
                   />
 
-                  <div className="relative z-10 flex flex-col md:flex-row items-start gap-8">
+                  <div className="relative z-10 flex flex-col md:flex-row items-start gap-6 sm:gap-8">
                     {/* Avatar */}
                     <div className="relative">
-                      <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-[#ff6b00] to-[#00d4ff] flex items-center justify-center text-white text-4xl font-bold shadow-lg">
+                      <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl bg-gradient-to-br from-[#ff6b00] to-[#00d4ff] flex items-center justify-center text-white text-3xl sm:text-4xl font-bold shadow-lg">
                         {(profile.personalInfo.firstName + ' ' + profile.personalInfo.lastName).split(" ").map((n: string) => n[0]).join("")}
                       </div>
                       <m.button
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
-                        className="absolute -bottom-2 -right-2 w-10 h-10 rounded-full bg-[#00d4ff] border-4 border-[#0a1428] flex items-center justify-center text-white shadow-lg"
+                        className="absolute -bottom-2 -right-2 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#00d4ff] border-4 border-[#0a1428] flex items-center justify-center text-white shadow-lg"
                       >
-                        <Camera className="w-5 h-5" />
+                        <Camera className="w-4 h-4 sm:w-5 sm:h-5" />
                       </m.button>
                     </div>
 
                     {/* Profile Info */}
-                    <div className="flex-1 space-y-4">
+                    <div className="flex-1 space-y-3 sm:space-y-4">
                       <div>
-                        <h2 className="text-3xl font-bold text-white mb-2">{profile.personalInfo.firstName} {profile.personalInfo.lastName}</h2>
-                        <p className="text-xl text-[#00d4ff] font-semibold">Software Engineer</p>
-                        <p className="text-gray-400">{profile.personalInfo.location}</p>
+                        <h2 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">{profile.personalInfo.firstName} {profile.personalInfo.lastName}</h2>
+                        <p className="text-lg sm:text-xl text-[#00d4ff] font-semibold">Software Engineer</p>
+                        <p className="text-sm sm:text-base text-gray-400">{profile.personalInfo.location}</p>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="flex items-center gap-3 text-gray-400">
-                          <Mail className="w-5 h-5 text-[#00d4ff]" />
-                          <span>{profile.personalInfo.email}</span>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                        <div className="flex items-center gap-2 sm:gap-3 text-gray-400">
+                          <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-[#00d4ff]" />
+                          <span className="text-sm sm:text-base truncate">{profile.personalInfo.email}</span>
                         </div>
-                        <div className="flex items-center gap-3 text-gray-400">
-                          <Phone className="w-5 h-5 text-[#00d4ff]" />
-                          <span>{profile.personalInfo.phone}</span>
+                        <div className="flex items-center gap-2 sm:gap-3 text-gray-400">
+                          <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-[#00d4ff]" />
+                          <span className="text-sm sm:text-base truncate">{profile.personalInfo.phone}</span>
                         </div>
-                        <div className="flex items-center gap-3 text-gray-400">
-                          <MapPin className="w-5 h-5 text-[#00d4ff]" />
-                          <span>{profile.personalInfo.location}</span>
+                        <div className="flex items-center gap-2 sm:gap-3 text-gray-400">
+                          <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-[#00d4ff]" />
+                          <span className="text-sm sm:text-base truncate">{profile.personalInfo.location}</span>
                         </div>
-                        <div className="flex items-center gap-3 text-gray-400">
-                          <Briefcase className="w-5 h-5 text-[#00d4ff]" />
-                          <span>{profile.experience.length} positions</span>
+                        <div className="flex items-center gap-2 sm:gap-3 text-gray-400">
+                          <Briefcase className="w-4 h-4 sm:w-5 sm:h-5 text-[#00d4ff]" />
+                          <span className="text-sm sm:text-base">{profile.experience.length} positions</span>
                         </div>
                       </div>
 
-                      <p className="text-gray-300 leading-relaxed">{profile.personalInfo.summary}</p>
+                      <p className="text-sm sm:text-base text-gray-300 leading-relaxed">{profile.personalInfo.summary}</p>
                     </div>
 
                     {/* Edit Button */}
@@ -1166,9 +1227,9 @@ export default function ProfilePage() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={handleEditProfile}
-                        className="px-6 py-3 bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] rounded-xl font-bold hover:bg-[#00d4ff]/30 transition-all duration-300 flex items-center gap-2"
+                        className="px-4 py-2 sm:px-6 sm:py-3 bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] rounded-xl font-bold hover:bg-[#00d4ff]/30 transition-all text-sm sm:text-base flex items-center gap-1 sm:gap-2"
                       >
-                        <Edit className="w-4 h-4" />
+                        <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
                         Edit Profile
                       </m.button>
                     </div>
@@ -1180,21 +1241,21 @@ export default function ProfilePage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20"
+                  className="p-4 sm:p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20"
                 >
-                  <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                    <Star className="w-6 h-6 text-[#00ff88]" />
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
+                    <Star className="w-5 h-5 sm:w-6 sm:h-6 text-[#00ff88]" />
                     Skills & Expertise
                   </h3>
 
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-wrap gap-2 sm:gap-3">
                     {profile.skills.map((skill, idx) => (
                       <m.span
                         key={skill.id}
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: idx * 0.05 }}
-                        className="px-4 py-2 bg-gradient-to-r from-[#00d4ff]/20 to-[#ff6b00]/20 border border-[#00d4ff]/30 rounded-full text-[#00d4ff] font-semibold text-sm"
+                        className="px-3 py-1 sm:px-4 sm:py-2 bg-gradient-to-r from-[#00d4ff]/20 to-[#ff6b00]/20 border border-[#00d4ff]/30 rounded-full text-[#00d4ff] font-semibold text-xs sm:text-sm"
                       >
                         {skill.name}
                       </m.span>
@@ -1207,23 +1268,23 @@ export default function ProfilePage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
-                  className="p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20"
+                  className="p-4 sm:p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20"
                 >
-                  <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                    <FileText className="w-6 h-6 text-[#00ff88]" />
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
+                    <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-[#00ff88]" />
                     Documents & Files
                   </h3>
 
                   {/* Upload Section */}
-                  <div className="mb-6">
+                  <div className="mb-4 sm:mb-6">
                     <label className="block">
-                      <div className="flex items-center justify-center w-full p-6 border-2 border-dashed border-[#00d4ff]/50 rounded-xl hover:border-[#00d4ff] transition-colors cursor-pointer bg-[#0f2540]/50">
+                      <div className="flex items-center justify-center w-full p-4 sm:p-6 border-2 border-dashed border-[#00d4ff]/50 rounded-xl hover:border-[#00d4ff] transition-colors cursor-pointer bg-[#0f2540]/50">
                         <div className="text-center">
-                          <Upload className="w-8 h-8 text-[#00d4ff] mx-auto mb-2" />
-                          <p className="text-white font-semibold mb-1">
+                          <Upload className="w-6 h-6 sm:w-8 sm:h-8 text-[#00d4ff] mx-auto mb-2" />
+                          <p className="text-white font-semibold mb-1 text-sm sm:text-base">
                             {uploading ? 'Uploading...' : 'Upload Document'}
                           </p>
-                          <p className="text-gray-400 text-sm">
+                          <p className="text-gray-400 text-xs sm:text-sm">
                             PDF, DOC, DOCX, TXT up to 10MB
                           </p>
                         </div>
@@ -1239,30 +1300,30 @@ export default function ProfilePage() {
                   </div>
 
                   {/* Documents List */}
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {(profile.documents || []).map((doc, idx) => (
                       <m.div
                         key={doc.id}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: idx * 0.1 }}
-                        className="flex items-center justify-between p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20"
+                        className="flex items-center justify-between p-3 sm:p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20"
                       >
-                        <div className="flex items-center gap-4">
-                          <FileText className="w-8 h-8 text-[#00d4ff]" />
-                          <div>
-                            <p className="text-white font-semibold">{doc.originalName}</p>
-                            <p className="text-gray-400 text-sm">
+                        <div className="flex items-center gap-2 sm:gap-4">
+                          <FileText className="w-4 h-4 sm:w-8 sm:h-8 text-[#00d4ff] flex-shrink-0" />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-white font-semibold text-sm sm:text-base truncate">{doc.originalName}</p>
+                            <p className="text-gray-400 text-xs sm:text-sm">
                               {(doc.size / 1024 / 1024).toFixed(2)} MB • {new Date(doc.uploadedAt).toLocaleDateString()}
                             </p>
                           </div>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 flex-shrink-0">
                           <m.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleFileDownload(doc.id, doc.originalName)}
-                            className="px-4 py-2 bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] rounded-lg font-bold hover:bg-[#00d4ff]/30 transition-all"
+                            className="px-3 py-2 sm:px-4 sm:py-2 bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] rounded-lg font-bold hover:bg-[#00d4ff]/30 transition-all text-xs sm:text-sm"
                           >
                             Download
                           </m.button>
@@ -1271,10 +1332,10 @@ export default function ProfilePage() {
                     ))}
 
                     {(!profile.documents || profile.documents.length === 0) && (
-                      <div className="text-center py-8">
-                        <FileText className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                        <p className="text-gray-400">No documents uploaded yet</p>
-                        <p className="text-gray-500 text-sm">Upload your resume, certificates, or other documents</p>
+                      <div className="text-center py-6 sm:py-8">
+                        <FileText className="w-10 h-10 sm:w-12 sm:h-12 text-gray-500 mx-auto mb-4" />
+                        <p className="text-gray-400 text-sm sm:text-base">No documents uploaded yet</p>
+                        <p className="text-gray-500 text-xs sm:text-sm">Upload your resume, certificates, or other documents</p>
                       </div>
                     )}
                   </div>
@@ -1285,14 +1346,14 @@ export default function ProfilePage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6 }}
-                  className="p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20"
+                  className="p-4 sm:p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20"
                 >
-                  <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                    <Globe className="w-6 h-6 text-[#00ff88]" />
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
+                    <Globe className="w-5 h-5 sm:w-6 sm:h-6 text-[#00ff88]" />
                     Professional Links
                   </h3>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                     {[
                       { label: "LinkedIn", url: profile.personalInfo.linkedinUrl, icon: Linkedin },
                       { label: "GitHub", url: profile.personalInfo.githubUrl, icon: Github },
@@ -1305,23 +1366,23 @@ export default function ProfilePage() {
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: idx * 0.1 }}
-                          className="p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300"
+                          className="p-3 sm:p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300"
                         >
-                          <div className="flex items-center gap-3 mb-2">
-                            <Icon className="w-6 h-6 text-[#00d4ff]" />
-                            <span className="text-white font-semibold">{link.label}</span>
+                          <div className="flex items-center gap-2 sm:gap-3 mb-2">
+                            <Icon className="w-4 h-4 sm:w-6 sm:h-6 text-[#00d4ff]" />
+                            <span className="text-white font-semibold text-sm sm:text-base">{link.label}</span>
                           </div>
                           {link.url ? (
                             <a
                               href={link.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-[#00d4ff] hover:text-[#00d4ff]/80 transition-colors text-sm font-semibold"
+                              className="text-[#00d4ff] hover:text-[#00d4ff]/80 transition-colors text-xs sm:text-sm font-semibold"
                             >
                               Go to Profile
                             </a>
                           ) : (
-                            <span className="text-gray-500 text-sm italic">Not provided</span>
+                            <span className="text-gray-500 text-xs sm:text-sm italic">Not provided</span>
                           )}
                         </m.div>
                       )
@@ -1333,28 +1394,28 @@ export default function ProfilePage() {
 
             {/* Experience Tab */}
             {activeTab === "experience" && (
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {profile.experience.map((exp, idx) => (
                   <m.div
                     key={exp.id}
                     initial={{ opacity: 0, x: -30 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.1 }}
-                    className="p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300"
+                    className="p-4 sm:p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300"
                   >
-                    <div className="flex items-start justify-between mb-6">
-                      <div>
-                        <h3 className="text-2xl font-bold text-white mb-2">{exp.position}</h3>
-                        <p className="text-xl text-[#00d4ff] font-semibold mb-2">{exp.company}</p>
-                        <div className="flex items-center gap-4 text-gray-400 text-sm">
-                          <span className="flex items-center gap-2">
-                            <Calendar className="w-4 h-4" />
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-4 sm:mb-6 gap-4">
+                      <div className="flex-1">
+                        <h3 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2">{exp.position}</h3>
+                        <p className="text-lg sm:text-xl text-[#00d4ff] font-semibold mb-2">{exp.company}</p>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-gray-400 text-xs sm:text-sm">
+                          <span className="flex items-center gap-1 sm:gap-2">
+                            <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
                             {new Date(exp.startDate).toLocaleDateString("en-US", { month: "short", year: "numeric" })} - {
                               exp.current ? "Present" : exp.endDate ? new Date(exp.endDate).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "Present"
                             }
                           </span>
                           {exp.current && (
-                            <span className="px-3 py-1 bg-[#00ff88]/20 border border-[#00ff88]/50 text-[#00ff88] rounded-full text-xs font-bold">
+                            <span className="px-2 py-1 sm:px-3 sm:py-1 bg-[#00ff88]/20 border border-[#00ff88]/50 text-[#00ff88] rounded-full text-xs font-bold">
                               CURRENT
                             </span>
                           )}
@@ -1367,7 +1428,7 @@ export default function ProfilePage() {
                           onClick={() => handleEditExperience(exp.id)}
                           className="p-2 rounded-lg bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] hover:bg-[#00d4ff]/30 transition-all"
                         >
-                          <Edit className="w-4 h-4" />
+                          <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
                         </m.button>
                         <m.button
                           whileHover={{ scale: 1.05 }}
@@ -1375,12 +1436,12 @@ export default function ProfilePage() {
                           onClick={() => handleDeleteExperience(exp.id)}
                           className="p-2 rounded-lg bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444] hover:bg-[#ff4444]/30 transition-all"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                         </m.button>
                       </div>
                     </div>
 
-                    <p className="text-gray-300 leading-relaxed">{exp.description}</p>
+                    <p className="text-sm sm:text-base text-gray-300 leading-relaxed">{exp.description}</p>
                   </m.div>
                 ))}
 
@@ -1391,9 +1452,9 @@ export default function ProfilePage() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleAddExperience}
-                  className="w-full p-8 rounded-3xl border-2 border-dashed border-[#00d4ff]/50 text-[#00d4ff] hover:border-[#00d4ff] hover:bg-[#00d4ff]/5 transition-all duration-300 flex items-center justify-center gap-3 font-bold"
+                  className="w-full p-6 sm:p-8 rounded-3xl border-2 border-dashed border-[#00d4ff]/50 text-[#00d4ff] hover:border-[#00d4ff] hover:bg-[#00d4ff]/5 transition-all duration-300 flex items-center justify-center gap-3 font-bold text-sm sm:text-base"
                 >
-                  <Plus className="w-6 h-6" />
+                  <Plus className="w-5 h-5 sm:w-6 sm:h-6" />
                   Add New Experience
                 </m.button>
               </div>
@@ -1401,28 +1462,28 @@ export default function ProfilePage() {
 
             {/* Education Tab */}
             {activeTab === "education" && (
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {profile.education.map((edu, idx) => (
                   <m.div
                     key={edu.id}
                     initial={{ opacity: 0, x: -30 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.1 }}
-                    className="p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300"
+                    className="p-4 sm:p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300"
                   >
-                    <div className="flex items-start justify-between mb-6">
-                      <div>
-                        <h3 className="text-2xl font-bold text-white mb-2">{edu.degree} in {edu.field}</h3>
-                        <p className="text-xl text-[#00d4ff] font-semibold mb-2">{edu.institution}</p>
-                        <div className="flex items-center gap-4 text-gray-400 text-sm">
-                          <span className="flex items-center gap-2">
-                            <Calendar className="w-4 h-4" />
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-4 sm:mb-6 gap-4">
+                      <div className="flex-1">
+                        <h3 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2">{edu.degree} in {edu.field}</h3>
+                        <p className="text-lg sm:text-xl text-[#00d4ff] font-semibold mb-2">{edu.institution}</p>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-gray-400 text-xs sm:text-sm">
+                          <span className="flex items-center gap-1 sm:gap-2">
+                            <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
                             {new Date(edu.startDate).toLocaleDateString("en-US", { month: "short", year: "numeric" })} - {
                               edu.current ? "Present" : edu.endDate ? new Date(edu.endDate).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "Present"
                             }
                           </span>
                           {edu.current && (
-                            <span className="px-3 py-1 bg-[#00ff88]/20 border border-[#00ff88]/50 text-[#00ff88] rounded-full text-xs font-bold">
+                            <span className="px-2 py-1 sm:px-3 sm:py-1 bg-[#00ff88]/20 border border-[#00ff88]/50 text-[#00ff88] rounded-full text-xs font-bold">
                               CURRENT
                             </span>
                           )}
@@ -1435,7 +1496,7 @@ export default function ProfilePage() {
                           onClick={() => handleEditEducation(edu.id)}
                           className="p-2 rounded-lg bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] hover:bg-[#00d4ff]/30 transition-all"
                         >
-                          <Edit className="w-4 h-4" />
+                          <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
                         </m.button>
                         <m.button
                           whileHover={{ scale: 1.05 }}
@@ -1443,7 +1504,7 @@ export default function ProfilePage() {
                           onClick={() => handleDeleteEducation(edu.id)}
                           className="p-2 rounded-lg bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444] hover:bg-[#ff4444]/30 transition-all"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                         </m.button>
                       </div>
                     </div>
@@ -1457,9 +1518,9 @@ export default function ProfilePage() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleAddEducation}
-                  className="w-full p-8 rounded-3xl border-2 border-dashed border-[#00d4ff]/50 text-[#00d4ff] hover:border-[#00d4ff] hover:bg-[#00d4ff]/5 transition-all duration-300 flex items-center justify-center gap-3 font-bold"
+                  className="w-full p-6 sm:p-8 rounded-3xl border-2 border-dashed border-[#00d4ff]/50 text-[#00d4ff] hover:border-[#00d4ff] hover:bg-[#00d4ff]/5 transition-all duration-300 flex items-center justify-center gap-3 font-bold text-sm sm:text-base"
                 >
-                  <Plus className="w-6 h-6" />
+                  <Plus className="w-5 h-5 sm:w-6 sm:h-6" />
                   Add New Education
                 </m.button>
               </div>
@@ -1467,56 +1528,56 @@ export default function ProfilePage() {
 
             {/* Settings Tab */}
             {activeTab === "settings" && (
-              <div className="space-y-8">
+              <div className="space-y-6 sm:space-y-8">
                 {/* Account Settings */}
                 <m.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20"
+                  className="p-4 sm:p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20"
                 >
-                  <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                    <Shield className="w-6 h-6 text-[#00ff88]" />
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
+                    <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-[#00ff88]" />
                     Account Settings
                   </h3>
 
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20">
+                  <div className="space-y-4 sm:space-y-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 gap-3">
                       <div>
-                        <p className="text-white font-semibold">Email Notifications</p>
-                        <p className="text-gray-400 text-sm">Receive updates about your applications</p>
+                        <p className="text-white font-semibold text-sm sm:text-base">Email Notifications</p>
+                        <p className="text-gray-400 text-xs sm:text-sm">Receive updates about your applications</p>
                       </div>
                       <m.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="px-4 py-2 bg-[#00ff88]/20 border border-[#00ff88]/50 text-[#00ff88] rounded-lg font-bold hover:bg-[#00ff88]/30 transition-all"
+                        className="px-3 py-2 sm:px-4 sm:py-2 bg-[#00ff88]/20 border border-[#00ff88]/50 text-[#00ff88] rounded-lg font-bold hover:bg-[#00ff88]/30 transition-all text-xs sm:text-sm self-start sm:self-center"
                       >
-                        <Check className="w-4 h-4" />
+                        <Check className="w-3 h-3 sm:w-4 sm:h-4" />
                       </m.button>
                     </div>
 
-                    <div className="flex items-center justify-between p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 gap-3">
                       <div>
-                        <p className="text-white font-semibold">Profile Visibility</p>
-                        <p className="text-gray-400 text-sm">Make your profile visible to recruiters</p>
+                        <p className="text-white font-semibold text-sm sm:text-base">Profile Visibility</p>
+                        <p className="text-gray-400 text-xs sm:text-sm">Make your profile visible to recruiters</p>
                       </div>
                       <m.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="px-4 py-2 bg-[#00ff88]/20 border border-[#00ff88]/50 text-[#00ff88] rounded-lg font-bold hover:bg-[#00ff88]/30 transition-all"
+                        className="px-3 py-2 sm:px-4 sm:py-2 bg-[#00ff88]/20 border border-[#00ff88]/50 text-[#00ff88] rounded-lg font-bold hover:bg-[#00ff88]/30 transition-all text-xs sm:text-sm self-start sm:self-center"
                       >
-                        <Check className="w-4 h-4" />
+                        <Check className="w-3 h-3 sm:w-4 sm:h-4" />
                       </m.button>
                     </div>
 
-                    <div className="flex items-center justify-between p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 gap-3">
                       <div>
-                        <p className="text-white font-semibold">Data Export</p>
-                        <p className="text-gray-400 text-sm">Download all your application data</p>
+                        <p className="text-white font-semibold text-sm sm:text-base">Data Export</p>
+                        <p className="text-gray-400 text-xs sm:text-sm">Download all your application data</p>
                       </div>
                       <m.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="px-4 py-2 bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] rounded-lg font-bold hover:bg-[#00d4ff]/30 transition-all"
+                        className="px-3 py-2 sm:px-4 sm:py-2 bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] rounded-lg font-bold hover:bg-[#00d4ff]/30 transition-all text-xs sm:text-sm self-start sm:self-center"
                       >
                         Export
                       </m.button>
@@ -1529,51 +1590,51 @@ export default function ProfilePage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20"
+                  className="p-4 sm:p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20"
                 >
-                  <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                    <Bell className="w-6 h-6 text-[#00ff88]" />
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
+                    <Bell className="w-5 h-5 sm:w-6 sm:h-6 text-[#00ff88]" />
                     Privacy & Security
                   </h3>
 
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20">
+                  <div className="space-y-4 sm:space-y-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 gap-3">
                       <div>
-                        <p className="text-white font-semibold">Two-Factor Authentication</p>
-                        <p className="text-gray-400 text-sm">Add an extra layer of security</p>
+                        <p className="text-white font-semibold text-sm sm:text-base">Two-Factor Authentication</p>
+                        <p className="text-gray-400 text-xs sm:text-sm">Add an extra layer of security</p>
                       </div>
                       <m.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="px-4 py-2 bg-[#ff6b00]/20 border border-[#ff6b00]/50 text-[#ff6b00] rounded-lg font-bold hover:bg-[#ff6b00]/30 transition-all"
+                        className="px-3 py-2 sm:px-4 sm:py-2 bg-[#ff6b00]/20 border border-[#ff6b00]/50 text-[#ff6b00] rounded-lg font-bold hover:bg-[#ff6b00]/30 transition-all text-xs sm:text-sm self-start sm:self-center"
                       >
                         Enable
                       </m.button>
                     </div>
 
-                    <div className="flex items-center justify-between p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 gap-3">
                       <div>
-                        <p className="text-white font-semibold">Change Password</p>
-                        <p className="text-gray-400 text-sm">Update your account password</p>
+                        <p className="text-white font-semibold text-sm sm:text-base">Change Password</p>
+                        <p className="text-gray-400 text-xs sm:text-sm">Update your account password</p>
                       </div>
                       <m.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="px-4 py-2 bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] rounded-lg font-bold hover:bg-[#00d4ff]/30 transition-all"
+                        className="px-3 py-2 sm:px-4 sm:py-2 bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] rounded-lg font-bold hover:bg-[#00d4ff]/30 transition-all text-xs sm:text-sm self-start sm:self-center"
                       >
                         Change
                       </m.button>
                     </div>
 
-                    <div className="flex items-center justify-between p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 gap-3">
                       <div>
-                        <p className="text-red-400 font-semibold">Delete Account</p>
-                        <p className="text-gray-400 text-sm">Permanently delete your account and data</p>
+                        <p className="text-red-400 font-semibold text-sm sm:text-base">Delete Account</p>
+                        <p className="text-gray-400 text-xs sm:text-sm">Permanently delete your account and data</p>
                       </div>
                       <m.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="px-4 py-2 bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444] rounded-lg font-bold hover:bg-[#ff4444]/30 transition-all"
+                        className="px-3 py-2 sm:px-4 sm:py-2 bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444] rounded-lg font-bold hover:bg-[#ff4444]/30 transition-all text-xs sm:text-sm self-start sm:self-center"
                       >
                         Delete
                       </m.button>
