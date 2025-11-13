@@ -10,6 +10,7 @@ import {
   Timer, Download, Upload, Share2, Bell, Settings, Award, TrendingDown,
   ChevronLeft, ExternalLink, MessageSquare, Phone, Mail, Linkedin, Github,
   PartyPopper, Moon, Sun, Volume2, VolumeX, Palette, Glasses,
+  X, Menu, User, LogOut,
 } from "lucide-react"
 import { RouteGuard } from "@/components/RouteGuard"
 import { useAuth } from "@/contexts/AuthContext"
@@ -52,6 +53,7 @@ export default function DashboardPage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("list")
   const [sortBy, setSortBy] = useState<"date" | "company" | "priority">("date")
   const [showAchievements, setShowAchievements] = useState(false)
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
   
   // Easter Eggs State
   const [konamiProgress, setKonamiProgress] = useState(0)
@@ -562,60 +564,139 @@ export default function DashboardPage() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[#0a1428]/80 border-b border-[#00d4ff]/20"
+        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[#0a1428]/90 border-b border-[#00d4ff]/20"
       >
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <m.div 
-            whileHover={{ scale: 1.05 }} 
-            className="flex items-center gap-3 cursor-pointer"
-            onClick={handleLogoClick}
-          >
-            <div className={`relative w-12 h-12 flex items-center justify-center ${partyMode ? 'animate-bounce' : ''}`}>
-              <img src="/csync.png" alt="CareerSync" className="w-full h-full object-contain" />
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2 sm:py-4">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <m.div
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center gap-1.5 sm:gap-3 cursor-pointer"
+              onClick={handleLogoClick}
+            >
+              <div className={`relative w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center ${partyMode ? 'animate-bounce' : ''}`}>
+                <img src="/csync.png" alt="CareerSync" className="w-full h-full object-contain" />
+              </div>
+              <span className="text-sm sm:text-xl font-bold bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] bg-clip-text text-transparent">
+                CareerSync
+              </span>
+            </m.div>
+
+            {/* Desktop Buttons */}
+            <div className="hidden sm:flex items-center gap-3">
+              <m.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setSoundEnabled(!soundEnabled)}
+                className="p-2 text-white rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+                title={soundEnabled ? "Sound On" : "Sound Off"}
+              >
+                {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+              </m.button>
+
+              <m.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowAchievements(true)}
+                className="px-4 py-2 text-white text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+              >
+                <Trophy className="w-4 h-4" />
+                <span>{unlockedAchievements.length}/{achievements.length}</span>
+              </m.button>
+
+              <m.a
+                href="/profile"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-6 py-2 text-white text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+              >
+                Profile
+              </m.a>
+              <m.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => logout()}
+                className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
+              >
+                Sign Out
+              </m.button>
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] bg-clip-text text-transparent">
-              CareerSync
-            </span>
-          </m.div>
 
-          <div className="flex items-center gap-3">
-            <m.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setSoundEnabled(!soundEnabled)}
-              className="p-2 text-white rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
-              title={soundEnabled ? "Sound On" : "Sound Off"}
-            >
-              {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-            </m.button>
-            
-            <m.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setShowAchievements(true)}
-              className="px-4 py-2 text-white text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
-            >
-              <Trophy className="w-4 h-4" />
-              <span className="hidden md:inline">{unlockedAchievements.length}/{achievements.length}</span>
-            </m.button>
+            {/* Mobile Menu Button */}
+            <div className="sm:hidden flex items-center gap-2">
+              <m.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setSoundEnabled(!soundEnabled)}
+                className="p-1.5 text-white rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+                title={soundEnabled ? "Sound On" : "Sound Off"}
+              >
+                {soundEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
+              </m.button>
 
-            <m.a
-              href="/profile"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-6 py-2 text-white text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
-            >
-              Profile
-            </m.a>
-            <m.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => logout()}
-              className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
-            >
-              Sign Out
-            </m.button>
+              <m.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowMobileMenu(!showMobileMenu)}
+                className="p-1.5 text-white rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+              >
+                {showMobileMenu ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+              </m.button>
+            </div>
           </div>
+
+          {/* Mobile Menu Dropdown */}
+          <AnimatePresence>
+            {showMobileMenu && (
+              <m.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="sm:hidden mt-3 pb-2"
+              >
+                <div className="flex flex-col gap-2">
+                  <m.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => {
+                      setShowAchievements(true)
+                      setShowMobileMenu(false)
+                    }}
+                    className="w-full px-4 py-3 text-left text-white text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Trophy className="w-4 h-4" />
+                      Achievements
+                    </div>
+                    <span className="text-xs text-gray-400">{unlockedAchievements.length}/{achievements.length}</span>
+                  </m.button>
+
+                  <m.a
+                    href="/profile"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full px-4 py-3 text-left text-white text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+                  >
+                    <User className="w-4 h-4" />
+                    Profile
+                  </m.a>
+
+                  <m.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => {
+                      logout()
+                      setShowMobileMenu(false)
+                    }}
+                    className="w-full px-4 py-3 text-left text-white text-sm font-bold rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300 flex items-center gap-2"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Sign Out
+                  </m.button>
+                </div>
+              </m.div>
+            )}
+          </AnimatePresence>
         </div>
       </m.nav>
 
@@ -658,7 +739,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 pt-24 pb-12 px-6 max-w-7xl mx-auto">
+      <div className="relative z-10 pt-20 sm:pt-24 pb-12 px-4 sm:px-6 max-w-7xl mx-auto">
         {/* Header with Motivational Quote */}
         <m.div
           initial={{ opacity: 0, y: 20 }}
@@ -1289,7 +1370,7 @@ export default function DashboardPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm"
             onClick={() => setShowDetailModal(false)}
           >
             <m.div
@@ -1297,11 +1378,11 @@ export default function DashboardPage() {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
               onClick={(e: React.MouseEvent) => e.stopPropagation()}
-              className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52] to-[#0f2540] border border-[#00d4ff]/30 shadow-2xl"
+              className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto p-4 sm:p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52] to-[#0f2540] border border-[#00d4ff]/30 shadow-2xl"
             >
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-3xl font-bold text-white flex items-center gap-3">
-                  <Building2 className="w-8 h-8 text-[#00d4ff]" />
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <h2 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2 sm:gap-3">
+                  <Building2 className="w-6 h-6 sm:w-8 sm:h-8 text-[#00d4ff]" />
                   Application Details
                 </h2>
                 <m.button
@@ -1310,43 +1391,43 @@ export default function DashboardPage() {
                   onClick={() => setShowDetailModal(false)}
                   className="p-2 rounded-full bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444]"
                 >
-                  <XCircle className="w-6 h-6" />
+                  <XCircle className="w-5 h-5 sm:w-6 sm:h-6" />
                 </m.button>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {/* Company Header */}
-                <div className="flex items-center gap-6 p-6 rounded-2xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
+                <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 p-4 sm:p-6 rounded-2xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
                   <div 
-                    className="w-20 h-20 rounded-2xl flex items-center justify-center text-white font-bold text-3xl"
+                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center text-white font-bold text-2xl sm:text-3xl flex-shrink-0"
                     style={{
                       background: `linear-gradient(135deg, ${getStatusColor(selectedApp.status)}40, ${getStatusColor(selectedApp.status)}20)`,
                     }}
                   >
                     {selectedApp.company.charAt(0)}
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-white mb-2">{selectedApp.company}</h3>
-                    <p className="text-xl text-gray-300">{selectedApp.position}</p>
+                  <div className="flex-1 text-center sm:text-left">
+                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2">{selectedApp.company}</h3>
+                    <p className="text-lg sm:text-xl text-gray-300">{selectedApp.position}</p>
                   </div>
-                  <div className="p-4 bg-white/5 rounded-lg flex items-center justify-center">
-                    <div className="scale-150">{getPriorityIcon(selectedApp.priority)}</div>
+                  <div className="p-3 sm:p-4 bg-white/5 rounded-lg flex items-center justify-center">
+                    <div className="scale-125 sm:scale-150">{getPriorityIcon(selectedApp.priority)}</div>
                   </div>
                 </div>
 
                 {/* Status */}
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
                     <div className="text-sm text-gray-400 mb-2">Status</div>
                     <div 
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-lg font-bold"
+                      className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full text-base sm:text-lg font-bold"
                       style={{
                         backgroundColor: `${getStatusColor(selectedApp.status)}20`,
                         color: getStatusColor(selectedApp.status),
                         border: `2px solid ${getStatusColor(selectedApp.status)}50`,
                       }}
                     >
-                      {React.createElement(getStatusIcon(selectedApp.status), { className: "w-5 h-5" })}
+                      {React.createElement(getStatusIcon(selectedApp.status), { className: "w-4 h-4 sm:w-5 sm:h-5" })}
                       {selectedApp.status.charAt(0).toUpperCase() + selectedApp.status.slice(1)}
                     </div>
                   </div>
@@ -1363,7 +1444,7 @@ export default function DashboardPage() {
                           }}
                         />
                       </div>
-                      <span className="text-lg font-bold" style={{ color: getStatusColor(selectedApp.status) }}>
+                      <span className="text-base sm:text-lg font-bold" style={{ color: getStatusColor(selectedApp.status) }}>
                         {selectedApp.progress}%
                       </span>
                     </div>
@@ -1371,7 +1452,7 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Details Grid */}
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {selectedApp.location && (
                     <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
                       <div className="flex items-center gap-2 text-gray-400 text-sm mb-1">
@@ -1444,7 +1525,7 @@ export default function DashboardPage() {
                 )}
 
                 {/* Actions */}
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-3">
                   {selectedApp.jobUrl && (
                     <m.a
                       href={selectedApp.jobUrl}
@@ -1452,9 +1533,9 @@ export default function DashboardPage() {
                       rel="noopener noreferrer"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      className="flex-1 px-6 py-3 rounded-xl bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] font-bold hover:bg-[#00d4ff]/30 transition-all flex items-center justify-center gap-2"
+                      className="flex-1 px-4 sm:px-6 py-3 rounded-xl bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] font-bold hover:bg-[#00d4ff]/30 transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
                     >
-                      <ExternalLink className="w-5 h-5" />
+                      <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5" />
                       View Job Posting
                     </m.a>
                   )}
@@ -1462,7 +1543,7 @@ export default function DashboardPage() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setShowDetailModal(false)}
-                    className="px-8 py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all"
+                    className="px-6 sm:px-8 py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all text-sm sm:text-base"
                   >
                     Close
                   </m.button>
@@ -1480,7 +1561,7 @@ export default function DashboardPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm"
             onClick={() => setShowAchievements(false)}
           >
             <m.div
@@ -1488,13 +1569,13 @@ export default function DashboardPage() {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
               onClick={(e: React.MouseEvent) => e.stopPropagation()}
-              className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52] to-[#0f2540] border border-[#00d4ff]/30 shadow-2xl"
+              className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto p-4 sm:p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52] to-[#0f2540] border border-[#00d4ff]/30 shadow-2xl"
             >
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-3xl font-bold text-white flex items-center gap-3">
-                  <Trophy className="w-8 h-8 text-[#00ff88]" />
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <h2 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2 sm:gap-3">
+                  <Trophy className="w-6 h-6 sm:w-8 sm:h-8 text-[#00ff88]" />
                   Achievements
-                  <span className="text-lg text-gray-400">({unlockedAchievements.length}/{achievements.length})</span>
+                  <span className="text-base sm:text-lg text-gray-400">({unlockedAchievements.length}/{achievements.length})</span>
                 </h2>
                 <m.button
                   whileHover={{ scale: 1.1, rotate: 90 }}
@@ -1502,12 +1583,12 @@ export default function DashboardPage() {
                   onClick={() => setShowAchievements(false)}
                   className="p-2 rounded-full bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444]"
                 >
-                  <XCircle className="w-6 h-6" />
+                  <XCircle className="w-5 h-5 sm:w-6 sm:h-6" />
                 </m.button>
               </div>
 
               {/* Progress Bar */}
-              <div className="mb-6">
+              <div className="mb-4 sm:mb-6">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm text-gray-400">Overall Progress</span>
                   <span className="text-sm font-bold text-[#00ff88]">
@@ -1525,58 +1606,58 @@ export default function DashboardPage() {
               </div>
 
               {/* Stats Summary */}
-              <div className="grid grid-cols-3 gap-4 mb-6">
-                <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20 text-center">
-                  <div className="text-2xl font-bold text-[#00d4ff] mb-1">{userStats.totalApplications}</div>
+              <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
+                <div className="p-3 sm:p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20 text-center">
+                  <div className="text-xl sm:text-2xl font-bold text-[#00d4ff] mb-1">{userStats.totalApplications}</div>
                   <div className="text-xs text-gray-400">Total Applications</div>
                 </div>
-                <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#ff6b00]/20 text-center">
-                  <div className="text-2xl font-bold text-[#ff6b00] mb-1 flex items-center justify-center gap-1">
-                    <Flame className="w-5 h-5" />
+                <div className="p-3 sm:p-4 rounded-xl bg-[#0f2540]/60 border border-[#ff6b00]/20 text-center">
+                  <div className="text-xl sm:text-2xl font-bold text-[#ff6b00] mb-1 flex items-center justify-center gap-1">
+                    <Flame className="w-4 h-4 sm:w-5 sm:h-5" />
                     {streak}
                   </div>
                   <div className="text-xs text-gray-400">Current Streak</div>
                 </div>
-                <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00ff88]/20 text-center">
-                  <div className="text-2xl font-bold text-[#00ff88] mb-1 flex items-center justify-center gap-1">
-                    <Award className="w-5 h-5" />
+                <div className="p-3 sm:p-4 rounded-xl bg-[#0f2540]/60 border border-[#00ff88]/20 text-center">
+                  <div className="text-xl sm:text-2xl font-bold text-[#00ff88] mb-1 flex items-center justify-center gap-1">
+                    <Award className="w-4 h-4 sm:w-5 sm:h-5" />
                     {userStats.longestStreak}
                   </div>
                   <div className="text-xs text-gray-400">Longest Streak</div>
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {achievements.map((achievement) => (
                   <m.div
                     key={achievement.id}
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: achievement.id * 0.05 }}
-                    className={`p-6 rounded-2xl border-2 transition-all ${
+                    className={`p-4 sm:p-6 rounded-2xl border-2 transition-all ${
                       achievement.unlocked
                         ? 'bg-gradient-to-br from-[#00ff88]/20 to-[#00d4ff]/20 border-[#00ff88]/50'
                         : 'bg-[#0f2540]/60 border-gray-700 opacity-50'
                     }`}
                   >
-                    <div className="flex items-start gap-4">
-                      <div className={`p-3 rounded-xl ${
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <div className={`p-2 sm:p-3 rounded-xl ${
                         achievement.unlocked 
                           ? 'bg-gradient-to-br from-[#00ff88]/40 to-[#00d4ff]/40' 
                           : 'bg-gray-800'
                       }`}>
-                        <achievement.icon className={`w-8 h-8 ${
+                        <achievement.icon className={`w-6 h-6 sm:w-8 sm:h-8 ${
                           achievement.unlocked ? 'text-[#00ff88]' : 'text-gray-600'
                         }`} />
                       </div>
                       <div className="flex-1">
-                        <h3 className={`text-lg font-bold mb-1 flex items-center gap-2 ${
+                        <h3 className={`text-base sm:text-lg font-bold mb-1 flex items-center gap-2 ${
                           achievement.unlocked ? 'text-white' : 'text-gray-500'
                         }`}>
                           {achievement.name}
-                          {achievement.unlocked && <Sparkles className="w-4 h-4 text-[#00ff88]" />}
+                          {achievement.unlocked && <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-[#00ff88]" />}
                         </h3>
-                        <p className={achievement.unlocked ? 'text-gray-300' : 'text-gray-600'}>
+                        <p className={`text-sm sm:text-base ${achievement.unlocked ? 'text-gray-300' : 'text-gray-600'}`}>
                           {achievement.description}
                         </p>
                       </div>
