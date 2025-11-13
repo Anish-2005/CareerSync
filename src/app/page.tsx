@@ -1183,7 +1183,7 @@ export default function LandingPage() {
             className="text-center mb-12"
           >
             <m.h2
-              className="text-6xl md:text-7xl font-black mb-6 text-white leading-none"
+              className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 text-white leading-none"
               animate={{
                 textShadow: [
                   "0 0 20px rgba(0, 212, 255, 0.6)",
@@ -1278,7 +1278,7 @@ export default function LandingPage() {
             />
 
             {/* Interactive background particles */}
-            <div className="absolute inset-0 overflow-hidden rounded-3xl">
+            <div className="absolute inset-0 overflow-hidden rounded-3xl hidden md:block">
               {[...Array(25)].map((_, i) => (
                 <m.div
                   key={i}
@@ -1308,7 +1308,7 @@ export default function LandingPage() {
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-4">
                   <div className="w-3 h-3 bg-[#00d4ff] rounded-full animate-pulse"></div>
-                  <span className="text-[#00d4ff] font-bold text-sm">SYSTEM ONLINE</span>
+                  <span className="text-[#00d4ff] font-bold text-base md:text-sm">SYSTEM ONLINE</span>
                 </div>
                 <div className="text-gray-400 text-sm font-mono">
                   <TimeDisplay />
@@ -1316,12 +1316,12 @@ export default function LandingPage() {
               </div>
 
               {/* Enhanced tab buttons with fluid interactions */}
-              <div className="flex gap-8 border-b border-[#00d4ff]/40 pb-6 mb-8">
+              <div className="flex gap-2 md:gap-8 border-b border-[#00d4ff]/40 pb-6 mb-8">
                 {["connections", "interactions", "insights"].map((tab, index) => (
                   <m.button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`relative px-6 py-3 text-sm font-bold transition-all duration-500 rounded-xl overflow-hidden ${
+                    className={`relative flex-1 px-3 py-2 sm:px-6 sm:py-3 text-sm font-bold transition-all duration-500 rounded-xl overflow-hidden ${
                       activeTab === tab
                         ? "text-[#00d4ff] bg-[#00d4ff]/15 border border-[#00d4ff]/60 shadow-lg shadow-[#00d4ff]/20"
                         : "text-gray-400 hover:text-white hover:bg-[#00d4ff]/8 border border-transparent hover:border-[#00d4ff]/30"
@@ -1410,7 +1410,7 @@ export default function LandingPage() {
                   {activeTab === "connections" && (
                     <div className="space-y-6">
                       {/* Progress overview */}
-                      <div className="grid grid-cols-3 gap-4 mb-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                         {[
                           { label: "Active", value: "47", color: "#00d4ff" },
                           { label: "Processing", value: "23", color: "#ff6b00" },
@@ -1444,7 +1444,7 @@ export default function LandingPage() {
                           initial={{ opacity: 0, x: -30 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: idx * 0.15 }}
-                          className="group relative flex items-center justify-between p-6 rounded-2xl bg-[#1a3a52]/50 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300 overflow-hidden"
+                          className="group relative flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-6 rounded-2xl bg-[#1a3a52]/50 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300 overflow-hidden"
                         >
                           {/* Priority indicator */}
                           <div
@@ -1457,32 +1457,34 @@ export default function LandingPage() {
                           {/* Animated background on hover */}
                           <div className="absolute inset-0 bg-gradient-to-r from-[#00d4ff]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                          <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#ff6b00]/20 to-[#00d4ff]/20 flex items-center justify-center">
-                              <span className="text-white font-bold text-sm">
-                                {app.company.charAt(0)}
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div className="flex items-center gap-4">
+                              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#ff6b00]/20 to-[#00d4ff]/20 flex items-center justify-center">
+                                <span className="text-white font-bold text-sm">
+                                  {app.company.charAt(0)}
+                                </span>
+                              </div>
+                              <div>
+                                <p className="font-bold text-white group-hover:text-[#00d4ff] transition-colors">
+                                  {app.company}
+                                </p>
+                                <p className="text-xs text-gray-400">{app.status}</p>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-4 sm:gap-4">
+                              <div className="w-20 h-2 bg-[#0f2540] rounded-full overflow-hidden">
+                                <m.div
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${app.progress}%` }}
+                                  transition={{ duration: 1.5, delay: idx * 0.2, ease: "easeOut" }}
+                                  className="h-full bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] rounded-full"
+                                />
+                              </div>
+                              <span className="text-sm text-gray-400 font-mono">
+                                {app.progress}%
                               </span>
                             </div>
-                            <div>
-                              <p className="font-bold text-white group-hover:text-[#00d4ff] transition-colors">
-                                {app.company}
-                              </p>
-                              <p className="text-xs text-gray-400">{app.status}</p>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center gap-4">
-                            <div className="w-20 h-2 bg-[#0f2540] rounded-full overflow-hidden">
-                              <m.div
-                                initial={{ width: 0 }}
-                                animate={{ width: `${app.progress}%` }}
-                                transition={{ duration: 1.5, delay: idx * 0.2, ease: "easeOut" }}
-                                className="h-full bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] rounded-full"
-                              />
-                            </div>
-                            <span className="text-sm text-gray-400 font-mono">
-                              {app.progress}%
-                            </span>
                           </div>
                         </m.div>
                       ))}
@@ -1492,9 +1494,9 @@ export default function LandingPage() {
                   {activeTab === "interactions" && (
                     <div className="space-y-6">
                       {/* Interview calendar view */}
-                      <div className="grid grid-cols-7 gap-2 mb-6">
+                      <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-6">
                         {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, idx) => (
-                          <div key={idx} className="text-center text-xs text-gray-400 py-2">
+                          <div key={idx} className="text-center text-xs sm:text-xs text-gray-400 py-2">
                             {day}
                           </div>
                         ))}
@@ -1522,9 +1524,9 @@ export default function LandingPage() {
                           initial={{ opacity: 0, x: -30 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: idx * 0.15 }}
-                          className="group relative p-6 rounded-2xl bg-[#1a3a52]/50 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300"
+                          className="group relative p-4 sm:p-6 rounded-2xl bg-[#1a3a52]/50 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300"
                         >
-                          <div className="flex items-center justify-between mb-4">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                             <div className="flex items-center gap-3">
                               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#ff6b00]/20 to-[#00d4ff]/20 flex items-center justify-center">
                                 <span className="text-white font-bold text-xs">
@@ -1533,7 +1535,7 @@ export default function LandingPage() {
                               </div>
                               <p className="font-bold text-white">{interview.company}</p>
                             </div>
-                            <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                            <span className={`px-3 py-1 rounded-full text-xs font-bold self-start sm:self-center ${
                               interview.status === 'confirmed'
                                 ? 'bg-[#00ff88]/20 text-[#00ff88] border border-[#00ff88]/50'
                                 : 'bg-[#ff6b00]/20 text-[#ff6b00] border border-[#ff6b00]/50'
@@ -1542,7 +1544,7 @@ export default function LandingPage() {
                             </span>
                           </div>
 
-                          <div className="flex items-center justify-between">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                             <div>
                               <p className="text-sm text-gray-400">{interview.date}</p>
                               <p className="text-xs text-[#00d4ff] font-medium">{interview.type}</p>
@@ -1550,7 +1552,7 @@ export default function LandingPage() {
                             <m.button
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
-                              className="px-4 py-2 bg-[#00d4ff]/20 border border-[#00d4ff]/50 rounded-lg text-[#00d4ff] text-sm font-bold hover:bg-[#00d4ff]/30 transition-all duration-300"
+                              className="px-4 py-2 bg-[#00d4ff]/20 border border-[#00d4ff]/50 rounded-lg text-[#00d4ff] text-sm font-bold hover:bg-[#00d4ff]/30 transition-all duration-300 self-start sm:self-center"
                             >
                               Join Call
                             </m.button>
@@ -1563,7 +1565,7 @@ export default function LandingPage() {
                   {activeTab === "insights" && (
                     <div className="space-y-6">
                       {/* Animated stats rings */}
-                      <div className="grid grid-cols-3 gap-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                         {[
                           { label: "Success Rate", value: 92, max: 100, color: "#00d4ff", icon: "�" },
                           { label: "Connections Made", value: 203, max: 250, color: "#ff6b00", icon: "⚡" },
@@ -1622,7 +1624,7 @@ export default function LandingPage() {
                         className="p-6 rounded-2xl bg-[#1a3a52]/50 border border-[#00d4ff]/20"
                       >
                         <h3 className="text-lg font-bold text-white mb-4">Performance Trend</h3>
-                        <div className="flex items-end gap-2 h-24">
+                        <div className="flex items-end gap-1 sm:gap-2 h-20 sm:h-24">
                           {[65, 72, 68, 85, 78, 92, 88].map((value, idx) => (
                             <m.div
                               key={idx}
@@ -1642,13 +1644,14 @@ export default function LandingPage() {
                           ))}
                         </div>
                         <div className="flex justify-between mt-2 text-xs text-gray-500">
-                          <span>Mon</span>
-                          <span>Tue</span>
-                          <span>Wed</span>
-                          <span>Thu</span>
-                          <span>Fri</span>
-                          <span>Sat</span>
-                          <span>Sun</span>
+                          <span className="hidden sm:inline">Mon</span>
+                          <span className="hidden sm:inline">Tue</span>
+                          <span className="hidden sm:inline">Wed</span>
+                          <span className="hidden sm:inline">Thu</span>
+                          <span className="hidden sm:inline">Fri</span>
+                          <span className="hidden sm:inline">Sat</span>
+                          <span className="hidden sm:inline">Sun</span>
+                          <span className="sm:hidden">M T W T F S S</span>
                         </div>
                       </m.div>
                     </div>
