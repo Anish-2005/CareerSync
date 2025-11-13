@@ -184,15 +184,31 @@ export default function LandingPage() {
     >
       {/* Navigation */}
       <m.nav
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: -100 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[#0a1428]/80 border-b border-[#00d4ff]/20"
+        transition={{ duration: 1, ease: "easeOut" }}
+        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[#0a1428]/90 border-b border-[#00d4ff]/30 shadow-lg shadow-[#00d4ff]/10"
       >
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <m.div whileHover={{ scale: 1.05 }} className="flex items-center gap-3">
-            <div className="relative w-12 h-12 flex items-center justify-center">
-              <img src="/csync.png" alt="CareerSync" className="w-full h-full object-contain" />
+          <m.div
+            whileHover={{ scale: 1.05, rotate: 5 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            className="flex items-center gap-3 cursor-pointer"
+          >
+            <div className="relative w-10 h-10 md:w-12 md:h-12 flex items-center justify-center">
+              <m.div
+                className="absolute inset-0 rounded-full bg-gradient-to-br from-[#00d4ff]/20 to-[#ff6b00]/20 blur-md"
+                animate={{
+                  scale: [1, 1.2, 1],
+                  opacity: [0.5, 0.8, 0.5],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                }}
+              />
+              <img src="/csync.png" alt="CareerSync" className="w-full h-full object-contain relative z-10" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] bg-clip-text text-transparent">
               CareerSync
@@ -200,96 +216,168 @@ export default function LandingPage() {
           </m.div>
 
           <div className="hidden md:flex items-center gap-8">
-            {["Features", "How It Works", "Pricing", "Contact"].map((item) => (
+            {[
+              { label: "Features", href: "#features" },
+              { label: "How It Works", href: "#how-it-works" },
+              { label: "Pricing", href: "#pricing" },
+              { label: "Contact", href: "#contact" },
+            ].map((link, index) => (
               <m.a
-                key={item}
-                href="#"
-                whileHover={{ color: "#00d4ff" }}
-                className="text-gray-300 hover:text-[#00d4ff] transition-colors duration-300 text-sm font-medium"
+                key={link.label}
+                href={link.href}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 + index * 0.1, duration: 0.5 }}
+                whileHover={{
+                  color: "#00d4ff",
+                  scale: 1.1,
+                  textShadow: "0 0 10px rgba(0, 212, 255, 0.5)",
+                }}
+                className="text-gray-300 hover:text-[#00d4ff] transition-all duration-300 text-sm font-medium relative group"
               >
-                {item}
+                {link.label}
+                <m.div
+                  className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-[#00d4ff] to-[#ff6b00] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+                />
               </m.a>
             ))}
           </div>
 
           <div className="flex items-center gap-3">
             {/* Mobile menu toggle */}
-            <button
+            <m.button
               onClick={() => setMobileOpen((s) => !s)}
-              className="md:hidden p-2 rounded-md text-gray-300 hover:bg-[#00d4ff]/10"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="md:hidden p-2 rounded-md text-gray-300 hover:bg-[#00d4ff]/20 hover:text-[#00d4ff] transition-all duration-300 relative overflow-hidden"
               aria-label="Toggle menu"
             >
-              {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-            {user ? (
-              <>
-                <m.a
-                  href="/dashboard"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-6 py-2 text-white text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
-                >
-                  Dashboard
-                </m.a>
-                <m.button
-                  onClick={logout}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
-                >
-                  Logout
-                </m.button>
-              </>
-            ) : (
-              <>
-                <m.a
-                  href="/login"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-6 py-2 text-white text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
-                >
-                  Login
-                </m.a>
-                <m.a
-                  href="/login"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
-                >
-                  Sign Up
-                </m.a>
-              </>
-            )}
+              <m.div
+                className="absolute inset-0 bg-gradient-to-r from-[#00d4ff]/10 to-[#ff6b00]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              />
+              <m.div
+                animate={{ rotate: mobileOpen ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </m.div>
+            </m.button>
+            <div className="hidden md:flex items-center gap-3">
+              {user ? (
+                <>
+                  <m.a
+                    href="/dashboard"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 1.2, duration: 0.5 }}
+                    whileHover={{
+                      scale: 1.05,
+                      boxShadow: "0 0 20px rgba(0, 212, 255, 0.4)",
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-6 py-2 text-white text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 bg-[#00d4ff]/10 hover:bg-[#00d4ff]/20"
+                  >
+                    Dashboard
+                  </m.a>
+                  <m.button
+                    onClick={logout}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 1.3, duration: 0.5 }}
+                    whileHover={{
+                      scale: 1.05,
+                      boxShadow: "0 0 25px rgba(255, 107, 0, 0.6)",
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
+                  >
+                    Logout
+                  </m.button>
+                </>
+              ) : (
+                <>
+                  <m.a
+                    href="/login"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 1.2, duration: 0.5 }}
+                    whileHover={{
+                      scale: 1.05,
+                      boxShadow: "0 0 20px rgba(0, 212, 255, 0.4)",
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-6 py-2 text-white text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 bg-[#00d4ff]/10 hover:bg-[#00d4ff]/20"
+                  >
+                    Login
+                  </m.a>
+                  <m.a
+                    href="/login"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 1.3, duration: 0.5 }}
+                    whileHover={{
+                      scale: 1.05,
+                      boxShadow: "0 0 25px rgba(255, 107, 0, 0.6)",
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
+                  >
+                    Sign Up
+                  </m.a>
+                </>
+              )}
+            </div>
           </div>
 
           {/* Mobile menu panel */}
-          {mobileOpen && (
-            <div className="md:hidden absolute top-full left-0 right-0 bg-[#081226]/95 border-t border-[#00d4ff]/10 backdrop-blur-sm z-40">
-              <div className="px-6 py-4 flex flex-col gap-4">
-                {["Features", "How It Works", "Pricing", "Contact"].map((item) => (
-                  <a key={item} href="#" className="text-gray-300 py-2 rounded hover:bg-[#00d4ff]/5 px-2">
-                    {item}
-                  </a>
-                ))}
-                <div className="flex flex-col gap-2 pt-2">
-                  {user ? (
-                    <>
-                      <a href="/dashboard" className="px-4 py-2 text-white bg-[#00d4ff]/10 rounded">Dashboard</a>
-                      <button onClick={logout} className="px-4 py-2 text-white bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] rounded">Logout</button>
-                    </>
-                  ) : (
-                    <>
-                      <a href="/login" className="px-4 py-2 text-white border border-[#00d4ff]/20 rounded">Login</a>
-                      <a href="/login" className="px-4 py-2 text-white bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] rounded">Sign Up</a>
-                    </>
-                  )}
+          <AnimatePresence>
+            {mobileOpen && (
+              <m.div
+                initial={{ opacity: 0, x: "100%" }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: "100%" }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="md:hidden absolute top-full left-0 right-0 bg-[#081226]/95 border-t border-[#00d4ff]/20 backdrop-blur-sm z-40 shadow-2xl shadow-[#00d4ff]/10"
+              >
+                <div className="px-6 py-6 flex flex-col gap-6">
+                  {[
+                    { label: "Features", href: "#features" },
+                    { label: "How It Works", href: "#how-it-works" },
+                    { label: "Pricing", href: "#pricing" },
+                    { label: "Contact", href: "#contact" },
+                  ].map((link, index) => (
+                    <m.a
+                      key={link.label}
+                      href={link.href}
+                      initial={{ opacity: 0, x: 50 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1, duration: 0.3 }}
+                      onClick={() => setMobileOpen(false)}
+                      className="text-gray-300 hover:text-[#00d4ff] transition-colors duration-300 text-lg font-medium py-2 border-b border-[#00d4ff]/10 hover:border-[#00d4ff]/30"
+                    >
+                      {link.label}
+                    </m.a>
+                  ))}
+                  <div className="flex flex-col gap-4 pt-4 border-t border-[#00d4ff]/20">
+                    {user ? (
+                      <>
+                        <a href="/dashboard" onClick={() => setMobileOpen(false)} className="px-6 py-3 text-white bg-[#00d4ff]/20 border border-[#00d4ff]/50 rounded-lg text-center font-medium hover:bg-[#00d4ff]/30 transition-all duration-300">Dashboard</a>
+                        <button onClick={() => { setMobileOpen(false); logout(); }} className="px-6 py-3 text-white bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] rounded-lg text-center font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300">Logout</button>
+                      </>
+                    ) : (
+                      <>
+                        <a href="/login" onClick={() => setMobileOpen(false)} className="px-6 py-3 text-white border border-[#00d4ff]/30 rounded-lg text-center font-medium hover:bg-[#00d4ff]/10 transition-all duration-300">Login</a>
+                        <a href="/login" onClick={() => setMobileOpen(false)} className="px-6 py-3 text-white bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] rounded-lg text-center font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300">Sign Up</a>
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </div>
-          )}
+              </m.div>
+            )}
+          </AnimatePresence>
         </div>
       </m.nav>      {/* Hero Section */}
-      <section className="mt-20 relative min-h-screen md:h-screen w-full flex items-center justify-center overflow-hidden py-12 md:py-0">
+      <section className="pt-20 md:pt-24 relative min-h-screen md:h-screen w-full flex items-center justify-center overflow-hidden py-12 md:py-0">
         {/* Innovative morphing background */}
         <div className="absolute inset-0 overflow-hidden">
           {/* Morphing geometric shapes */}
@@ -401,7 +489,7 @@ export default function LandingPage() {
           {/* Innovative badge with morphing effect */}
           <m.div
             variants={itemVariants}
-            className="relative inline-flex items-center gap-2 px-4 py-2 sm:px-8 sm:py-4 rounded-full border border-[#00d4ff]/30 bg-[#00d4ff]/5 backdrop-blur-xl overflow-hidden"
+            className="relative inline-flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-8 sm:py-4 rounded-full border border-[#00d4ff]/30 bg-[#00d4ff]/5 backdrop-blur-xl overflow-hidden"
             whileHover={{ scale: 1.05 }}
           >
             {/* Morphing background */}
@@ -421,7 +509,7 @@ export default function LandingPage() {
               }}
             />
             <m.div
-              className="w-3 h-3 rounded-full bg-[#00d4ff]"
+              className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#00d4ff]"
               animate={{
                 scale: [1, 1.5, 1],
                 opacity: [0.7, 1, 0.7],
@@ -432,9 +520,9 @@ export default function LandingPage() {
                 ease: "easeInOut",
               }}
             />
-            <span className="text-[#00d4ff] font-semibold relative z-10">Next-Generation Career Intelligence</span>
+            <span className="text-[#00d4ff] font-semibold relative z-10 text-[10px] sm:text-sm md:text-base">Next-Generation Career Intelligence</span>
             <m.div
-              className="w-2 h-2 rounded-full bg-[#ff6b00]"
+              className="w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-[#ff6b00]"
               animate={{
                 scale: [1, 1.3, 1],
                 opacity: [0.5, 0.9, 0.5],
@@ -451,7 +539,7 @@ export default function LandingPage() {
           {/* Fluid morphing headline */}
           <m.h1
             variants={itemVariants}
-            className="text-4xl sm:text-5xl md:text-7xl lg:text-9xl font-black mb-6 sm:mb-8 leading-none tracking-tight"
+            className="mt-8 text-[12vw] sm:text-5xl md:text-7xl lg:text-9xl font-black mb-6 sm:mb-8 leading-tight tracking-tight"
             style={{
               background: "linear-gradient(135deg, #ffffff 0%, #00d4ff 25%, #ff6b00 50%, #00ff88 75%, #ffffff 100%)",
               backgroundSize: "400% 400%",
@@ -719,7 +807,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features Section with Fluid Layout */}
-      <section className="relative py-12 md:py-24 px-4 md:px-6 bg-gradient-to-b from-[#0a1428] to-[#1a2d4d] overflow-hidden">
+      <section id="features" className="relative py-12 md:py-24 px-4 md:px-6 bg-gradient-to-b from-[#0a1428] to-[#1a2d4d] overflow-hidden scroll-mt-24">
         {/* Dynamic fluid background */}
         <div className="absolute inset-0 hidden md:block">
           {/* Organic flowing shapes */}
@@ -1052,7 +1140,7 @@ export default function LandingPage() {
       </section>
 
       {/* Dashboard Preview */}
-      <section className="relative py-20 px-6 bg-gradient-to-b from-[#1a2d4d] to-[#0a1428] overflow-hidden">
+      <section id="how-it-works" className="relative py-20 px-6 bg-gradient-to-b from-[#1a2d4d] to-[#0a1428] overflow-hidden scroll-mt-24">
         {/* HUD-style background */}
         <div className="absolute inset-0">
           {/* Grid overlay */}
@@ -1400,7 +1488,7 @@ export default function LandingPage() {
                     </div>
                   )}
 
-                  {activeTab === "interviews" && (
+                  {activeTab === "interactions" && (
                     <div className="space-y-6">
                       {/* Interview calendar view */}
                       <div className="grid grid-cols-7 gap-2 mb-6">
@@ -1471,7 +1559,7 @@ export default function LandingPage() {
                     </div>
                   )}
 
-                  {activeTab === "stats" && (
+                  {activeTab === "insights" && (
                     <div className="space-y-6">
                       {/* Animated stats rings */}
                       <div className="grid grid-cols-3 gap-6">
@@ -1801,7 +1889,7 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing Section */}
-      <section className="relative py-20 px-6 overflow-hidden">
+      <section id="pricing" className="relative py-20 px-6 overflow-hidden scroll-mt-24">
         {/* Dynamic background effects */}
         <div className="absolute inset-0">
           {/* Floating geometric shapes */}
@@ -2117,8 +2205,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
+      {/* Footer (Contact) */}
       <m.footer
+        id="contact"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
@@ -2183,7 +2272,7 @@ export default function LandingPage() {
 
       {/* Enhanced floating decorative elements */}
       <m.div
-        className="fixed bottom-10 right-10 w-40 h-40 rounded-full bg-gradient-to-br from-[#ff6b00]/30 to-transparent blur-3xl pointer-events-none"
+        className="fixed bottom-10 right-10 w-40 h-40 rounded-full bg-gradient-to-br from-[#ff6b00]/30 to-transparent blur-3xl pointer-events-none hidden md:block"
         animate={{
           y: [0, 60, 0],
           x: [0, 40, 0],
@@ -2197,7 +2286,7 @@ export default function LandingPage() {
       />
 
       <m.div
-        className="fixed top-1/4 left-20 w-32 h-32 rounded-full bg-gradient-to-br from-[#00d4ff]/25 to-transparent blur-3xl pointer-events-none"
+        className="fixed top-1/4 left-20 w-32 h-32 rounded-full bg-gradient-to-br from-[#00d4ff]/25 to-transparent blur-3xl pointer-events-none hidden md:block"
         animate={{
           y: [0, -80, 0],
           x: [0, -60, 0],
@@ -2212,7 +2301,7 @@ export default function LandingPage() {
       />
 
       <m.div
-        className="fixed top-3/4 right-16 w-24 h-24 rounded-full bg-gradient-to-br from-[#00ff88]/20 to-transparent blur-2xl pointer-events-none"
+        className="fixed top-3/4 right-16 w-24 h-24 rounded-full bg-gradient-to-br from-[#00ff88]/20 to-transparent blur-2xl pointer-events-none hidden md:block"
         animate={{
           y: [0, 40, 0],
           x: [0, 30, 0],
