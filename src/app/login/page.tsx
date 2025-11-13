@@ -73,7 +73,7 @@ export default function LoginPage() {
 
   return (
     <div
-      className="min-h-screen overflow-hidden bg-gradient-to-b from-[#0a1428] via-[#1a2d4d] to-[#0a1428] flex items-center justify-center p-6"
+      className="min-h-screen overflow-hidden bg-gradient-to-b from-[#0a1428] via-[#1a2d4d] to-[#0a1428] flex items-center justify-center p-4 sm:p-6"
       style={{ fontFamily: '"Geist", sans-serif' }}
     >
       {/* Background Effects */}
@@ -123,22 +123,22 @@ export default function LoginPage() {
         className="relative w-full max-w-md"
       >
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-8">
           <m.div
             whileHover={{ scale: 1.05 }}
-            className="inline-flex items-center gap-3 mb-6"
+            className="inline-flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6"
           >
-            <div className="relative w-16 h-16 flex items-center justify-center">
+            <div className="relative w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center">
               <img src="/csync.png" alt="CareerSync" className="w-full h-full object-contain" />
             </div>
-            <span className="text-3xl font-bold bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] bg-clip-text text-transparent">
+            <span className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] bg-clip-text text-transparent">
               CareerSync
             </span>
           </m.div>
-          <h1 className="text-4xl font-black text-white mb-2">
+          <h1 className="text-3xl sm:text-4xl font-black text-white mb-2">
             {isSignUp ? "Create Account" : "Welcome Back"}
           </h1>
-          <p className="text-gray-400">
+          <p className="text-sm sm:text-base text-gray-400">
             {isSignUp
               ? "Join CareerSync to track your career journey"
               : "Sign in to access your dashboard"
@@ -151,22 +151,22 @@ export default function LoginPage() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
-          className="bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 backdrop-blur-xl rounded-3xl border border-[#00d4ff]/20 p-8 shadow-2xl"
+          className="bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 backdrop-blur-xl rounded-3xl border border-[#00d4ff]/20 p-6 sm:p-8 shadow-2xl"
         >
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             {/* Email */}
             <div>
               <label className="block text-sm font-bold text-gray-400 mb-2">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#00d4ff]" />
+                <Mail className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-[#00d4ff]" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
-                  className="w-full pl-12 pr-4 py-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                  className="w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
                   required
                 />
               </div>
@@ -178,21 +178,21 @@ export default function LoginPage() {
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#00d4ff]" />
+                <Lock className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-[#00d4ff]" />
                 <input
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="w-full pl-12 pr-12 py-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                  className="w-full pl-10 sm:pl-12 pr-10 sm:pr-12 py-3 sm:py-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#00d4ff] transition-colors"
+                  className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#00d4ff] transition-colors"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
                 </button>
               </div>
             </div>
@@ -215,26 +215,26 @@ export default function LoginPage() {
               disabled={loading}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full py-4 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold text-lg hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+              className="w-full py-3 sm:py-4 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold text-base sm:text-lg hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 sm:gap-3"
             >
               {loading ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   {isSignUp ? "Creating Account..." : "Signing In..."}
                 </>
               ) : (
                 <>
                   {isSignUp ? "Create Account" : "Sign In"}
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
                 </>
               )}
             </m.button>
           </form>
 
           {/* Divider */}
-          <div className="flex items-center gap-4 my-6">
+          <div className="flex items-center gap-3 sm:gap-4 my-4 sm:my-6">
             <div className="flex-1 h-px bg-[#00d4ff]/20" />
-            <span className="text-gray-400 text-sm">or</span>
+            <span className="text-gray-400 text-xs sm:text-sm">or</span>
             <div className="flex-1 h-px bg-[#00d4ff]/20" />
           </div>
 
@@ -244,17 +244,17 @@ export default function LoginPage() {
             disabled={loading}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full py-4 rounded-xl bg-white/10 border border-[#00d4ff]/20 text-white font-bold hover:bg-white/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+            className="w-full py-3 sm:py-4 rounded-xl bg-white/10 border border-[#00d4ff]/20 text-white font-bold hover:bg-white/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-base"
           >
-            <Chrome className="w-5 h-5" />
+            <Chrome className="w-4 h-4 sm:w-5 sm:h-5" />
             Continue with Google
           </m.button>
 
           {/* Toggle Sign Up/Sign In */}
-          <div className="text-center mt-6">
+          <div className="text-center mt-4 sm:mt-6">
             <button
               onClick={() => setIsSignUp(!isSignUp)}
-              className="text-[#00d4ff] hover:text-[#00d4ff]/80 transition-colors text-sm"
+              className="text-[#00d4ff] hover:text-[#00d4ff]/80 transition-colors text-sm sm:text-base"
             >
               {isSignUp
                 ? "Already have an account? Sign in"
@@ -264,10 +264,10 @@ export default function LoginPage() {
           </div>
 
           {/* Back to Landing */}
-          <div className="text-center mt-4">
+          <div className="text-center mt-3 sm:mt-4">
             <a
               href="/"
-              className="text-gray-400 hover:text-white transition-colors text-sm"
+              className="text-gray-400 hover:text-white transition-colors text-xs sm:text-sm"
             >
               ← Back to CareerSync
             </a>
