@@ -719,9 +719,9 @@ export default function LandingPage() {
       </section>
 
       {/* Features Section with Fluid Layout */}
-      <section className="relative py-24 px-6 bg-gradient-to-b from-[#0a1428] to-[#1a2d4d] overflow-hidden">
+      <section className="relative py-12 md:py-24 px-4 md:px-6 bg-gradient-to-b from-[#0a1428] to-[#1a2d4d] overflow-hidden">
         {/* Dynamic fluid background */}
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 hidden md:block">
           {/* Organic flowing shapes */}
           {[...Array(20)].map((_, i) => (
             <m.div
@@ -782,11 +782,11 @@ export default function LandingPage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center mb-20"
+            className="text-center mb-8 md:mb-20"
           >
             {/* Fluid section title */}
             <m.h2
-              className="text-6xl md:text-8xl font-black mb-6 leading-none"
+              className="text-3xl sm:text-4xl md:text-6xl lg:text-8xl font-black mb-4 md:mb-6 leading-none"
               animate={{
                 backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                 textShadow: [
@@ -812,7 +812,7 @@ export default function LandingPage() {
               Sync Features
             </m.h2>
             <m.p
-              className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed font-light"
+              className="text-sm sm:text-base md:text-xl lg:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed font-light px-4"
               animate={{
                 opacity: [0.6, 1, 0.6],
               }}
@@ -842,7 +842,7 @@ export default function LandingPage() {
 
           {/* Fluid dynamic grid */}
           <m.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 lg:gap-10"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -918,10 +918,10 @@ export default function LandingPage() {
                   stiffness: 300,
                   damping: 25,
                 }}
-                className={`group relative overflow-hidden rounded-3xl backdrop-blur-xl transition-all duration-700 cursor-pointer ${
+                className={`group relative overflow-hidden rounded-2xl md:rounded-3xl backdrop-blur-xl transition-all duration-700 cursor-pointer ${
                   feature.size === 'large'
-                    ? 'md:col-span-2 lg:col-span-1 p-10'
-                    : 'p-8'
+                    ? 'md:col-span-2 lg:col-span-1 p-6 md:p-10'
+                    : 'p-5 md:p-8'
                 }`}
                 style={{
                   background: "linear-gradient(135deg, rgba(26, 58, 82, 0.8), rgba(15, 37, 64, 0.8))",
@@ -949,7 +949,7 @@ export default function LandingPage() {
                 />
 
                 {/* Fluid particle system */}
-                <div className="absolute inset-0 overflow-hidden rounded-3xl">
+                <div className="absolute inset-0 overflow-hidden rounded-3xl hidden md:block">
                   {[...Array(feature.size === 'large' ? 12 : 8)].map((_, i) => (
                     <m.div
                       key={i}
@@ -976,8 +976,8 @@ export default function LandingPage() {
 
                 {/* Fluid icon container */}
                 <m.div
-                  className={`relative rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500 ${
-                    feature.size === 'large' ? 'w-20 h-20' : 'w-16 h-16'
+                  className={`relative rounded-2xl flex items-center justify-center mb-4 md:mb-8 group-hover:scale-110 transition-transform duration-500 ${
+                    feature.size === 'large' ? 'w-14 h-14 md:w-20 md:h-20' : 'w-12 h-12 md:w-16 md:h-16'
                   }`}
                   style={{
                     background: `linear-gradient(135deg, ${feature.color})`,
@@ -1010,8 +1010,8 @@ export default function LandingPage() {
                 {/* Fluid content */}
                 <div style={{ transform: "translateZ(15px)" }}>
                   <m.h3
-                    className={`font-bold text-white mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r transition-all duration-500 ${
-                      feature.size === 'large' ? 'text-2xl' : 'text-xl'
+                    className={`font-bold text-white mb-3 md:mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r transition-all duration-500 ${
+                      feature.size === 'large' ? 'text-lg md:text-2xl' : 'text-base md:text-xl'
                     }`}
                     style={{
                       background: `linear-gradient(135deg, #${feature.color.split('from-[')[1].split(']')[0]}, #${feature.color.split('to-[')[1].split(']')[0]})`,
@@ -1022,7 +1022,7 @@ export default function LandingPage() {
                     {feature.title}
                   </m.h3>
                   <p className={`text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors duration-300 ${
-                    feature.size === 'large' ? 'text-base' : 'text-sm'
+                    feature.size === 'large' ? 'text-sm md:text-base' : 'text-xs md:text-sm'
                   }`}>
                     {feature.description}
                   </p>
