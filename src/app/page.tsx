@@ -15,6 +15,8 @@ import {
   Trophy,
   Play,
   Star,
+  Menu,
+  X,
 } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
 
@@ -125,6 +127,7 @@ function TimeDisplay() {
 // Main Landing Page
 export default function LandingPage() {
   const [activeTab, setActiveTab] = useState("applications")
+  const [mobileOpen, setMobileOpen] = useState(false)
   const [scrollY, setScrollY] = useState(0)
   const { user, logout } = useAuth()
 
@@ -210,6 +213,14 @@ export default function LandingPage() {
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Mobile menu toggle */}
+            <button
+              onClick={() => setMobileOpen((s) => !s)}
+              className="md:hidden p-2 rounded-md text-gray-300 hover:bg-[#00d4ff]/10"
+              aria-label="Toggle menu"
+            >
+              {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
             {user ? (
               <>
                 <m.a
@@ -250,14 +261,40 @@ export default function LandingPage() {
               </>
             )}
           </div>
+
+          {/* Mobile menu panel */}
+          {mobileOpen && (
+            <div className="md:hidden absolute top-full left-0 right-0 bg-[#081226]/95 border-t border-[#00d4ff]/10 backdrop-blur-sm z-40">
+              <div className="px-6 py-4 flex flex-col gap-4">
+                {["Features", "How It Works", "Pricing", "Contact"].map((item) => (
+                  <a key={item} href="#" className="text-gray-300 py-2 rounded hover:bg-[#00d4ff]/5 px-2">
+                    {item}
+                  </a>
+                ))}
+                <div className="flex flex-col gap-2 pt-2">
+                  {user ? (
+                    <>
+                      <a href="/dashboard" className="px-4 py-2 text-white bg-[#00d4ff]/10 rounded">Dashboard</a>
+                      <button onClick={logout} className="px-4 py-2 text-white bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] rounded">Logout</button>
+                    </>
+                  ) : (
+                    <>
+                      <a href="/login" className="px-4 py-2 text-white border border-[#00d4ff]/20 rounded">Login</a>
+                      <a href="/login" className="px-4 py-2 text-white bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] rounded">Sign Up</a>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </m.nav>      {/* Hero Section */}
-      <section className="mt-20 relative h-screen w-full flex items-center justify-center overflow-hidden">
+      <section className="mt-20 relative min-h-screen md:h-screen w-full flex items-center justify-center overflow-hidden py-12 md:py-0">
         {/* Innovative morphing background */}
         <div className="absolute inset-0 overflow-hidden">
           {/* Morphing geometric shapes */}
           <m.div
-            className="absolute top-1/4 left-1/4 w-96 h-96 opacity-20"
+            className="hidden md:block absolute top-1/4 left-1/4 w-96 h-96 opacity-20"
             animate={{
               borderRadius: ["50% 20% 80% 30%", "30% 80% 20% 70%", "80% 30% 50% 20%", "50% 20% 80% 30%"],
               rotate: [0, 90, 180, 360],
@@ -274,7 +311,7 @@ export default function LandingPage() {
             }}
           />
           <m.div
-            className="absolute bottom-1/4 right-1/4 w-80 h-80 opacity-15"
+            className="hidden md:block absolute bottom-1/4 right-1/4 w-80 h-80 opacity-15"
             animate={{
               borderRadius: ["20% 80% 30% 70%", "70% 30% 80% 20%", "30% 70% 20% 80%", "20% 80% 30% 70%"],
               rotate: [360, 270, 180, 0],
@@ -293,6 +330,7 @@ export default function LandingPage() {
           />
 
           {/* Advanced particle system */}
+          <div className="hidden md:block">
           {[...Array(30)].map((_, i) => (
             <m.div
               key={i}
@@ -317,6 +355,7 @@ export default function LandingPage() {
               }}
             />
           ))}
+          </div>
 
           {/* Liquid-like flowing elements */}
           <m.div
@@ -362,7 +401,7 @@ export default function LandingPage() {
           {/* Innovative badge with morphing effect */}
           <m.div
             variants={itemVariants}
-            className="relative inline-flex items-center gap-3 px-8 py-4 rounded-full border border-[#00d4ff]/30 bg-[#00d4ff]/5 backdrop-blur-xl overflow-hidden"
+            className="relative inline-flex items-center gap-2 px-4 py-2 sm:px-8 sm:py-4 rounded-full border border-[#00d4ff]/30 bg-[#00d4ff]/5 backdrop-blur-xl overflow-hidden"
             whileHover={{ scale: 1.05 }}
           >
             {/* Morphing background */}
@@ -412,7 +451,7 @@ export default function LandingPage() {
           {/* Fluid morphing headline */}
           <m.h1
             variants={itemVariants}
-            className="text-7xl md:text-9xl font-black mb-8 leading-none tracking-tight"
+            className="text-4xl sm:text-5xl md:text-7xl lg:text-9xl font-black mb-6 sm:mb-8 leading-none tracking-tight"
             style={{
               background: "linear-gradient(135deg, #ffffff 0%, #00d4ff 25%, #ff6b00 50%, #00ff88 75%, #ffffff 100%)",
               backgroundSize: "400% 400%",
@@ -446,7 +485,7 @@ export default function LandingPage() {
           {/* Dynamic subheading with typing effect */}
           <m.p
             variants={itemVariants}
-            className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto mb-16 leading-relaxed font-light"
+            className="text-sm sm:text-base md:text-2xl text-gray-300 max-w-xl md:max-w-4xl mx-auto mb-8 md:mb-16 leading-relaxed font-light"
             animate={{
               opacity: [0.7, 1, 0.7],
             }}
@@ -484,7 +523,7 @@ export default function LandingPage() {
                 boxShadow: "0 0 40px rgba(255, 107, 0, 0.6)",
               }}
               whileTap={{ scale: 0.95 }}
-              className="group relative px-12 py-6 text-white font-bold text-xl rounded-2xl overflow-hidden"
+              className="group relative px-6 py-3 sm:px-12 sm:py-6 text-white font-bold text-lg sm:text-xl rounded-2xl overflow-hidden"
               style={{
                 background: "linear-gradient(135deg, #ff6b00 0%, #ff8c00 100%)",
                 boxShadow: "0 0 20px rgba(255, 107, 0, 0.4)",
@@ -535,7 +574,7 @@ export default function LandingPage() {
                 backgroundColor: "rgba(0, 212, 255, 0.1)",
               }}
               whileTap={{ scale: 0.95 }}
-              className="group relative px-12 py-6 text-white font-bold text-xl rounded-2xl border-2 border-[#00d4ff] hover:bg-[#00d4ff]/10 transition-all duration-300 overflow-hidden"
+              className="group relative px-6 py-3 sm:px-12 sm:py-6 text-white font-bold text-lg sm:text-xl rounded-2xl border-2 border-[#00d4ff] hover:bg-[#00d4ff]/10 transition-all duration-300 overflow-hidden"
             >
               {/* Liquid border effect */}
               <m.div
@@ -564,10 +603,10 @@ export default function LandingPage() {
           {/* Interactive floating stat with morphing effects */}
           <m.div
             variants={itemVariants}
-            className="mt-24 flex justify-center"
+            className="mt-12 md:mt-24 flex justify-center"
           >
             <m.div
-              className="group relative flex items-center gap-6 px-10 py-6 rounded-3xl bg-gradient-to-r from-[#1a3a52]/80 to-[#0f2540]/80 backdrop-blur-xl border border-[#00d4ff]/30 overflow-hidden cursor-pointer"
+              className="group relative flex items-center gap-6 px-4 py-4 sm:px-10 sm:py-6 rounded-3xl bg-gradient-to-r from-[#1a3a52]/80 to-[#0f2540]/80 backdrop-blur-xl border border-[#00d4ff]/30 overflow-hidden cursor-pointer"
               whileHover={{
                 scale: 1.05,
                 rotateY: 5,
