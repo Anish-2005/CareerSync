@@ -656,7 +656,8 @@ export default function LandingPage() {
               </div>
               <span className="relative z-10">Start Your Journey</span>
             </m.button>
-            <m.button
+            <m.a
+              href="#features"
               whileHover={{
                 scale: 1.05,
                 backgroundColor: "rgba(0, 212, 255, 0.1)",
@@ -685,7 +686,7 @@ export default function LandingPage() {
                 }}
               />
               <span className="relative z-10">Explore Features</span>
-            </m.button>
+            </m.a>
           </m.div>
 
           {/* Interactive floating stat with morphing effects */}
