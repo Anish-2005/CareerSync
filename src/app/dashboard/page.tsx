@@ -664,11 +664,11 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
             <h1
-              className="text-5xl md:text-6xl font-black leading-none"
+              className="text-4xl sm:text-5xl md:text-6xl font-black leading-none"
               style={{
                 background: "linear-gradient(135deg, #ffffff 0%, #00d4ff 30%, #ff6b00 60%, #00ff88 90%)",
                 WebkitBackgroundClip: "text",
@@ -683,10 +683,10 @@ export default function DashboardPage() {
               <m.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#ff6b00]/20 to-[#00ff88]/20 border border-[#ff6b00]/50"
+                className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 rounded-full bg-gradient-to-r from-[#ff6b00]/20 to-[#00ff88]/20 border border-[#ff6b00]/50 self-start sm:self-center"
               >
-                <Flame className="w-5 h-5 text-[#ff6b00]" />
-                <span className="text-white font-bold">{streak} day streak!</span>
+                <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-[#ff6b00]" />
+                <span className="text-sm sm:text-base text-white font-bold">{streak} day streak!</span>
               </m.div>
             )}
           </div>
@@ -695,9 +695,9 @@ export default function DashboardPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="text-lg text-gray-300 italic flex items-center gap-2"
+            className="text-base sm:text-lg text-gray-300 italic flex items-center gap-2"
           >
-            <Sparkles className="w-5 h-5 text-[#00ff88]" />
+            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-[#00ff88]" />
             {motivationalQuote}
           </m.p>
         </m.div>
@@ -707,15 +707,15 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="mb-6 flex flex-wrap gap-3"
+          className="mb-6 flex flex-col sm:flex-row gap-3"
         >
           <m.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setShowAddModal(true)}
-            className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold flex items-center gap-2 hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all"
+            className="px-4 py-3 sm:px-6 sm:py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all text-sm sm:text-base"
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
             Add Application
           </m.button>
 
@@ -723,16 +723,16 @@ export default function DashboardPage() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
-            className="px-6 py-3 rounded-xl bg-[#1a3a52]/60 border border-[#00d4ff]/20 text-white font-bold flex items-center gap-2 hover:border-[#00d4ff]/50 transition-all"
+            className="px-4 py-3 sm:px-6 sm:py-3 rounded-xl bg-[#1a3a52]/60 border border-[#00d4ff]/20 text-white font-bold flex items-center justify-center gap-2 hover:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
           >
-            <BarChart3 className="w-5 h-5" />
+            <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
             {viewMode === 'grid' ? 'List View' : 'Grid View'}
           </m.button>
 
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
-            className="px-6 py-3 rounded-xl bg-[#1a3a52]/60 border border-[#00d4ff]/20 text-white font-bold hover:border-[#00d4ff]/50 transition-all focus:outline-none focus:border-[#00d4ff]/50"
+            className="px-4 py-3 sm:px-6 sm:py-3 rounded-xl bg-[#1a3a52]/60 border border-[#00d4ff]/20 text-white font-bold hover:border-[#00d4ff]/50 transition-all focus:outline-none focus:border-[#00d4ff]/50 text-sm sm:text-base"
           >
             <option value="date">Sort by Date</option>
             <option value="company">Sort by Company</option>
@@ -745,7 +745,7 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8"
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-8"
         >
           {[
             { label: "Total Apps", value: stats.total, icon: Briefcase, color: "#00d4ff", subtitle: "All time" },
@@ -760,7 +760,7 @@ export default function DashboardPage() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: idx * 0.1 }}
               whileHover={{ scale: 1.05, y: -5 }}
-              className="relative p-6 rounded-2xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300 overflow-hidden group cursor-pointer"
+              className="relative p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300 overflow-hidden group cursor-pointer"
             >
               <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-xl"
@@ -768,14 +768,14 @@ export default function DashboardPage() {
               />
 
               <div className="relative z-10">
-                <div className="flex items-center justify-between mb-3">
-                  <stat.icon className="w-6 h-6" style={{ color: stat.color }} />
+                <div className="flex items-center justify-between mb-2 sm:mb-3">
+                  <stat.icon className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: stat.color }} />
                 </div>
-                <div className="text-4xl font-black mb-2" style={{ color: stat.color }}>
+                <div className="text-2xl sm:text-4xl font-black mb-1 sm:mb-2" style={{ color: stat.color }}>
                   {stat.value}
                 </div>
-                <div className="text-sm font-bold text-white mb-1">{stat.label}</div>
-                <div className="text-xs text-gray-400">{stat.subtitle}</div>
+                <div className="text-xs sm:text-sm font-bold text-white mb-1">{stat.label}</div>
+                <div className="text-xs text-gray-400 hidden sm:block">{stat.subtitle}</div>
               </div>
             </m.div>
           ))}
@@ -843,7 +843,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Tab Filters */}
-          <div className="flex gap-3 overflow-x-auto pb-2">
+          <div className="flex gap-2 md:gap-3 overflow-x-auto pb-2">
             {[
               { label: "All", value: "all", count: stats.total, icon: Briefcase },
               { label: "Applied", value: "applied", count: stats.applied, icon: Send },
@@ -856,16 +856,16 @@ export default function DashboardPage() {
                 onClick={() => setSelectedTab(tab.value as typeof selectedTab)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className={`px-6 py-3 rounded-xl font-bold text-sm whitespace-nowrap transition-all duration-300 flex items-center gap-2 ${
+                className={`px-3 py-2 sm:px-6 sm:py-3 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all duration-300 flex items-center gap-1 sm:gap-2 ${
                   selectedTab === tab.value
                     ? "bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white shadow-lg"
                     : "bg-[#1a3a52]/60 border border-[#00d4ff]/20 text-gray-400 hover:text-white hover:border-[#00d4ff]/50"
                 }`}
               >
-                <tab.icon className="w-4 h-4" />
+                <tab.icon className="w-3 h-3 sm:w-4 sm:h-4" />
                 {tab.label}
                 <span
-                  className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+                  className={`px-1 sm:px-2 py-0.5 rounded-full text-xs font-bold ${
                     selectedTab === tab.value ? "bg-white/20" : "bg-[#00d4ff]/20"
                   }`}
                 >
@@ -936,7 +936,7 @@ export default function DashboardPage() {
                     exit={{ opacity: 0, scale: 0.9 }}
                     transition={{ delay: idx * 0.03 }}
                     whileHover={{ scale: 1.02, y: -2 }}
-                    className="group relative p-6 rounded-2xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300 overflow-hidden cursor-pointer"
+                    className="group relative p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300 overflow-hidden cursor-pointer"
                     onClick={() => {
                       setSelectedApp(app)
                       setShowDetailModal(true)
@@ -961,10 +961,10 @@ export default function DashboardPage() {
 
                     <div className="relative z-10">
                       {/* Header */}
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center gap-4">
+                      <div className="flex items-start justify-between mb-3 sm:mb-4">
+                        <div className="flex items-center gap-3 sm:gap-4">
                           <div
-                            className="w-14 h-14 rounded-xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0"
+                            className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0"
                             style={{
                               background: `linear-gradient(135deg, ${statusColor}40, ${statusColor}20)`,
                             }}
@@ -972,7 +972,7 @@ export default function DashboardPage() {
                             {app.company.charAt(0)}
                           </div>
                           <div className="min-w-0">
-                            <h3 className="text-xl font-bold text-white group-hover:text-[#00d4ff] transition-colors truncate">
+                            <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-[#00d4ff] transition-colors truncate">
                               {app.company}
                             </h3>
                             <p className="text-gray-400 text-sm truncate">{app.position}</p>
@@ -984,40 +984,40 @@ export default function DashboardPage() {
 
                       {/* Status Badge */}
                       <div
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold mb-4"
+                        className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-bold mb-3 sm:mb-4 self-start"
                         style={{
                           backgroundColor: `${statusColor}20`,
                           color: statusColor,
                           border: `1px solid ${statusColor}50`,
                         }}
                       >
-                        <StatusIcon className="w-4 h-4" />
+                        <StatusIcon className="w-3 h-3 sm:w-4 sm:h-4" />
                         {app.status.charAt(0).toUpperCase() + app.status.slice(1)}
                       </div>
 
                       {/* Details */}
-                      <div className="space-y-2 mb-4 text-sm">
+                      <div className="space-y-1 sm:space-y-2 mb-3 sm:mb-4 text-xs sm:text-sm">
                         <div className="flex items-center gap-2 text-gray-400">
-                          <Calendar className="w-4 h-4 text-[#00d4ff]" />
-                          <span>{new Date(app.applicationDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
+                          <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-[#00d4ff]" />
+                          <span className="truncate">{new Date(app.applicationDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
                         </div>
                         {app.location && (
                           <div className="flex items-center gap-2 text-gray-400">
-                            <MapPin className="w-4 h-4 text-[#ff6b00]" />
+                            <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-[#ff6b00]" />
                             <span className="truncate">{app.location}</span>
                           </div>
                         )}
                         {app.salary && (
                           <div className="flex items-center gap-2 text-gray-400">
-                            <DollarSign className="w-4 h-4 text-[#00ff88]" />
-                            <span>{app.salary}</span>
+                            <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-[#00ff88]" />
+                            <span className="truncate">{app.salary}</span>
                           </div>
                         )}
                       </div>
 
                       {/* Progress Bar */}
-                      <div className="mb-4">
-                        <div className="flex items-center justify-between mb-2">
+                      <div className="mb-3 sm:mb-4">
+                        <div className="flex items-center justify-between mb-1 sm:mb-2">
                           <span className="text-xs text-gray-400">Progress</span>
                           <span className="text-xs font-bold" style={{ color: statusColor }}>
                             {app.progress}%
@@ -1037,7 +1037,7 @@ export default function DashboardPage() {
                       </div>
 
                       {/* Actions */}
-                      <div className="flex items-center justify-end gap-2">
+                      <div className="flex items-center justify-end gap-1 sm:gap-2">
                         <m.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
@@ -1046,10 +1046,10 @@ export default function DashboardPage() {
                             setSelectedApp(app)
                             setShowDetailModal(true)
                           }}
-                          className="p-2 rounded-lg bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] hover:bg-[#00d4ff]/30 transition-all"
+                          className="p-1.5 sm:p-2 rounded-lg bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] hover:bg-[#00d4ff]/30 transition-all"
                           title="View Details"
                         >
-                          <Eye className="w-4 h-4" />
+                          <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
                         </m.button>
                         {app.jobUrl && (
                           <m.a
@@ -1059,10 +1059,10 @@ export default function DashboardPage() {
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                            className="p-2 rounded-lg bg-[#ff6b00]/20 border border-[#ff6b00]/50 text-[#ff6b00] hover:bg-[#ff6b00]/30 transition-all"
+                            className="p-1.5 sm:p-2 rounded-lg bg-[#ff6b00]/20 border border-[#ff6b00]/50 text-[#ff6b00] hover:bg-[#ff6b00]/30 transition-all"
                             title="View Job Posting"
                           >
-                            <ExternalLink className="w-4 h-4" />
+                            <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
                           </m.a>
                         )}
                         <m.button
@@ -1072,10 +1072,10 @@ export default function DashboardPage() {
                             e.stopPropagation()
                             handleDeleteApplication(app._id)
                           }}
-                          className="p-2 rounded-lg bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444] hover:bg-[#ff4444]/30 transition-all"
+                          className="p-1.5 sm:p-2 rounded-lg bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444] hover:bg-[#ff4444]/30 transition-all"
                           title="Delete"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                         </m.button>
                       </div>
                     </div>
@@ -1120,7 +1120,7 @@ export default function DashboardPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm"
             onClick={() => setShowAddModal(false)}
           >
             <m.div
@@ -1128,11 +1128,11 @@ export default function DashboardPage() {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
               onClick={(e: React.MouseEvent) => e.stopPropagation()}
-              className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52] to-[#0f2540] border border-[#00d4ff]/30 shadow-2xl"
+              className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52] to-[#0f2540] border border-[#00d4ff]/30 shadow-2xl"
             >
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-3xl font-bold text-white flex items-center gap-3">
-                  <Rocket className="w-8 h-8 text-[#00d4ff]" />
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <h2 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2 sm:gap-3">
+                  <Rocket className="w-6 h-6 sm:w-8 sm:h-8 text-[#00d4ff]" />
                   New Application
                 </h2>
                 <m.button
@@ -1141,12 +1141,12 @@ export default function DashboardPage() {
                   onClick={() => setShowAddModal(false)}
                   className="p-2 rounded-full bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444]"
                 >
-                  <XCircle className="w-6 h-6" />
+                  <XCircle className="w-5 h-5 sm:w-6 sm:h-6" />
                 </m.button>
               </div>
 
               <form onSubmit={handleAddApplication} className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-bold text-gray-400 mb-2">Company *</label>
                     <input
@@ -1155,7 +1155,7 @@ export default function DashboardPage() {
                       onChange={(e) => setFormData({...formData, company: e.target.value})}
                       placeholder="Google, Microsoft..."
                       required
-                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                      className="w-full px-3 sm:px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
                     />
                   </div>
                   <div>
@@ -1166,12 +1166,12 @@ export default function DashboardPage() {
                       onChange={(e) => setFormData({...formData, position: e.target.value})}
                       placeholder="Software Engineer..."
                       required
-                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                      className="w-full px-3 sm:px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
                     />
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-bold text-gray-400 mb-2">Location</label>
                     <input
@@ -1179,7 +1179,7 @@ export default function DashboardPage() {
                       value={formData.location}
                       onChange={(e) => setFormData({...formData, location: e.target.value})}
                       placeholder="San Francisco, CA / Remote"
-                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                      className="w-full px-3 sm:px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
                     />
                   </div>
                   <div>
@@ -1189,7 +1189,7 @@ export default function DashboardPage() {
                       value={formData.salary}
                       onChange={(e) => setFormData({...formData, salary: e.target.value})}
                       placeholder="$100k - $150k"
-                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                      className="w-full px-3 sm:px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
                     />
                   </div>
                 </div>
@@ -1201,17 +1201,17 @@ export default function DashboardPage() {
                     value={formData.jobUrl}
                     onChange={(e) => setFormData({...formData, jobUrl: e.target.value})}
                     placeholder="https://example.com/job"
-                    className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                    className="w-full px-3 sm:px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
                   />
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-bold text-gray-400 mb-2">Status *</label>
                     <select 
                       value={formData.status}
                       onChange={(e) => setFormData({...formData, status: e.target.value as Application['status']})}
-                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                      className="w-full px-3 sm:px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
                     >
                       <option value="applied">Applied</option>
                       <option value="interview">Interviewing</option>
@@ -1225,7 +1225,7 @@ export default function DashboardPage() {
                     <select 
                       value={formData.priority}
                       onChange={(e) => setFormData({...formData, priority: e.target.value as Application['priority']})}
-                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                      className="w-full px-3 sm:px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
                     >
                       <option value="high">High</option>
                       <option value="medium">Medium</option>
@@ -1241,7 +1241,7 @@ export default function DashboardPage() {
                     value={formData.contactInfo}
                     onChange={(e) => setFormData({...formData, contactInfo: e.target.value})}
                     placeholder="recruiter@company.com or John Doe"
-                    className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                    className="w-full px-3 sm:px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
                   />
                 </div>
 
@@ -1252,17 +1252,17 @@ export default function DashboardPage() {
                     value={formData.notes}
                     onChange={(e) => setFormData({...formData, notes: e.target.value})}
                     placeholder="Add any additional notes about the application..."
-                    className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all resize-none"
+                    className="w-full px-3 sm:px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all resize-none text-sm sm:text-base"
                   />
                 </div>
 
-                <div className="flex gap-3 pt-4">
+                <div className="flex flex-col sm:flex-row gap-3 pt-4">
                   <m.button
                     type="button"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setShowAddModal(false)}
-                    className="flex-1 px-6 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white font-bold hover:border-[#00d4ff]/50 transition-all"
+                    className="flex-1 px-4 sm:px-6 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white font-bold hover:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
                   >
                     Cancel
                   </m.button>
@@ -1270,9 +1270,9 @@ export default function DashboardPage() {
                     type="submit"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all flex items-center justify-center gap-2"
+                    className="flex-1 px-4 sm:px-6 py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
                   >
-                    <Plus className="w-5 h-5" />
+                    <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
                     Add Application
                   </m.button>
                 </div>
