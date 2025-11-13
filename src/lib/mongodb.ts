@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://anish:anish@cluster0.hqbs2di.mongodb.net/';
+const MONGODB_URI = process.env.MONGODB_URI || '';
 
 if (!MONGODB_URI) {
   throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
@@ -23,13 +23,13 @@ async function dbConnect() {
   }
 
   if (!cached.promise) {
-    const opts = {
+    // Connection options can be extended via environment variables if needed.
+    const opts: mongoose.ConnectOptions = {
       bufferCommands: false,
+      // Use the unified topology and new URL parser by default in modern drivers
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-      return mongoose;
-    });
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((m) => m);
   }
 
   try {
