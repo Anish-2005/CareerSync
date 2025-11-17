@@ -82,7 +82,7 @@ export default function LoginPage() {
     color: theme.textPrimary,
     fontSize: 14,
     outline: "none",
-    ...((theme.bgInput as unknown) as React.CSSProperties),
+    ...((theme.bgInputStyle as unknown) as React.CSSProperties),
     borderStyle: "solid",
     borderWidth: "1px",
     borderColor: (theme.bgInput as any)?.borderColor ?? theme.borderMedium,
@@ -123,7 +123,7 @@ export default function LoginPage() {
         overflow: "hidden",
         fontFamily: '"Geist", sans-serif',
         color: theme.textPrimary,
-        ...(theme.bgPrimary as React.CSSProperties),
+        ...(theme.bgPrimaryStyle as React.CSSProperties),
       }}
     >
       {/* Background Effects (morphing shapes) */}
@@ -238,9 +238,9 @@ export default function LoginPage() {
           transition={{ delay: 0.2 }}
           style={{
             padding: 24,
-            ...(theme.bgModal as React.CSSProperties),
+            ...(theme.bgModalStyle as React.CSSProperties),
             ...modalBorderStyle,
-            boxShadow: (theme.bgCard as any)?.boxShadow ?? "0 20px 40px rgba(2,6,23,0.6)",
+            boxShadow: (theme.bgCardStyle as any)?.boxShadow ?? "0 20px 40px rgba(2,6,23,0.6)",
             backdropFilter: "blur(8px)",
           }}
         >
@@ -275,7 +275,7 @@ export default function LoginPage() {
                   style={{
                     ...inputBaseStyle,
                     paddingLeft: 40,
-                    background: (theme.bgInput as any)?.backgroundColor ?? (theme.bgInput as any)?.background,
+                    background: (theme.bgInputStyle as any)?.backgroundColor ?? (theme.bgInputStyle as any)?.background,
                   }}
                 />
               </div>
@@ -308,7 +308,7 @@ export default function LoginPage() {
                     ...inputBaseStyle,
                     paddingLeft: 40,
                     paddingRight: 40,
-                    background: (theme.bgInput as any)?.backgroundColor ?? (theme.bgInput as any)?.background,
+                    background: (theme.bgInputStyle as any)?.backgroundColor ?? (theme.bgInputStyle as any)?.background,
                   }}
                 />
                 <button
@@ -369,7 +369,7 @@ export default function LoginPage() {
                 color: "#fff",
                 cursor: loading ? "not-allowed" : "pointer",
                 opacity: loading ? 0.65 : 1,
-                ...(theme.bgButton as React.CSSProperties),
+                ...(theme.bgButtonStyle as React.CSSProperties),
                 border: "none",
               }}
             >
@@ -408,8 +408,8 @@ export default function LoginPage() {
                 padding: "0.75rem 1rem",
                 borderRadius: 12,
                 border: `1px solid ${theme.borderMedium}`,
-                background: (theme.bgButtonSecondary as any)?.backgroundColor ?? "transparent",
-                color: (theme.bgButtonSecondary as any)?.color ?? theme.textPrimary,
+                background: (theme.bgButtonSecondaryStyle as any)?.backgroundColor ?? "transparent",
+                color: (theme.bgButtonSecondaryStyle as any)?.color ?? theme.textPrimary,
                 cursor: loading ? "not-allowed" : "pointer",
                 fontWeight: 700,
               }}

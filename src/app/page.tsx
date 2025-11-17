@@ -263,7 +263,7 @@ export default function LandingPage() {
               />
               <img src="/csync.png" alt="CareerSync" className="w-full h-full object-contain relative z-10" />
             </div>
-            <span className={`text-xl font-bold ${theme.gradientText}`}>
+            <span className="text-xl font-bold" style={theme.gradientText}>
               CareerSync
             </span>
           </m.div>
@@ -612,8 +612,9 @@ export default function LandingPage() {
           {/* Fluid morphing headline */}
           <m.h1
             variants={itemVariants}
-            className={`mt-8 text-[12vw] sm:text-5xl md:text-7xl lg:text-9xl font-black mb-6 sm:mb-8 leading-tight tracking-tight ${theme.gradientText}`}
+            className="mt-8 text-[12vw] sm:text-5xl md:text-7xl lg:text-9xl font-black mb-6 sm:mb-8 leading-tight tracking-tight"
             style={{
+              ...theme.gradientText,
               filter: theme.theme === 'light'
                 ? "drop-shadow(0 2px 4px rgba(15,23,42,0.08))"
                 : "drop-shadow(0 0 40px rgba(0, 212, 255, 0.3))",

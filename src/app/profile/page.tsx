@@ -888,8 +888,8 @@ export default function ProfilePage() {
 
   // --- RENDER HANDLING USING theme hook's inline style objects ---
   // Fallback helpers
-  const safeBgPrimary = (theme.bgPrimary as React.CSSProperties) || {}
-  const safeBgNav = (theme.bgNav as React.CSSProperties) || {}
+  const safeBgPrimary = theme.bgPrimaryStyle || {}
+  const safeBgNav = theme.bgNavStyle || {}
   const safeBorderLight = theme.borderLight || (theme.borderMedium || "#e2e8f0")
   const safeMorph1 = theme.morphShape1 || "linear-gradient(135deg, rgba(255,107,0,0.3), rgba(0,212,255,0.3))"
   const safeMorph2 = theme.morphShape2 || "linear-gradient(225deg, rgba(0,255,136,0.2), rgba(255,107,0,0.2))"
@@ -1192,9 +1192,9 @@ export default function ProfilePage() {
                     animate={{ opacity: 1, scale: 1 }}
                     className="relative p-4 sm:p-8 rounded-3xl overflow-hidden"
                     style={{
-                      background: theme.bgCard ? (theme.bgCard as any).background || (theme.bgCard as any).backgroundColor : undefined,
-                      border: `1px solid ${(theme.bgCard as any)?.borderColor ?? theme.borderMedium}`,
-                      boxShadow: (theme.bgCard as any)?.boxShadow ?? undefined,
+                      background: theme.bgCardStyle?.backgroundColor,
+                      border: `1px solid ${theme.borderMedium}`,
+                      boxShadow: undefined,
                     }}
                   >
                     {/* Background glow */}
@@ -1274,7 +1274,7 @@ export default function ProfilePage() {
                     transition={{ delay: 0.2 }}
                     className="p-4 sm:p-8 rounded-3xl"
                     style={{
-                      background: theme.bgCard ? (theme.bgCard as any).background || (theme.bgCard as any).backgroundColor : undefined,
+                      background: theme.bgCardStyle?.backgroundColor,
                       border: `1px solid ${theme.borderMedium}`,
                     }}
                   >
@@ -1306,7 +1306,7 @@ export default function ProfilePage() {
                     transition={{ delay: 0.4 }}
                     className="p-4 sm:p-8 rounded-3xl"
                     style={{
-                      background: theme.bgCard ? (theme.bgCard as any).background || (theme.bgCard as any).backgroundColor : undefined,
+                      background: theme.bgCardStyle?.backgroundColor,
                       border: `1px solid ${theme.borderMedium}`,
                     }}
                   >
@@ -1390,7 +1390,7 @@ export default function ProfilePage() {
                     transition={{ delay: 0.6 }}
                     className="p-4 sm:p-8 rounded-3xl"
                     style={{
-                      background: theme.bgCard ? (theme.bgCard as any).background || (theme.bgCard as any).backgroundColor : undefined,
+                      background: theme.bgCardStyle?.backgroundColor,
                       border: `1px solid ${theme.borderMedium}`,
                     }}
                   >

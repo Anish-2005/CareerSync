@@ -7,18 +7,25 @@ export function useThemeClasses() {
     theme,
     // Class names for backgrounds
     bgPrimary: 'bg-primary',
+    bgPrimaryStyle: theme === 'light' ? { backgroundColor: '#f8fafc' } : { backgroundColor: '#0a1428' },
     
     bgCard: 'bg-card',
+    bgCardStyle: theme === 'light' ? { backgroundColor: '#ffffff' } : { backgroundColor: '#1a2d4d' },
     
     bgNav: 'bg-nav',
+    bgNavStyle: theme === 'light' ? { backgroundColor: '#f1f5f9' } : { backgroundColor: '#0f2540' },
     
     bgModal: 'bg-modal',
+    bgModalStyle: theme === 'light' ? { backgroundColor: 'rgba(255, 255, 255, 0.95)' } : { backgroundColor: 'rgba(26, 58, 82, 0.95)' },
     
     bgInput: 'bg-input',
+    bgInputStyle: theme === 'light' ? { backgroundColor: '#ffffff' } : { backgroundColor: '#0f2540' },
     
     bgButton: 'bg-button',
+    bgButtonStyle: theme === 'light' ? { backgroundColor: '#4f46e5' } : { backgroundColor: '#ff6b00' },
     
     bgButtonSecondary: 'bg-button-secondary',
+    bgButtonSecondaryStyle: theme === 'light' ? { backgroundColor: 'transparent' } : { backgroundColor: 'rgba(0, 212, 255, 0.1)' },
     
     // Color values
     textPrimary: theme === 'light' ? '#0f172a' : '#ffffff',
