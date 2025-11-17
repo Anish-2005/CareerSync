@@ -33,3 +33,74 @@ body {
 
 /* Small utility to blur background panels */
 .backdrop-blur { backdrop-filter: blur(6px); }
+
+/* Theme backgrounds - Dark (default) */
+.bg-primary {
+  background: linear-gradient(to bottom, #0a1428, #1a2d4d, #0a1428);
+}
+
+.bg-card {
+  background: linear-gradient(to bottom right, rgba(26, 58, 82, 0.6), rgba(15, 37, 64, 0.6));
+  border-color: rgba(0, 212, 255, 0.2);
+}
+
+.bg-nav {
+  background-color: rgba(10, 20, 40, 0.9);
+  border-color: rgba(0, 212, 255, 0.2);
+}
+
+.bg-modal {
+  background: linear-gradient(to bottom right, #1a3a52, #0f2540);
+}
+
+.bg-input {
+  background-color: #0f2540;
+  border-color: rgba(0, 212, 255, 0.2);
+}
+
+.bg-button {
+  background: linear-gradient(to right, #ff6b00, #00d4ff);
+}
+
+.bg-button-secondary {
+  background-color: rgba(0, 212, 255, 0.2);
+  border-color: rgba(0, 212, 255, 0.5);
+  color: #00d4ff;
+}
+
+/* Theme backgrounds - Light */
+.light .bg-primary {
+  background: linear-gradient(to bottom, #f8fafc, #eef2f7, #f8fafc);
+}
+
+.light .bg-card {
+  background-color: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 2px 8px rgba(15,23,42,0.06);
+}
+
+.light .bg-nav {
+  background-color: rgba(255, 255, 255, 0.85);
+  border-color: #e2e8f0;
+  box-shadow: 0 1px 4px rgba(15,23,42,0.05);
+}
+
+.light .bg-modal {
+  background: linear-gradient(to bottom right, #ffffff, #f9fafb);
+}
+
+.light .bg-input {
+  background-color: #ffffff;
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.light .bg-button {
+  background: linear-gradient(90deg, #4f46e5, #6366f1);
+  box-shadow: 0 4px 18px rgba(79,70,229,0.25);
+}
+
+.light .bg-button-secondary {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #334155;
+}

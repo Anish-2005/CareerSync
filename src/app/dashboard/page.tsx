@@ -891,7 +891,7 @@ export default function DashboardPage() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: idx * 0.1 }}
                 whileHover={{ scale: 1.05, y: -5 }}
-                className="relative p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300 overflow-hidden group cursor-pointer"
+                className={`relative p-4 sm:p-6 rounded-2xl ${theme.bgCard} hover:border-[#00d4ff]/50 transition-all duration-300 overflow-hidden group cursor-pointer`}
               >
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-xl"
@@ -1067,7 +1067,7 @@ export default function DashboardPage() {
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ delay: idx * 0.03 }}
                       whileHover={{ scale: 1.02, y: -2 }}
-                      className="group relative p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300 overflow-hidden cursor-pointer"
+                      className={`group relative p-4 sm:p-6 rounded-2xl ${theme.bgCard} hover:border-[#00d4ff]/50 transition-all duration-300 overflow-hidden cursor-pointer`}
                       onClick={() => {
                         setSelectedApp(app)
                         setShowDetailModal(true)
@@ -1259,7 +1259,7 @@ export default function DashboardPage() {
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.9, y: 20 }}
                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52] to-[#0f2540] border border-[#00d4ff]/30 shadow-2xl"
+                className={`relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-8 rounded-3xl ${theme.bgModal} shadow-2xl`}
               >
                 <div className="flex items-center justify-between mb-4 sm:mb-6">
                   <h2 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2 sm:gap-3">
@@ -1286,7 +1286,7 @@ export default function DashboardPage() {
                         onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                         placeholder="Google, Microsoft..."
                         required
-                        className="w-full px-3 sm:px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
+                        className={`w-full px-3 sm:px-4 py-3 rounded-xl ${theme.bgInput} text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base`}
                       />
                     </div>
                     <div>
@@ -1297,7 +1297,7 @@ export default function DashboardPage() {
                         onChange={(e) => setFormData({ ...formData, position: e.target.value })}
                         placeholder="Software Engineer..."
                         required
-                        className="w-full px-3 sm:px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
+                        className={`w-full px-3 sm:px-4 py-3 rounded-xl ${theme.bgInput} text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base`}
                       />
                     </div>
                   </div>
@@ -1310,7 +1310,7 @@ export default function DashboardPage() {
                         value={formData.location}
                         onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                         placeholder="San Francisco, CA / Remote"
-                        className="w-full px-3 sm:px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
+                        className={`w-full px-3 sm:px-4 py-3 rounded-xl ${theme.bgInput} text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base`}
                       />
                     </div>
                     <div>
@@ -1320,7 +1320,7 @@ export default function DashboardPage() {
                         value={formData.salary}
                         onChange={(e) => setFormData({ ...formData, salary: e.target.value })}
                         placeholder="$100k - $150k"
-                        className="w-full px-3 sm:px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
+                        className={`w-full px-3 sm:px-4 py-3 rounded-xl ${theme.bgInput} text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base`}
                       />
                     </div>
                   </div>
@@ -1332,7 +1332,7 @@ export default function DashboardPage() {
                       value={formData.jobUrl}
                       onChange={(e) => setFormData({ ...formData, jobUrl: e.target.value })}
                       placeholder="https://example.com/job"
-                      className="w-full px-3 sm:px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
+                      className={`w-full px-3 sm:px-4 py-3 rounded-xl ${theme.bgInput} text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base`}
                     />
                   </div>
 
@@ -1342,7 +1342,7 @@ export default function DashboardPage() {
                       <select
                         value={formData.status}
                         onChange={(e) => setFormData({ ...formData, status: e.target.value as Application['status'] })}
-                        className="w-full px-3 sm:px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
+                        className={`w-full px-3 sm:px-4 py-3 rounded-xl ${theme.bgInput} text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base`}
                       >
                         <option value="applied">Applied</option>
                         <option value="interview">Interviewing</option>
@@ -1356,7 +1356,7 @@ export default function DashboardPage() {
                       <select
                         value={formData.priority}
                         onChange={(e) => setFormData({ ...formData, priority: e.target.value as Application['priority'] })}
-                        className="w-full px-3 sm:px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
+                        className={`w-full px-3 sm:px-4 py-3 rounded-xl ${theme.bgInput} text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base`}
                       >
                         <option value="high">High</option>
                         <option value="medium">Medium</option>
@@ -1372,7 +1372,7 @@ export default function DashboardPage() {
                       value={formData.contactInfo}
                       onChange={(e) => setFormData({ ...formData, contactInfo: e.target.value })}
                       placeholder="recruiter@company.com or John Doe"
-                      className="w-full px-3 sm:px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
+                      className={`w-full px-3 sm:px-4 py-3 rounded-xl ${theme.bgInput} text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base`}
                     />
                   </div>
 
@@ -1383,7 +1383,7 @@ export default function DashboardPage() {
                       value={formData.notes}
                       onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                       placeholder="Add any additional notes about the application..."
-                      className="w-full px-3 sm:px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all resize-none text-sm sm:text-base"
+                      className={`w-full px-3 sm:px-4 py-3 rounded-xl ${theme.bgInput} text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all resize-none text-sm sm:text-base`}
                     />
                   </div>
 
@@ -1393,7 +1393,7 @@ export default function DashboardPage() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => setShowAddModal(false)}
-                      className="flex-1 px-4 sm:px-6 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white font-bold hover:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
+                      className={`flex-1 px-4 sm:px-6 py-3 rounded-xl ${theme.bgButtonSecondary} text-white font-bold hover:border-[#00d4ff]/50 transition-all text-sm sm:text-base`}
                     >
                       Cancel
                     </m.button>
@@ -1428,7 +1428,7 @@ export default function DashboardPage() {
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.9, y: 20 }}
                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto p-4 sm:p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52] to-[#0f2540] border border-[#00d4ff]/30 shadow-2xl"
+                className={`relative w-full max-w-3xl max-h-[90vh] overflow-y-auto p-4 sm:p-8 rounded-3xl ${theme.bgModal} shadow-2xl`}
               >
                 <div className="flex items-center justify-between mb-4 sm:mb-6">
                   <h2 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2 sm:gap-3">
@@ -1619,7 +1619,7 @@ export default function DashboardPage() {
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.9, y: 20 }}
                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto p-4 sm:p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52] to-[#0f2540] border border-[#00d4ff]/30 shadow-2xl"
+                className={`relative w-full max-w-4xl max-h-[90vh] overflow-y-auto p-4 sm:p-8 rounded-3xl ${theme.bgModal} shadow-2xl`}
               >
                 <div className="flex items-center justify-between mb-4 sm:mb-6">
                   <h2 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2 sm:gap-3">

@@ -5,34 +5,20 @@ export function useThemeClasses() {
   
   return {
     theme,
-    // Inline style objects for backgrounds
-    bgPrimary: theme === 'light'
-      ? { background: 'linear-gradient(to bottom, #f8fafc, #eef2f7, #f8fafc)' }
-      : { background: 'linear-gradient(to bottom, #0a1428, #1a2d4d, #0a1428)' },
+    // Class names for backgrounds
+    bgPrimary: 'bg-primary',
     
-    bgCard: theme === 'light'
-      ? { backgroundColor: '#ffffff', borderColor: '#e2e8f0', boxShadow: '0 2px 8px rgba(15,23,42,0.06)' }
-      : { background: 'linear-gradient(to bottom right, rgba(26, 58, 82, 0.6), rgba(15, 37, 64, 0.6))', borderColor: 'rgba(0, 212, 255, 0.2)' },
+    bgCard: 'bg-card',
     
-    bgNav: theme === 'light'
-      ? { backgroundColor: 'rgba(255, 255, 255, 0.85)', borderColor: '#e2e8f0', boxShadow: '0 1px 4px rgba(15,23,42,0.05)' }
-      : { backgroundColor: 'rgba(10, 20, 40, 0.9)', borderColor: 'rgba(0, 212, 255, 0.2)' },
+    bgNav: 'bg-nav',
     
-    bgModal: theme === 'light'
-      ? { background: 'linear-gradient(to bottom right, #ffffff, #f9fafb)' }
-      : { background: 'linear-gradient(to bottom right, #1a3a52, #0f2540)' },
+    bgModal: 'bg-modal',
     
-    bgInput: theme === 'light'
-      ? { backgroundColor: '#ffffff', borderColor: 'rgba(99, 102, 241, 0.3)' }
-      : { backgroundColor: '#0f2540', borderColor: 'rgba(0, 212, 255, 0.2)' },
+    bgInput: 'bg-input',
     
-    bgButton: theme === 'light'
-      ? { background: 'linear-gradient(90deg, #4f46e5, #6366f1)', boxShadow: '0 4px 18px rgba(79,70,229,0.25)' }
-      : { background: 'linear-gradient(to right, #ff6b00, #00d4ff)' },
+    bgButton: 'bg-button',
     
-    bgButtonSecondary: theme === 'light'
-      ? { backgroundColor: '#f1f5f9', borderColor: '#cbd5e1', color: '#334155' }
-      : { backgroundColor: 'rgba(0, 212, 255, 0.2)', borderColor: 'rgba(0, 212, 255, 0.5)', color: '#00d4ff' },
+    bgButtonSecondary: 'bg-button-secondary',
     
     // Color values
     textPrimary: theme === 'light' ? '#0f172a' : '#ffffff',
