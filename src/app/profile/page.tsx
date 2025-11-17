@@ -1257,9 +1257,11 @@ export default function ProfilePage() {
                           onClick={handleEditProfile}
                           className="px-4 py-2 sm:px-6 sm:py-3 rounded-xl font-bold"
                           style={{ background: "rgba(0,212,255,0.12)", border: `1px solid ${theme.borderMedium}`, color: theme.textAccent }}
-                        >
+                        > 
+                        <div className="flex flex-col items-center sm:flex-row sm:items-center gap-2">
                           <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
                           <span style={{ marginLeft: 8 }}>Edit Profile</span>
+                          </div>
                         </m.button>
                       </div>
                     </div>
