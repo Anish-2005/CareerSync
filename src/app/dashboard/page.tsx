@@ -522,14 +522,21 @@ export default function DashboardPage() {
     console.log(`🔊 Playing ${type} sound`)
   }
 
-  const unlockedAchievements = achievements.filter(a => a.unlocked)
+  // --- RENDER HANDLING USING theme hook's inline style objects ---
+  // Fallback helpers
+  const safeBgPrimary = theme.bgPrimaryStyle || {}
+  const safeBgNav = theme.bgNavStyle || {}
+  const safeBorderLight = theme.borderLight || (theme.borderMedium || "#e2e8f0")
+  const safeMorph1 = theme.morphShape1 || "linear-gradient(135deg, rgba(255,107,0,0.3), rgba(0,212,255,0.3))"
+  const safeMorph2 = theme.morphShape2 || "linear-gradient(225deg, rgba(0,255,136,0.2), rgba(255,107,0,0.2)"
+  const safeBgInput = theme.bgInputStyle || {}
+  const safeBgButtonSecondary = theme.bgButtonSecondaryStyle || {}
 
-  // Render
+  const unlockedAchievements = achievements.filter(a => a.unlocked)
   return (
     <RouteGuard>
       <div
-        className={`min-h-screen overflow-hidden ${theme.bgPrimary}`}
-        style={{ fontFamily: '"Geist", sans-serif' }}
+        style={{ minHeight: "100vh", overflow: "hidden", fontFamily: '"Geist", sans-serif', ...(safeBgPrimary as any) }}
       >
         {/* Error Notification */}
         <AnimatePresence>
@@ -612,7 +619,7 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md ${theme.bgNav} border-b ${theme.borderLight}`}
+          style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, backdropFilter: "blur(12px)", borderBottom: `1px solid ${safeBorderLight}`, ...(safeBgNav as any) }}
         >
           <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2 sm:py-4">
             <div className="flex items-center justify-between">
@@ -637,7 +644,8 @@ export default function DashboardPage() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setSoundEnabled(!soundEnabled)}
-                  className="p-2 text-white rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+                  className="p-2 rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+                  style={{ color: theme.textPrimary }}
                   title={soundEnabled ? "Sound On" : "Sound Off"}
                 >
                   {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
@@ -647,7 +655,8 @@ export default function DashboardPage() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowAchievements(true)}
-                  className="px-4 py-2 text-white text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+                  className="px-4 py-2 text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+                  style={{ color: theme.textPrimary }}
                 >
                   <Trophy className="w-4 h-4" />
                   <span>{unlockedAchievements.length}/{achievements.length}</span>
@@ -657,7 +666,8 @@ export default function DashboardPage() {
                   href="/profile"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-6 py-2 text-white text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+                  className="px-6 py-2 text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+                  style={{ color: theme.textPrimary }}
                 >
                   Profile
                 </m.a>
@@ -678,7 +688,8 @@ export default function DashboardPage() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setSoundEnabled(!soundEnabled)}
-                  className="p-1.5 text-white rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+                  className="p-1.5 rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+                  style={{ color: theme.textPrimary }}
                   title={soundEnabled ? "Sound On" : "Sound Off"}
                 >
                   {soundEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
@@ -688,7 +699,8 @@ export default function DashboardPage() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowMobileMenu(!showMobileMenu)}
-                  className="p-1.5 text-white rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+                  className="p-1.5 rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+                  style={{ color: theme.textPrimary }}
                 >
                   {showMobileMenu ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
                 </m.button>
@@ -712,20 +724,22 @@ export default function DashboardPage() {
                         setShowAchievements(true)
                         setShowMobileMenu(false)
                       }}
-                      className="w-full px-4 py-3 text-left text-white text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center justify-between"
+                      className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center justify-between"
+                      style={{ color: theme.textPrimary }}
                     >
                       <div className="flex items-center gap-2">
                         <Trophy className="w-4 h-4" />
                         Achievements
                       </div>
-                      <span className="text-xs text-gray-400">{unlockedAchievements.length}/{achievements.length}</span>
+                      <span className="text-xs" style={{ color: theme.textSecondary }}>{unlockedAchievements.length}/{achievements.length}</span>
                     </m.button>
 
                     <m.a
                       href="/profile"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      className="w-full px-4 py-3 text-left text-white text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+                      className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+                      style={{ color: theme.textPrimary }}
                     >
                       <User className="w-4 h-4" />
                       Profile
@@ -801,7 +815,7 @@ export default function DashboardPage() {
               <h1
                 className="text-4xl sm:text-5xl md:text-6xl font-black leading-none"
                 style={{
-                  background: "linear-gradient(135deg, #ffffff 0%, #00d4ff 30%, #ff6b00 60%, #00ff88 90%)",
+                  background: "linear-gradient(135deg, #1a1a1a 0%, #00d4ff 30%, #ff6b00 60%, #00ff88 90%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
@@ -855,7 +869,8 @@ export default function DashboardPage() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
-              className="px-4 py-3 sm:px-6 sm:py-3 rounded-xl bg-[#1a3a52]/60 border border-[#00d4ff]/20 text-white font-bold flex items-center justify-center gap-2 hover:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
+              style={{ padding: "0.75rem 1.5rem", borderRadius: "0.75rem", border: "1px solid rgba(0,212,255,0.2)", color: theme.textPrimary, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", transition: "all 0.3s", backgroundColor: "rgba(26,58,82,0.6)" }}
+              className="sm:px-6 sm:py-3 hover:border-[#00d4ff]/50 text-sm sm:text-base"
             >
               <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
               {viewMode === 'grid' ? 'List View' : 'Grid View'}
@@ -864,7 +879,8 @@ export default function DashboardPage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="px-4 py-3 sm:px-6 sm:py-3 rounded-xl bg-[#1a3a52]/60 border border-[#00d4ff]/20 text-white font-bold hover:border-[#00d4ff]/50 transition-all focus:outline-none focus:border-[#00d4ff]/50 text-sm sm:text-base"
+              style={{ padding: "0.75rem 1.5rem", borderRadius: "0.75rem", border: "1px solid transparent", outline: "none", transition: "all 0.3s", fontWeight: 700, fontSize: "0.875rem", ...(safeBgInput as any), color: theme.textPrimary }}
+              className="sm:px-6 sm:py-3 sm:text-base focus:border-[#00d4ff]/50"
             >
               <option value="date">Sort by Date</option>
               <option value="company">Sort by Company</option>
@@ -892,7 +908,8 @@ export default function DashboardPage() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: idx * 0.1 }}
                 whileHover={{ scale: 1.05, y: -5 }}
-                className={`relative p-4 sm:p-6 rounded-2xl ${theme.bgCard} hover:border-[#00d4ff]/50 transition-all duration-300 overflow-hidden group cursor-pointer`}
+                style={{ position: "relative", padding: "1rem", borderRadius: "1rem", border: "1px solid rgba(0,0,0,0.1)", transition: "all 0.3s", overflow: "hidden", cursor: "pointer", ...(theme.bgCardStyle || {}) }}
+                className="group sm:p-6"
               >
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-xl"
@@ -907,7 +924,7 @@ export default function DashboardPage() {
                     {stat.value}
                   </div>
                   <div className="text-xs sm:text-sm font-bold mb-1" style={{ color: theme.textPrimary }}>{stat.label}</div>
-                  <div className="text-xs text-gray-400 hidden sm:block">{stat.subtitle}</div>
+                  <div className="text-xs hidden sm:block" style={{ color: theme.textSecondary }}>{stat.subtitle}</div>
                 </div>
               </m.div>
             ))}
@@ -947,7 +964,8 @@ export default function DashboardPage() {
                 </div>
                 <button
                   onClick={() => setShowSecretStats(false)}
-                  className="mt-4 text-gray-400 hover:text-white transition-colors text-sm"
+                  className="mt-4 text-sm transition-colors"
+                  style={{ color: theme.textSecondary }}
                 >
                   Hide Stats
                 </button>
@@ -964,13 +982,14 @@ export default function DashboardPage() {
           >
             {/* Search Bar */}
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5" style={{ color: theme.textSecondary }} />
               <input
                 type="text"
                 placeholder="Search companies, positions, or locations..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 rounded-2xl bg-[#1a3a52]/60 border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all duration-300"
+                style={{ width: "100%", paddingLeft: "3rem", paddingRight: "1rem", paddingTop: "1rem", paddingBottom: "1rem", borderRadius: "1rem", border: "1px solid transparent", outline: "none", transition: "all 0.3s", ...(safeBgInput as any), color: theme.textPrimary }}
+                className="placeholder-gray-500 focus:border-[#00d4ff]/50"
               />
             </div>
 
@@ -988,18 +1007,33 @@ export default function DashboardPage() {
                   onClick={() => setSelectedTab(tab.value as typeof selectedTab)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`px-3 py-2 sm:px-6 sm:py-3 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all duration-300 flex items-center gap-1 sm:gap-2 ${
-                    selectedTab === tab.value
-                      ? "bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white shadow-lg"
-                      : "bg-[#1a3a52]/60 border border-[#00d4ff]/20 text-gray-400 hover:text-white hover:border-[#00d4ff]/50"
-                  }`}
+                  style={{
+                    padding: "0.5rem 0.75rem",
+                    borderRadius: "0.75rem",
+                    fontWeight: 700,
+                    fontSize: "0.75rem",
+                    whiteSpace: "nowrap",
+                    transition: "all 0.3s",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.25rem",
+                    ...(selectedTab === tab.value
+                      ? { background: "linear-gradient(90deg,#ff6b00,#00d4ff)", color: "#fff", boxShadow: "0 10px 30px rgba(0,0,0,0.25)" }
+                      : { background: "rgba(26,58,82,0.38)", border: `1px solid rgba(0,212,255,0.2)`, color: theme.textTertiary }),
+                  }}
+                  className="sm:px-6 sm:py-3 sm:text-sm sm:gap-2"
                 >
                   <tab.icon className="w-3 h-3 sm:w-4 sm:h-4" />
                   {tab.label}
                   <span
-                    className={`px-1 sm:px-2 py-0.5 rounded-full text-xs font-bold ${
-                      selectedTab === tab.value ? "bg-white/20" : "bg-[#00d4ff]/20"
-                    }`}
+                    style={{
+                      padding: "0.125rem 0.25rem",
+                      borderRadius: "9999px",
+                      fontSize: "0.75rem",
+                      fontWeight: 700,
+                      ...(selectedTab === tab.value ? { backgroundColor: "rgba(255,255,255,0.2)" } : { backgroundColor: "rgba(0,212,255,0.2)" }),
+                    }}
+                    className="sm:px-2"
                   >
                     {tab.count}
                   </span>
@@ -1068,7 +1102,8 @@ export default function DashboardPage() {
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ delay: idx * 0.03 }}
                       whileHover={{ scale: 1.02, y: -2 }}
-                      className={`group relative p-4 sm:p-6 rounded-2xl ${theme.bgCard} hover:border-[#00d4ff]/50 transition-all duration-300 overflow-hidden cursor-pointer`}
+                      style={{ position: "relative", padding: "1rem", borderRadius: "1rem", border: "1px solid rgba(0,0,0,0.1)", transition: "all 0.3s", overflow: "hidden", cursor: "pointer", ...(theme.bgCardStyle || {}) }}
+                      className="group sm:p-6 hover:border-[#00d4ff]/50"
                       onClick={() => {
                         setSelectedApp(app)
                         setShowDetailModal(true)
@@ -1155,7 +1190,7 @@ export default function DashboardPage() {
                               {app.progress}%
                             </span>
                           </div>
-                          <div className="h-2 bg-[#0f2540] rounded-full overflow-hidden">
+                          <div className="h-2 rounded-full overflow-hidden" style={{ backgroundColor: theme.bgInputStyle?.backgroundColor || '#e5e7eb' }}>
                             <m.div
                               initial={{ width: 0 }}
                               animate={{ width: `${app.progress}%` }}
@@ -1260,7 +1295,8 @@ export default function DashboardPage() {
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.9, y: 20 }}
                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                className={`relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-8 rounded-3xl ${theme.bgModal} shadow-2xl`}
+                style={{ position: "relative", width: "100%", maxWidth: "42rem", maxHeight: "90vh", overflowY: "auto", padding: "1rem", borderRadius: "1.5rem", ...(theme.bgModalStyle || {}) }}
+                className="shadow-2xl sm:p-8"
               >
                 <div className="flex items-center justify-between mb-4 sm:mb-6">
                   <h2 className="text-2xl sm:text-3xl font-bold flex items-center gap-2 sm:gap-3" style={{ color: theme.textPrimary }}>
@@ -1281,14 +1317,15 @@ export default function DashboardPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-bold mb-2" style={{ color: theme.textSecondary }}>Company *</label>
-                      <input
-                        type="text"
-                        value={formData.company}
-                        onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                        placeholder="Google, Microsoft..."
-                        required
-                        className={`w-full px-3 sm:px-4 py-3 rounded-xl ${theme.bgInput} text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base`}
-                      />
+              <input
+                type="text"
+                value={formData.company}
+                onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                placeholder="Google, Microsoft..."
+                required
+                style={{ width: "100%", padding: "0.75rem", borderRadius: "0.75rem", color: theme.textPrimary, backgroundColor: "transparent", border: "1px solid transparent", outline: "none", transition: "all 0.3s", fontSize: "0.875rem", ...(safeBgInput as any) }}
+                className="placeholder-gray-500 focus:border-[#00d4ff]/50 sm:text-base"
+              />
                     </div>
                     <div>
                       <label className="block text-sm font-bold mb-2" style={{ color: theme.textSecondary }}>Position *</label>
@@ -1298,7 +1335,8 @@ export default function DashboardPage() {
                         onChange={(e) => setFormData({ ...formData, position: e.target.value })}
                         placeholder="Software Engineer..."
                         required
-                        className={`w-full px-3 sm:px-4 py-3 rounded-xl ${theme.bgInput} text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base`}
+                        style={{ width: "100%", padding: "0.75rem", borderRadius: "0.75rem", color: theme.textPrimary, backgroundColor: "transparent", border: "1px solid transparent", outline: "none", transition: "all 0.3s", fontSize: "0.875rem", ...(safeBgInput as any) }}
+                        className="placeholder-gray-500 focus:border-[#00d4ff]/50 sm:text-base"
                       />
                     </div>
                   </div>
@@ -1311,7 +1349,8 @@ export default function DashboardPage() {
                         value={formData.location}
                         onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                         placeholder="San Francisco, CA / Remote"
-                        className={`w-full px-3 sm:px-4 py-3 rounded-xl ${theme.bgInput} text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base`}
+                        style={{ width: "100%", padding: "0.75rem", borderRadius: "0.75rem", color: theme.textPrimary, backgroundColor: "transparent", border: "1px solid transparent", outline: "none", transition: "all 0.3s", fontSize: "0.875rem", ...(safeBgInput as any) }}
+                        className="placeholder-gray-500 focus:border-[#00d4ff]/50 sm:text-base"
                       />
                     </div>
                     <div>
@@ -1321,7 +1360,8 @@ export default function DashboardPage() {
                         value={formData.salary}
                         onChange={(e) => setFormData({ ...formData, salary: e.target.value })}
                         placeholder="$100k - $150k"
-                        className={`w-full px-3 sm:px-4 py-3 rounded-xl ${theme.bgInput} text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base`}
+                        style={{ width: "100%", padding: "0.75rem", borderRadius: "0.75rem", color: theme.textPrimary, backgroundColor: "transparent", border: "1px solid transparent", outline: "none", transition: "all 0.3s", fontSize: "0.875rem", ...(safeBgInput as any) }}
+                        className="placeholder-gray-500 focus:border-[#00d4ff]/50 sm:text-base"
                       />
                     </div>
                   </div>
@@ -1333,7 +1373,8 @@ export default function DashboardPage() {
                       value={formData.jobUrl}
                       onChange={(e) => setFormData({ ...formData, jobUrl: e.target.value })}
                       placeholder="https://example.com/job"
-                      className={`w-full px-3 sm:px-4 py-3 rounded-xl ${theme.bgInput} text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base`}
+                      style={{ width: "100%", padding: "0.75rem", borderRadius: "0.75rem", color: theme.textPrimary, backgroundColor: "transparent", border: "1px solid transparent", outline: "none", transition: "all 0.3s", fontSize: "0.875rem", ...(safeBgInput as any) }}
+                      className="placeholder-gray-500 focus:border-[#00d4ff]/50 sm:text-base"
                     />
                   </div>
 
@@ -1343,7 +1384,8 @@ export default function DashboardPage() {
                       <select
                         value={formData.status}
                         onChange={(e) => setFormData({ ...formData, status: e.target.value as Application['status'] })}
-                        className={`w-full px-3 sm:px-4 py-3 rounded-xl ${theme.bgInput} text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base`}
+                        style={{ width: "100%", padding: "0.75rem", borderRadius: "0.75rem", color: theme.textPrimary, backgroundColor: "transparent", border: "1px solid transparent", outline: "none", transition: "all 0.3s", fontSize: "0.875rem", ...(safeBgInput as any) }}
+                        className="focus:border-[#00d4ff]/50 sm:text-base"
                       >
                         <option value="applied">Applied</option>
                         <option value="interview">Interviewing</option>
@@ -1357,7 +1399,8 @@ export default function DashboardPage() {
                       <select
                         value={formData.priority}
                         onChange={(e) => setFormData({ ...formData, priority: e.target.value as Application['priority'] })}
-                        className={`w-full px-3 sm:px-4 py-3 rounded-xl ${theme.bgInput} text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base`}
+                        style={{ width: "100%", padding: "0.75rem", borderRadius: "0.75rem", color: theme.textPrimary, backgroundColor: "transparent", border: "1px solid transparent", outline: "none", transition: "all 0.3s", fontSize: "0.875rem", ...(safeBgInput as any) }}
+                        className="focus:border-[#00d4ff]/50 sm:text-base"
                       >
                         <option value="high">High</option>
                         <option value="medium">Medium</option>
@@ -1373,7 +1416,8 @@ export default function DashboardPage() {
                       value={formData.contactInfo}
                       onChange={(e) => setFormData({ ...formData, contactInfo: e.target.value })}
                       placeholder="recruiter@company.com or John Doe"
-                      className={`w-full px-3 sm:px-4 py-3 rounded-xl ${theme.bgInput} text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base`}
+                      style={{ width: "100%", padding: "0.75rem", borderRadius: "0.75rem", color: theme.textPrimary, backgroundColor: "transparent", border: "1px solid transparent", outline: "none", transition: "all 0.3s", fontSize: "0.875rem", ...(safeBgInput as any) }}
+                      className="placeholder-gray-500 focus:border-[#00d4ff]/50 sm:text-base"
                     />
                   </div>
 
@@ -1384,7 +1428,8 @@ export default function DashboardPage() {
                       value={formData.notes}
                       onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                       placeholder="Add any additional notes about the application..."
-                      className={`w-full px-3 sm:px-4 py-3 rounded-xl ${theme.bgInput} text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all resize-none text-sm sm:text-base`}
+                      style={{ width: "100%", padding: "0.75rem", borderRadius: "0.75rem", color: theme.textPrimary, backgroundColor: "transparent", border: "1px solid transparent", outline: "none", transition: "all 0.3s", resize: "none", fontSize: "0.875rem", ...(safeBgInput as any) }}
+                      className="placeholder-gray-500 focus:border-[#00d4ff]/50 sm:text-base"
                     />
                   </div>
 
@@ -1394,7 +1439,8 @@ export default function DashboardPage() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => setShowAddModal(false)}
-                      className={`flex-1 px-4 sm:px-6 py-3 rounded-xl ${theme.bgButtonSecondary} text-white font-bold hover:border-[#00d4ff]/50 transition-all text-sm sm:text-base`}
+                      style={{ flex: 1, padding: "0.75rem 1.5rem", borderRadius: "0.75rem", fontWeight: 700, transition: "all 0.3s", fontSize: "0.875rem", ...(safeBgButtonSecondary as any), border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      className="sm:px-6 sm:py-3 sm:text-base"
                     >
                       Cancel
                     </m.button>
@@ -1429,7 +1475,8 @@ export default function DashboardPage() {
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.9, y: 20 }}
                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                className={`relative w-full max-w-3xl max-h-[90vh] overflow-y-auto p-4 sm:p-8 rounded-3xl ${theme.bgModal} shadow-2xl`}
+                style={{ position: "relative", width: "100%", maxWidth: "48rem", maxHeight: "90vh", overflowY: "auto", padding: "1rem", borderRadius: "1.5rem", ...(theme.bgModalStyle || {}) }}
+                className="shadow-2xl sm:p-8"
               >
                 <div className="flex items-center justify-between mb-4 sm:mb-6">
                   <h2 className="text-2xl sm:text-3xl font-bold flex items-center gap-2 sm:gap-3" style={{ color: theme.textPrimary }}>
@@ -1448,7 +1495,7 @@ export default function DashboardPage() {
 
                 <div className="space-y-4 sm:space-y-6">
                   {/* Company Header */}
-                  <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 p-4 sm:p-6 rounded-2xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
+                  <div style={{ padding: "1rem 1.5rem", borderRadius: "1rem", border: "1px solid rgba(0,0,0,0.1)", ...(theme.bgCardStyle || {}) }} className="sm:p-6">
                     <div
                       className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center text-white font-bold text-2xl sm:text-3xl flex-shrink-0"
                       style={{
@@ -1468,7 +1515,7 @@ export default function DashboardPage() {
 
                   {/* Status */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
+                    <div style={{ padding: "1rem", borderRadius: "0.75rem", border: "1px solid rgba(0,0,0,0.1)", ...(theme.bgCardStyle || {}) }}>
                       <div className="text-sm mb-2" style={{ color: theme.textSecondary }}>Status</div>
                       <div
                         className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full text-base sm:text-lg font-bold"
@@ -1483,10 +1530,10 @@ export default function DashboardPage() {
                       </div>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
+                    <div style={{ padding: "1rem", borderRadius: "0.75rem", border: "1px solid rgba(0,0,0,0.1)", ...(theme.bgCardStyle || {}) }}>
                       <div className="text-sm mb-2" style={{ color: theme.textSecondary }}>Progress</div>
                       <div className="flex items-center gap-3">
-                        <div className="flex-1 h-3 bg-[#1a3a52] rounded-full overflow-hidden">
+                        <div className="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden" style={{ backgroundColor: theme.bgInputStyle?.backgroundColor || '#f3f4f6' }}>
                           <div
                             className="h-full rounded-full transition-all duration-500"
                             style={{
@@ -1505,7 +1552,7 @@ export default function DashboardPage() {
                   {/* Details Grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {selectedApp.location && (
-                      <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
+                      <div style={{ padding: "1rem", borderRadius: "0.75rem", border: "1px solid rgba(0,0,0,0.1)", ...(theme.bgCardStyle || {}) }}>
                         <div className="flex items-center gap-2 text-sm mb-1" style={{ color: theme.textSecondary }}>
                           <MapPin className="w-4 h-4 text-[#ff6b00]" />
                           Location
@@ -1515,7 +1562,7 @@ export default function DashboardPage() {
                     )}
 
                     {selectedApp.salary && (
-                      <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
+                      <div style={{ padding: "1rem", borderRadius: "0.75rem", border: "1px solid rgba(0,0,0,0.1)", ...(theme.bgCardStyle || {}) }}>
                         <div className="flex items-center gap-2 text-sm mb-1" style={{ color: theme.textSecondary }}>
                           <DollarSign className="w-4 h-4 text-[#00ff88]" />
                           Salary Range
@@ -1524,7 +1571,7 @@ export default function DashboardPage() {
                       </div>
                     )}
 
-                    <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
+                    <div style={{ padding: "1rem", borderRadius: "0.75rem", border: "1px solid rgba(0,0,0,0.1)", ...(theme.bgCardStyle || {}) }}>
                       <div className="flex items-center gap-2 text-sm mb-1" style={{ color: theme.textSecondary }}>
                         <Calendar className="w-4 h-4 text-[#00d4ff]" />
                         Applied On
@@ -1538,7 +1585,7 @@ export default function DashboardPage() {
                       </div>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
+                    <div style={{ padding: "1rem", borderRadius: "0.75rem", border: "1px solid rgba(0,0,0,0.1)", ...(theme.bgCardStyle || {}) }}>
                       <div className="flex items-center gap-2 text-sm mb-1" style={{ color: theme.textSecondary }}>
                         <Clock className="w-4 h-4 text-[#00d4ff]" />
                         Last Updated
@@ -1555,7 +1602,7 @@ export default function DashboardPage() {
 
                   {/* Contact Info */}
                   {selectedApp.contactInfo && (
-                    <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
+                    <div style={{ padding: "1rem", borderRadius: "0.75rem", border: "1px solid rgba(0,0,0,0.1)", ...(theme.bgCardStyle || {}) }}>
                       <div className="flex items-center gap-2 text-sm mb-2" style={{ color: theme.textSecondary }}>
                         <Users className="w-4 h-4 text-[#00d4ff]" />
                         Contact Information
@@ -1566,7 +1613,7 @@ export default function DashboardPage() {
 
                   {/* Notes */}
                   {selectedApp.notes && (
-                    <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
+                    <div style={{ padding: "1rem", borderRadius: "0.75rem", border: "1px solid rgba(0,0,0,0.1)", ...(theme.bgCardStyle || {}) }}>
                       <div className="flex items-center gap-2 text-sm mb-2" style={{ color: theme.textSecondary }}>
                         <FileText className="w-4 h-4 text-[#00d4ff]" />
                         Notes
@@ -1620,7 +1667,8 @@ export default function DashboardPage() {
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.9, y: 20 }}
                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
-                className={`relative w-full max-w-4xl max-h-[90vh] overflow-y-auto p-4 sm:p-8 rounded-3xl ${theme.bgModal} shadow-2xl`}
+                style={{ position: "relative", width: "100%", maxWidth: "56rem", maxHeight: "90vh", overflowY: "auto", padding: "1rem", borderRadius: "1.5rem", ...(theme.bgModalStyle || {}) }}
+                className="shadow-2xl sm:p-8"
               >
                 <div className="flex items-center justify-between mb-4 sm:mb-6">
                   <h2 className="text-2xl sm:text-3xl font-bold flex items-center gap-2 sm:gap-3" style={{ color: theme.textPrimary }}>
@@ -1646,7 +1694,7 @@ export default function DashboardPage() {
                       {Math.round((unlockedAchievements.length / achievements.length) * 100)}%
                     </span>
                   </div>
-                  <div className="h-3 bg-[#0f2540] rounded-full overflow-hidden">
+                  <div className="h-3 bg-gray-200 rounded-full overflow-hidden" style={{ backgroundColor: theme.bgInputStyle?.backgroundColor || '#f3f4f6' }}>
                     <m.div
                       initial={{ width: 0 }}
                       animate={{ width: `${(unlockedAchievements.length / achievements.length) * 100}%` }}
@@ -1656,49 +1704,51 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-                {/* Stats Summary */}
-                <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
-                  <div className="p-3 sm:p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20 text-center">
-                    <div className="text-xl sm:text-2xl font-bold text-[#00d4ff] mb-1">{userStats.totalApplications}</div>
-                    <div className="text-xs" style={{ color: theme.textSecondary }}>Total Applications</div>
-                  </div>
-                  <div className="p-3 sm:p-4 rounded-xl bg-[#0f2540]/60 border border-[#ff6b00]/20 text-center">
-                    <div className="text-xl sm:text-2xl font-bold text-[#ff6b00] mb-1 flex items-center justify-center gap-1">
-                      <Flame className="w-4 h-4 sm:w-5 sm:h-5" />
-                      {streak}
-                    </div>
-                    <div className="text-xs" style={{ color: theme.textSecondary }}>Current Streak</div>
-                  </div>
-                  <div className="p-3 sm:p-4 rounded-xl bg-[#0f2540]/60 border border-[#00ff88]/20 text-center">
-                    <div className="text-xl sm:text-2xl font-bold text-[#00ff88] mb-1 flex items-center justify-center gap-1">
-                      <Award className="w-4 h-4 sm:w-5 sm:h-5" />
-                      {userStats.longestStreak}
-                    </div>
-                    <div className="text-xs" style={{ color: theme.textSecondary }}>Longest Streak</div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* Stats Summary */}
+        <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
+          <div style={{ padding: "0.75rem 1rem", borderRadius: "0.75rem", textAlign: "center", border: "1px solid rgba(0,0,0,0.1)", ...(theme.bgCardStyle || {}) }} className="sm:p-4">
+            <div className="text-xl sm:text-2xl font-bold text-[#00d4ff] mb-1">{userStats.totalApplications}</div>
+            <div className="text-xs" style={{ color: theme.textSecondary }}>Total Applications</div>
+          </div>
+          <div style={{ padding: "0.75rem 1rem", borderRadius: "0.75rem", textAlign: "center", border: "1px solid rgba(0,0,0,0.1)", ...(theme.bgCardStyle || {}) }} className="sm:p-4">
+            <div className="text-xl sm:text-2xl font-bold text-[#ff6b00] mb-1 flex items-center justify-center gap-1">
+              <Flame className="w-4 h-4 sm:w-5 sm:h-5" />
+              {streak}
+            </div>
+            <div className="text-xs" style={{ color: theme.textSecondary }}>Current Streak</div>
+          </div>
+          <div style={{ padding: "0.75rem 1rem", borderRadius: "0.75rem", textAlign: "center", border: "1px solid rgba(0,0,0,0.1)", ...(theme.bgCardStyle || {}) }} className="sm:p-4">
+            <div className="text-xl sm:text-2xl font-bold text-[#00ff88] mb-1 flex items-center justify-center gap-1">
+              <Award className="w-4 h-4 sm:w-5 sm:h-5" />
+              {userStats.longestStreak}
+            </div>
+            <div className="text-xs" style={{ color: theme.textSecondary }}>Longest Streak</div>
+          </div>
+        </div>                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {achievements.map((achievement) => (
                     <m.div
                       key={achievement.id}
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: achievement.id * 0.05 }}
-                      className={`p-4 sm:p-6 rounded-2xl border-2 transition-all ${
-                        achievement.unlocked
-                          ? 'bg-gradient-to-br from-[#00ff88]/20 to-[#00d4ff]/20 border-[#00ff88]/50'
-                          : 'bg-[#0f2540]/60 border-gray-700 opacity-50'
-                      }`}
+                      style={{
+                        padding: "1rem 1.5rem",
+                        borderRadius: "1rem",
+                        border: achievement.unlocked ? "2px solid rgba(0,255,136,0.3)" : "1px solid rgba(0,0,0,0.1)",
+                        transition: "all 0.3s",
+                        ...(theme.bgCardStyle || {}),
+                        ...(achievement.unlocked ? { boxShadow: "0 4px 12px rgba(0,255,136,0.15)" } : {})
+                      }}
+                      className="sm:p-6"
                     >
                       <div className="flex items-start gap-3 sm:gap-4">
                         <div className={`p-2 sm:p-3 rounded-xl ${
                           achievement.unlocked
                             ? 'bg-gradient-to-br from-[#00ff88]/40 to-[#00d4ff]/40'
-                            : 'bg-gray-800'
+                            : 'bg-gray-200'
                         }`}>
                           <achievement.icon className={`w-6 h-6 sm:w-8 sm:h-8 ${
-                            achievement.unlocked ? 'text-[#00ff88]' : 'text-gray-600'
+                            achievement.unlocked ? 'text-[#00ff88]' : 'text-gray-500'
                           }`} />
                         </div>
                         <div className="flex-1">
@@ -1706,7 +1756,7 @@ export default function DashboardPage() {
                             {achievement.name}
                             {achievement.unlocked && <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-[#00ff88]" />}
                           </h3>
-                          <p className={`text-sm sm:text-base ${achievement.unlocked ? '' : 'text-gray-600'}`} style={achievement.unlocked ? { color: theme.textSecondary } : {}}>
+                          <p className={`text-sm sm:text-base`} style={{ color: theme.textSecondary }}>
                             {achievement.description}
                           </p>
                         </div>
