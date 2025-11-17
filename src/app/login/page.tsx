@@ -69,7 +69,6 @@ export default function LoginPage() {
     }
   }
 
-  // Avoid flicker when user is already authenticated
   if (user) return null
 
   // helper style builders
@@ -83,15 +82,33 @@ export default function LoginPage() {
     color: theme.textPrimary,
     fontSize: 14,
     outline: "none",
-    ...theme.bgInput,
+    ...((theme.bgInput as unknown) as React.CSSProperties),
     borderStyle: "solid",
     borderWidth: "1px",
-    borderColor: theme.bgInput?.borderColor ?? theme.borderMedium,
+    borderColor: (theme.bgInput as any)?.borderColor ?? theme.borderMedium,
   }
 
   const modalBorderStyle = {
     border: `1px solid ${theme.borderMedium}`,
     borderRadius: 24,
+  }
+
+  // Gradient style safe merge (fall back to a solid color if gradient object missing)
+  const gradientObj = (theme.gradientText as any) || {}
+  const gradientStyle: React.CSSProperties = {
+    display: "inline-block",
+    // prefer backgroundImage property from your theme object, else fallback to a visible color
+    backgroundImage: gradientObj.background ?? gradientObj?.backgroundImage ?? undefined,
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    backgroundClip: "text",
+    // typography tuning
+    fontSize: 20,
+    fontWeight: 800,
+    letterSpacing: "-0.02em",
+    lineHeight: 1,
+    // fallback color so text is visible if gradient isn't applied
+    color: theme.textPrimary,
   }
 
   return (
@@ -112,7 +129,6 @@ export default function LoginPage() {
       {/* Background Effects (morphing shapes) */}
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "hidden" }}>
         <m.div
-          className="absolute"
           style={{
             position: "absolute",
             top: "25%",
@@ -137,7 +153,6 @@ export default function LoginPage() {
           transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
         />
         <m.div
-          className="absolute"
           style={{
             position: "absolute",
             bottom: "25%",
@@ -172,20 +187,39 @@ export default function LoginPage() {
       >
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 20 }}>
-          <m.div whileHover={{ scale: 1.05 }} style={{ display: "inline-flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-            <div style={{ width: 64, height: 64, display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <img src="/csync.png" alt="CareerSync" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-            </div>
-            <span
+          <m.div
+            whileHover={{ scale: 1.05 }}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 12,
+              marginBottom: 12,
+              verticalAlign: "middle",
+            }}
+          >
+            <div
               style={{
-                fontSize: 20,
-                fontWeight: 800,
-                background: (theme.gradientText as React.CSSProperties)?.background,
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
+                width: 56,
+                height: 56,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
               }}
             >
-              CareerSync
+              {/* slightly smaller logo to balance the text */}
+              <img
+                src="/csync.png"
+                alt="CareerSync"
+                style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
+              />
+            </div>
+
+            {/* Clean gradient text with fallbacks */}
+            <span style={gradientStyle}>
+              {/* Use a little larger spacing for the wordmark */}
+              <span style={{ fontSize: 22, fontWeight: 900 }}>Career</span>
+              <span style={{ marginLeft: 4, fontSize: 22, fontWeight: 900 }}>Sync</span>
             </span>
           </m.div>
 
@@ -206,7 +240,7 @@ export default function LoginPage() {
             padding: 24,
             ...(theme.bgModal as React.CSSProperties),
             ...modalBorderStyle,
-            boxShadow: theme.bgCard?.boxShadow ?? "0 20px 40px rgba(2,6,23,0.6)",
+            boxShadow: (theme.bgCard as any)?.boxShadow ?? "0 20px 40px rgba(2,6,23,0.6)",
             backdropFilter: "blur(8px)",
           }}
         >
@@ -289,7 +323,7 @@ export default function LoginPage() {
                     background: "transparent",
                     border: "none",
                     cursor: "pointer",
-                    color: "rgba(255,255,255,0.75)",
+                    color: theme.textSecondary,
                   }}
                 >
                   {showPassword ? <EyeOff style={{ width: 18, height: 18 }} /> : <Eye style={{ width: 18, height: 18 }} />}
@@ -308,9 +342,9 @@ export default function LoginPage() {
                   gap: 10,
                   padding: 12,
                   borderRadius: 12,
-                  background: "rgba(239, 68, 68, 0.08)",
-                  border: "1px solid rgba(239,68,68,0.18)",
-                  color: "#f87171",
+                  background: theme.theme === 'light' ? "rgba(239, 68, 68, 0.08)" : "rgba(255, 68, 68, 0.15)",
+                  border: `1px solid ${theme.statusRejected}20`,
+                  color: theme.statusRejected,
                 }}
               >
                 <AlertCircle style={{ width: 18, height: 18 }} />
@@ -355,9 +389,9 @@ export default function LoginPage() {
 
           {/* Divider */}
           <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "16px 0" }}>
-            <div style={{ height: 1, flex: 1, background: "rgba(0,0,0,0.06)" }} />
+            <div style={{ height: 1, flex: 1, background: theme.borderMedium }} />
             <div style={{ fontSize: 13, color: theme.textTertiary }}>or</div>
-            <div style={{ height: 1, flex: 1, background: "rgba(0,0,0,0.06)" }} />
+            <div style={{ height: 1, flex: 1, background: theme.borderMedium }} />
           </div>
 
           {/* Google sign-in */}
@@ -374,8 +408,8 @@ export default function LoginPage() {
                 padding: "0.75rem 1rem",
                 borderRadius: 12,
                 border: `1px solid ${theme.borderMedium}`,
-                background: theme.bgButtonSecondary?.backgroundColor ?? "transparent",
-                color: theme.bgButtonSecondary?.color ?? theme.textPrimary,
+                background: (theme.bgButtonSecondary as any)?.backgroundColor ?? "transparent",
+                color: (theme.bgButtonSecondary as any)?.color ?? theme.textPrimary,
                 cursor: loading ? "not-allowed" : "pointer",
                 fontWeight: 700,
               }}
@@ -408,7 +442,6 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* small helper for spin animation */}
           <style>{`
             @keyframes spin { to { transform: rotate(360deg); } }
           `}</style>
