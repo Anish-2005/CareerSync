@@ -1,6 +1,7 @@
+// app/(auth)/login/page.tsx
 "use client"
 
-import { useState, useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import {
@@ -8,7 +9,6 @@ import {
   Lock,
   Eye,
   EyeOff,
-  Zap,
   ArrowRight,
   Chrome,
   AlertCircle,
@@ -49,8 +49,8 @@ export default function LoginPage() {
         await signIn(email, password)
       }
       router.push("/dashboard")
-    } catch (error: any) {
-      setError(error.message || "An error occurred")
+    } catch (err: any) {
+      setError(err?.message || "An error occurred")
     } finally {
       setLoading(false)
     }
@@ -59,223 +59,359 @@ export default function LoginPage() {
   const handleGoogleSignIn = async () => {
     setLoading(true)
     setError("")
-
     try {
       await signInWithGoogle()
       router.push("/dashboard")
-    } catch (error: any) {
-      setError(error.message || "An error occurred")
+    } catch (err: any) {
+      setError(err?.message || "An error occurred")
     } finally {
       setLoading(false)
     }
   }
 
-  if (user) {
-    return null // Will redirect
+  // Avoid flicker when user is already authenticated
+  if (user) return null
+
+  // helper style builders
+  const inputBaseStyle: React.CSSProperties = {
+    width: "100%",
+    paddingLeft: "2.5rem",
+    paddingRight: "0.75rem",
+    paddingTop: "0.75rem",
+    paddingBottom: "0.75rem",
+    borderRadius: 16,
+    color: theme.textPrimary,
+    fontSize: 14,
+    outline: "none",
+    ...theme.bgInput,
+    borderStyle: "solid",
+    borderWidth: "1px",
+    borderColor: theme.bgInput?.borderColor ?? theme.borderMedium,
+  }
+
+  const modalBorderStyle = {
+    border: `1px solid ${theme.borderMedium}`,
+    borderRadius: 24,
   }
 
   return (
     <div
-      className={`min-h-screen overflow-hidden ${theme.bgPrimary} flex items-center justify-center p-4 sm:p-6`}
-      style={{ fontFamily: '"Geist", sans-serif' }}
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "1rem",
+        position: "relative",
+        overflow: "hidden",
+        fontFamily: '"Geist", sans-serif',
+        color: theme.textPrimary,
+        ...(theme.bgPrimary as React.CSSProperties),
+      }}
     >
-      {/* Background Effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Morphing shapes */}
+      {/* Background Effects (morphing shapes) */}
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "hidden" }}>
         <m.div
-          className="absolute top-1/4 left-1/4 w-96 h-96 opacity-20"
+          className="absolute"
+          style={{
+            position: "absolute",
+            top: "25%",
+            left: "25%",
+            width: 384,
+            height: 384,
+            opacity: 0.2,
+            filter: "blur(40px)",
+            background: theme.morphShape1,
+            borderRadius: "50%",
+          }}
           animate={{
-            borderRadius: ["50% 20% 80% 30%", "30% 80% 20% 70%", "80% 30% 50% 20%", "50% 20% 80% 30%"],
+            borderRadius: [
+              "50% 20% 80% 30%",
+              "30% 80% 20% 70%",
+              "80% 30% 50% 20%",
+              "50% 20% 80% 30%",
+            ],
             rotate: [0, 90, 180, 360],
             scale: [1, 1.2, 0.8, 1],
           }}
-          transition={{
-            duration: 20,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut",
-          }}
-          style={{
-            background: "linear-gradient(135deg, rgba(255, 107, 0, 0.3), rgba(0, 212, 255, 0.3))",
-            filter: "blur(40px)",
-          }}
+          transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
         />
         <m.div
-          className="absolute bottom-1/4 right-1/4 w-80 h-80 opacity-15"
+          className="absolute"
+          style={{
+            position: "absolute",
+            bottom: "25%",
+            right: "25%",
+            width: 320,
+            height: 320,
+            opacity: 0.15,
+            filter: "blur(30px)",
+            background: theme.morphShape2,
+            borderRadius: "40%",
+          }}
           animate={{
-            borderRadius: ["20% 80% 30% 70%", "70% 30% 80% 20%", "30% 70% 20% 80%", "20% 80% 30% 70%"],
+            borderRadius: [
+              "20% 80% 30% 70%",
+              "70% 30% 80% 20%",
+              "30% 70% 20% 80%",
+              "20% 80% 30% 70%",
+            ],
             rotate: [360, 270, 180, 0],
             scale: [0.8, 1.3, 1, 0.8],
           }}
-          transition={{
-            duration: 25,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut",
-          }}
-          style={{
-            background: "linear-gradient(225deg, rgba(0, 255, 136, 0.2), rgba(255, 107, 0, 0.2))",
-            filter: "blur(30px)",
-          }}
+          transition={{ duration: 25, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
         />
       </div>
 
-      {/* Login Form */}
+      {/* Card */}
       <m.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="relative w-full max-w-md"
+        style={{ width: "100%", maxWidth: 480, position: "relative", zIndex: 10 }}
       >
         {/* Header */}
-        <div className="text-center mb-6 sm:mb-8">
-          <m.div
-            whileHover={{ scale: 1.05 }}
-            className="inline-flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6"
-          >
-            <div className="relative w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center">
-              <img src="/csync.png" alt="CareerSync" className="w-full h-full object-contain" />
+        <div style={{ textAlign: "center", marginBottom: 20 }}>
+          <m.div whileHover={{ scale: 1.05 }} style={{ display: "inline-flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+            <div style={{ width: 64, height: 64, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <img src="/csync.png" alt="CareerSync" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
             </div>
-            <span className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] bg-clip-text text-transparent">
+            <span
+              style={{
+                fontSize: 20,
+                fontWeight: 800,
+                background: (theme.gradientText as React.CSSProperties)?.background,
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
               CareerSync
             </span>
           </m.div>
-          <h1 className="text-3xl sm:text-4xl font-black text-white mb-2">
+
+          <h1 style={{ fontSize: 34, fontWeight: 900, marginBottom: 8, color: theme.textPrimary }}>
             {isSignUp ? "Create Account" : "Welcome Back"}
           </h1>
-          <p className="text-sm sm:text-base text-gray-400">
-            {isSignUp
-              ? "Join CareerSync to track your career journey"
-              : "Sign in to access your dashboard"
-            }
+          <p style={{ fontSize: 14, color: theme.textSecondary }}>
+            {isSignUp ? "Join CareerSync to track your career journey" : "Sign in to access your dashboard"}
           </p>
         </div>
 
-        {/* Form */}
+        {/* Modal Card */}
         <m.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
-          className={`${theme.bgModal} backdrop-blur-xl rounded-3xl border ${theme.borderMedium} p-6 sm:p-8 shadow-2xl`}
+          style={{
+            padding: 24,
+            ...(theme.bgModal as React.CSSProperties),
+            ...modalBorderStyle,
+            boxShadow: theme.bgCard?.boxShadow ?? "0 20px 40px rgba(2,6,23,0.6)",
+            backdropFilter: "blur(8px)",
+          }}
         >
-          <ThemeToggle />
-          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
+            <ThemeToggle />
+          </div>
+
+          <form onSubmit={handleSubmit} style={{ display: "grid", gap: 12 }}>
             {/* Email */}
             <div>
-              <label className="block text-sm font-bold text-gray-400 mb-2">
+              <label style={{ display: "block", marginBottom: 8, fontWeight: 700, color: theme.textSecondary }}>
                 Email Address
               </label>
-              <div className="relative">
-                <Mail className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-[#00d4ff]" />
+              <div style={{ position: "relative" }}>
+                <Mail
+                  style={{
+                    position: "absolute",
+                    left: 12,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    width: 18,
+                    height: 18,
+                    color: theme.textAccent,
+                  }}
+                />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
-                  className="w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
                   required
+                  style={{
+                    ...inputBaseStyle,
+                    paddingLeft: 40,
+                    background: (theme.bgInput as any)?.backgroundColor ?? (theme.bgInput as any)?.background,
+                  }}
                 />
               </div>
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-bold text-gray-400 mb-2">
+              <label style={{ display: "block", marginBottom: 8, fontWeight: 700, color: theme.textSecondary }}>
                 Password
               </label>
-              <div className="relative">
-                <Lock className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-[#00d4ff]" />
+              <div style={{ position: "relative" }}>
+                <Lock
+                  style={{
+                    position: "absolute",
+                    left: 12,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    width: 18,
+                    height: 18,
+                    color: theme.textAccent,
+                  }}
+                />
                 <input
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className="w-full pl-10 sm:pl-12 pr-10 sm:pr-12 py-3 sm:py-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all text-sm sm:text-base"
                   required
+                  style={{
+                    ...inputBaseStyle,
+                    paddingLeft: 40,
+                    paddingRight: 40,
+                    background: (theme.bgInput as any)?.backgroundColor ?? (theme.bgInput as any)?.background,
+                  }}
                 />
                 <button
                   type="button"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#00d4ff] transition-colors"
+                  style={{
+                    position: "absolute",
+                    right: 12,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    color: "rgba(255,255,255,0.75)",
+                  }}
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
+                  {showPassword ? <EyeOff style={{ width: 18, height: 18 }} /> : <Eye style={{ width: 18, height: 18 }} />}
                 </button>
               </div>
             </div>
 
-            {/* Error Message */}
+            {/* Error */}
             {error && (
               <m.div
-                initial={{ opacity: 0, y: -10 }}
+                initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="flex items-center gap-3 p-4 rounded-xl bg-red-500/20 border border-red-500/50 text-red-400"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: 12,
+                  borderRadius: 12,
+                  background: "rgba(239, 68, 68, 0.08)",
+                  border: "1px solid rgba(239,68,68,0.18)",
+                  color: "#f87171",
+                }}
               >
-                <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                <span className="text-sm">{error}</span>
+                <AlertCircle style={{ width: 18, height: 18 }} />
+                <div style={{ fontSize: 13 }}>{error}</div>
               </m.div>
             )}
 
-            {/* Submit Button */}
-            <m.button
+            {/* Submit */}
+            <button
               type="submit"
               disabled={loading}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full py-3 sm:py-4 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold text-base sm:text-lg hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 sm:gap-3"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 10,
+                width: "100%",
+                padding: "0.85rem 1rem",
+                borderRadius: 12,
+                fontWeight: 800,
+                fontSize: 15,
+                color: "#fff",
+                cursor: loading ? "not-allowed" : "pointer",
+                opacity: loading ? 0.65 : 1,
+                ...(theme.bgButton as React.CSSProperties),
+                border: "none",
+              }}
             >
               {loading ? (
                 <>
-                  <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  {isSignUp ? "Creating Account..." : "Signing In..."}
+                  <div style={{ width: 18, height: 18, border: "2px solid white", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
+                  <span>{isSignUp ? "Creating Account..." : "Signing In..."}</span>
                 </>
               ) : (
                 <>
-                  {isSignUp ? "Create Account" : "Sign In"}
-                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span>{isSignUp ? "Create Account" : "Sign In"}</span>
+                  <ArrowRight style={{ width: 18, height: 18 }} />
                 </>
               )}
-            </m.button>
+            </button>
           </form>
 
           {/* Divider */}
-          <div className="flex items-center gap-3 sm:gap-4 my-4 sm:my-6">
-            <div className="flex-1 h-px bg-[#00d4ff]/20" />
-            <span className="text-gray-400 text-xs sm:text-sm">or</span>
-            <div className="flex-1 h-px bg-[#00d4ff]/20" />
+          <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "16px 0" }}>
+            <div style={{ height: 1, flex: 1, background: "rgba(0,0,0,0.06)" }} />
+            <div style={{ fontSize: 13, color: theme.textTertiary }}>or</div>
+            <div style={{ height: 1, flex: 1, background: "rgba(0,0,0,0.06)" }} />
           </div>
 
-          {/* Google Sign In */}
-          <m.button
-            onClick={handleGoogleSignIn}
-            disabled={loading}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="w-full py-3 sm:py-4 rounded-xl bg-white/10 border border-[#00d4ff]/20 text-white font-bold hover:bg-white/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-base"
-          >
-            <Chrome className="w-4 h-4 sm:w-5 sm:h-5" />
-            Continue with Google
-          </m.button>
-
-          {/* Toggle Sign Up/Sign In */}
-          <div className="text-center mt-4 sm:mt-6">
+          {/* Google sign-in */}
+          <div style={{ display: "grid", gap: 12 }}>
             <button
-              onClick={() => setIsSignUp(!isSignUp)}
-              className="text-[#00d4ff] hover:text-[#00d4ff]/80 transition-colors text-sm sm:text-base"
+              onClick={handleGoogleSignIn}
+              disabled={loading}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 10,
+                width: "100%",
+                padding: "0.75rem 1rem",
+                borderRadius: 12,
+                border: `1px solid ${theme.borderMedium}`,
+                background: theme.bgButtonSecondary?.backgroundColor ?? "transparent",
+                color: theme.bgButtonSecondary?.color ?? theme.textPrimary,
+                cursor: loading ? "not-allowed" : "pointer",
+                fontWeight: 700,
+              }}
             >
-              {isSignUp
-                ? "Already have an account? Sign in"
-                : "Don't have an account? Sign up"
-              }
+              <Chrome style={{ width: 18, height: 18 }} />
+              Continue with Google
             </button>
+
+            {/* Toggle / Links */}
+            <div style={{ textAlign: "center" }}>
+              <button
+                onClick={() => setIsSignUp(!isSignUp)}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  color: theme.textAccent,
+                  fontSize: 14,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                {isSignUp ? "Already have an account? Sign in" : "Don't have an account? Sign up"}
+              </button>
+            </div>
+
+            <div style={{ textAlign: "center" }}>
+              <a href="/" style={{ color: theme.textTertiary, fontSize: 13, textDecoration: "none" }}>
+                ← Back to CareerSync
+              </a>
+            </div>
           </div>
 
-          {/* Back to Landing */}
-          <div className="text-center mt-3 sm:mt-4">
-            <a
-              href="/"
-              className="text-gray-400 hover:text-white transition-colors text-xs sm:text-sm"
-            >
-              ← Back to CareerSync
-            </a>
-          </div>
+          {/* small helper for spin animation */}
+          <style>{`
+            @keyframes spin { to { transform: rotate(360deg); } }
+          `}</style>
         </m.div>
       </m.div>
     </div>

@@ -19,7 +19,7 @@ import {
   X,
 } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
-import { useThemeClasses } from "@/hooks/useThemeClasses"
+import { useTheme } from "@/contexts/ThemeContext"
 import ThemeToggle from "@/components/ThemeToggle"
 
 // Cast motion to any to avoid strict prop typing issues in this file
@@ -132,7 +132,57 @@ export default function LandingPage() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrollY, setScrollY] = useState(0)
   const { user, logout } = useAuth()
-  const theme = useThemeClasses()
+  const { theme: mode } = useTheme()
+  const theme = mode === 'light' ? {
+    theme: 'light',
+    bgPrimary: { background: 'linear-gradient(to bottom, #f8fafc, #eef2f7, #f8fafc)' },
+    bgCard: { backgroundColor: '#ffffff', borderColor: '#e2e8f0', boxShadow: '0 2px 8px rgba(15,23,42,0.06)' },
+    bgNav: { backgroundColor: 'rgba(255, 255, 255, 0.85)', borderColor: '#e2e8f0', boxShadow: '0 1px 4px rgba(15,23,42,0.05)' },
+    bgModal: { background: 'linear-gradient(to bottom right, #ffffff, #f9fafb)' },
+    bgInput: { backgroundColor: '#ffffff', borderColor: 'rgba(99, 102, 241, 0.3)' },
+    bgButton: { background: 'linear-gradient(90deg, #4f46e5, #6366f1)', boxShadow: '0 4px 18px rgba(79,70,229,0.25)' },
+    bgButtonSecondary: { backgroundColor: '#f1f5f9', borderColor: '#cbd5e1', color: '#334155' },
+    textPrimary: '#0f172a',
+    textSecondary: '#475569',
+    textTertiary: '#64748b',
+    textAccent: '#2563eb',
+    gradientText: { background: 'linear-gradient(to right, #0f172a, #2563eb, #1d4ed8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' },
+    borderLight: '#e2e8f0',
+    borderMedium: '#cbd5e1',
+    borderStrong: '#94a3b8',
+    statusApplied: '#2563eb',
+    statusInterview: '#f59e0b',
+    statusOffer: '#10b981',
+    statusRejected: '#ef4444',
+    morphShape1: 'linear-gradient(135deg, rgba(37, 99, 235, 0.18), rgba(99, 102, 241, 0.18))',
+    morphShape2: 'linear-gradient(225deg, rgba(99, 102, 241, 0.15), rgba(29, 78, 216, 0.15))',
+    particleColors: ['#2563eb', '#6366f1', '#0ea5e9']
+  } : {
+    theme: 'dark',
+    bgPrimary: { background: 'linear-gradient(to bottom, #0a1428, #1a2d4d, #0a1428)' },
+    bgCard: { background: 'linear-gradient(to bottom right, rgba(26, 58, 82, 0.6), rgba(15, 37, 64, 0.6))', borderColor: 'rgba(0, 212, 255, 0.2)' },
+    bgNav: { backgroundColor: 'rgba(10, 20, 40, 0.9)', borderColor: 'rgba(0, 212, 255, 0.2)' },
+    bgModal: { background: 'linear-gradient(to bottom right, #1a3a52, #0f2540)' },
+    bgInput: { backgroundColor: '#0f2540', borderColor: 'rgba(0, 212, 255, 0.2)' },
+    bgButton: { background: 'linear-gradient(to right, #ff6b00, #00d4ff)' },
+    bgButtonSecondary: { backgroundColor: 'rgba(0, 212, 255, 0.2)', borderColor: 'rgba(0, 212, 255, 0.5)', color: '#00d4ff' },
+    textPrimary: '#ffffff',
+    textSecondary: '#9ca3af',
+    textTertiary: '#6b7280',
+    textAccent: '#00d4ff',
+    gradientText: { background: 'linear-gradient(to right, #ffffff, #00d4ff, #ff6b00)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' },
+    borderLight: 'rgba(0, 212, 255, 0.2)',
+    borderMedium: 'rgba(0, 212, 255, 0.3)',
+    borderStrong: 'rgba(0, 212, 255, 0.5)',
+    statusApplied: '#00d4ff',
+    statusInterview: '#ff6b00',
+    statusOffer: '#00ff88',
+    statusRejected: '#ff4444',
+    morphShape1: 'linear-gradient(135deg, rgba(255, 107, 0, 0.3), rgba(0, 212, 255, 0.3))',
+    morphShape2: 'linear-gradient(225deg, rgba(0, 255, 136, 0.2), rgba(255, 107, 0, 0.2))',
+    particleColors: ['#00d4ff', '#ff6b00', '#00ff88']
+  }
+  const isLight = theme.theme === 'light'
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -240,7 +290,8 @@ export default function LandingPage() {
               >
                 {link.label}
                 <m.div
-                  className={`absolute -bottom-1 left-0 right-0 h-0.5 ${theme.buttonPrimary} scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left`}
+                  className="absolute -bottom-1 left-0 right-0 h-0.5 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+                  style={{ backgroundColor: theme.textAccent }}
                 />
               </m.a>
             ))}
@@ -253,7 +304,8 @@ export default function LandingPage() {
               onClick={() => setMobileOpen((s) => !s)}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className={`md:hidden p-2 rounded-md ${theme.textSecondary} ${theme.buttonSecondary} transition-all duration-300 relative overflow-hidden`}
+              className="md:hidden p-2 rounded-md transition-all duration-300 relative overflow-hidden"
+              style={{ ...theme.bgButtonSecondary, color: theme.textSecondary }}
               aria-label="Toggle menu"
             >
               <m.div
@@ -279,7 +331,8 @@ export default function LandingPage() {
                       boxShadow: "0 0 20px rgba(0, 212, 255, 0.4)",
                     }}
                     whileTap={{ scale: 0.95 }}
-                    className={`px-6 py-2 ${theme.textPrimary} text-sm font-medium rounded-full ${theme.buttonSecondary} transition-all duration-300`}
+                    className="px-6 py-2 text-sm font-medium rounded-full transition-all duration-300"
+                    style={{ ...theme.bgButtonSecondary }}
                   >
                     Dashboard
                   </m.a>
@@ -293,7 +346,8 @@ export default function LandingPage() {
                       boxShadow: "0 0 25px rgba(255, 107, 0, 0.6)",
                     }}
                     whileTap={{ scale: 0.95 }}
-                    className={`px-6 py-2 ${theme.textPrimary} text-sm font-bold rounded-full ${theme.buttonPrimary} hover:shadow-lg transition-all duration-300`}
+                    className="px-6 py-2 text-sm font-bold rounded-full hover:shadow-lg transition-all duration-300"
+                    style={{ ...theme.bgButton, color: '#ffffff' }}
                   >
                     Logout
                   </m.button>
@@ -310,7 +364,8 @@ export default function LandingPage() {
                       boxShadow: "0 0 20px rgba(0, 212, 255, 0.4)",
                     }}
                     whileTap={{ scale: 0.95 }}
-                    className={`px-6 py-2 ${theme.textPrimary} text-sm font-medium rounded-full ${theme.buttonSecondary} transition-all duration-300`}
+                    className="px-6 py-2 text-sm font-medium rounded-full transition-all duration-300"
+                    style={{ ...theme.bgButtonSecondary }}
                   >
                     Login
                   </m.a>
@@ -324,7 +379,8 @@ export default function LandingPage() {
                       boxShadow: "0 0 25px rgba(255, 107, 0, 0.6)",
                     }}
                     whileTap={{ scale: 0.95 }}
-                    className={`px-6 py-2 ${theme.textPrimary} text-sm font-bold rounded-full ${theme.buttonPrimary} hover:shadow-lg transition-all duration-300`}
+                    className="px-6 py-2 text-sm font-bold rounded-full hover:shadow-lg transition-all duration-300"
+                    style={{ ...theme.bgButton, color: '#ffffff' }}
                   >
                     Sign Up
                   </m.a>
@@ -362,16 +418,16 @@ export default function LandingPage() {
                       {link.label}
                     </m.a>
                   ))}
-                  <div className={`flex flex-col gap-4 pt-4 border-t ${theme.borderLight}`}>
+                  <div className="flex flex-col gap-4 pt-4 border-t" style={{ borderColor: theme.borderLight }}>
                     {user ? (
                       <>
-                        <a href="/dashboard" onClick={() => setMobileOpen(false)} className={`px-6 py-3 ${theme.textPrimary} ${theme.buttonSecondary} rounded-lg text-center font-medium transition-all duration-300`}>Dashboard</a>
-                        <button onClick={() => { setMobileOpen(false); logout(); }} className={`px-6 py-3 ${theme.textPrimary} ${theme.buttonPrimary} rounded-lg text-center font-bold hover:shadow-lg transition-all duration-300`}>Logout</button>
+                        <a href="/dashboard" onClick={() => setMobileOpen(false)} className="px-6 py-3 rounded-lg text-center font-medium transition-all duration-300" style={{ ...theme.bgButtonSecondary }}>Dashboard</a>
+                        <button onClick={() => { setMobileOpen(false); logout(); }} className="px-6 py-3 rounded-lg text-center font-bold hover:shadow-lg transition-all duration-300" style={{ ...theme.bgButton, color: '#ffffff' }}>Logout</button>
                       </>
                     ) : (
                       <>
-                        <a href="/login" onClick={() => setMobileOpen(false)} className={`px-6 py-3 ${theme.textPrimary} ${theme.buttonSecondary} rounded-lg text-center font-medium transition-all duration-300`}>Login</a>
-                        <a href="/login" onClick={() => setMobileOpen(false)} className={`px-6 py-3 ${theme.textPrimary} ${theme.buttonPrimary} rounded-lg text-center font-bold hover:shadow-lg transition-all duration-300`}>Sign Up</a>
+                        <a href="/login" onClick={() => setMobileOpen(false)} className="px-6 py-3 rounded-lg text-center font-medium transition-all duration-300" style={{ ...theme.bgButtonSecondary }}>Login</a>
+                        <a href="/login" onClick={() => setMobileOpen(false)} className="px-6 py-3 rounded-lg text-center font-bold hover:shadow-lg transition-all duration-300" style={{ ...theme.bgButton, color: '#ffffff' }}>Sign Up</a>
                       </>
                     )}
                   </div>
@@ -416,22 +472,22 @@ export default function LandingPage() {
               delay: 5,
             }}
             style={{
-              background: "linear-gradient(225deg, rgba(0, 255, 136, 0.2), rgba(255, 107, 0, 0.2))",
+              background: theme.morphShape2,
               filter: "blur(30px)",
             }}
           />
 
           {/* Advanced particle system */}
           <div className="hidden md:block">
-          {[...Array(30)].map((_, i) => (
+          {[...Array(isLight ? 10 : 30)].map((_, i) => (
             <m.div
               key={i}
-              className="absolute w-2 h-2 rounded-full"
+              className={`absolute ${isLight ? 'w-1 h-1' : 'w-2 h-2'} rounded-full`}
               animate={{
                 x: [0, 50, -25, 0],
                 y: [0, -30, 15, 0],
                 scale: [0, 1, 0.5, 1, 0],
-                opacity: [0, 0.8, 0.4, 0.8, 0],
+                opacity: isLight ? [0, 0.6, 0.3, 0.6, 0] : [0, 0.8, 0.4, 0.8, 0],
               }}
               transition={{
                 duration: 15,
@@ -440,10 +496,10 @@ export default function LandingPage() {
                 delay: i * 0.2,
               }}
               style={{
-                background: i % 3 === 0 ? "#00d4ff" : i % 3 === 1 ? "#ff6b00" : "#00ff88",
+                background: theme.particleColors[i % 3],
                 left: `${particlePositions[i]?.left || 50}%`,
                 top: `${particlePositions[i]?.top || 50}%`,
-                filter: "blur(1px)",
+                filter: isLight ? "blur(0.6px)" : "blur(1px)",
               }}
             />
           ))}
@@ -461,7 +517,9 @@ export default function LandingPage() {
               ease: "easeInOut",
             }}
             style={{
-              background: "linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.4), transparent)",
+              background: theme.theme === 'light' 
+                ? "linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.3), transparent)"
+                : "linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.4), transparent)",
               filter: "blur(20px)",
             }}
           />
@@ -477,7 +535,9 @@ export default function LandingPage() {
               delay: 3,
             }}
             style={{
-              background: "linear-gradient(90deg, transparent, rgba(255, 107, 0, 0.3), transparent)",
+              background: theme.theme === 'light'
+                ? "linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.25), transparent)"
+                : "linear-gradient(90deg, transparent, rgba(255, 107, 0, 0.3), transparent)",
               filter: "blur(25px)",
             }}
           />
@@ -493,7 +553,8 @@ export default function LandingPage() {
           {/* Innovative badge with morphing effect */}
           <m.div
             variants={itemVariants}
-            className={`relative inline-flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-8 sm:py-4 rounded-full border ${theme.borderMedium} ${theme.buttonSecondary} backdrop-blur-xl overflow-hidden`}
+            className="relative inline-flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-8 sm:py-4 rounded-full border backdrop-blur-xl overflow-hidden"
+            style={{ ...theme.bgButtonSecondary, borderColor: theme.borderMedium }}
             whileHover={{ scale: 1.05 }}
           >
             {/* Morphing background */}
@@ -509,11 +570,13 @@ export default function LandingPage() {
                 ease: "easeInOut",
               }}
               style={{
-                background: "linear-gradient(45deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 0, 0.1))",
+                background: theme.theme === 'light'
+                  ? "linear-gradient(45deg, rgba(99, 102, 241, 0.08), rgba(245, 158, 11, 0.08))"
+                  : "linear-gradient(45deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 0, 0.1))",
               }}
             />
             <m.div
-              className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#00d4ff]"
+              className="w-2 h-2 sm:w-3 sm:h-3 rounded-full"
               animate={{
                 scale: [1, 1.5, 1],
                 opacity: [0.7, 1, 0.7],
@@ -523,10 +586,13 @@ export default function LandingPage() {
                 repeat: Number.POSITIVE_INFINITY,
                 ease: "easeInOut",
               }}
+              style={{
+                backgroundColor: theme.textAccent
+              }}
             />
             <span className={`${theme.textAccent} font-semibold relative z-10 text-[10px] sm:text-sm md:text-base`}>Next-Generation Career Intelligence</span>
             <m.div
-              className="w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-[#ff6b00]"
+              className="w-1 h-1 sm:w-2 sm:h-2 rounded-full"
               animate={{
                 scale: [1, 1.3, 1],
                 opacity: [0.5, 0.9, 0.5],
@@ -537,6 +603,9 @@ export default function LandingPage() {
                 ease: "easeInOut",
                 delay: 0.5,
               }}
+              style={{
+                backgroundColor: theme.statusInterview
+              }}
             />
           </m.div>
 
@@ -545,11 +614,17 @@ export default function LandingPage() {
             variants={itemVariants}
             className={`mt-8 text-[12vw] sm:text-5xl md:text-7xl lg:text-9xl font-black mb-6 sm:mb-8 leading-tight tracking-tight ${theme.gradientText}`}
             style={{
-              filter: "drop-shadow(0 0 40px rgba(0, 212, 255, 0.3))",
+              filter: theme.theme === 'light'
+                ? "drop-shadow(0 2px 4px rgba(15,23,42,0.08))"
+                : "drop-shadow(0 0 40px rgba(0, 212, 255, 0.3))",
             }}
             animate={{
               backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-              textShadow: [
+              textShadow: theme.theme === 'light' ? [
+                "0 1px 2px rgba(0,0,0,0.08)",
+                "0 2px 4px rgba(0,0,0,0.10)",
+                "0 1px 2px rgba(0,0,0,0.08)",
+              ] : [
                 "0 0 20px rgba(0, 212, 255, 0.5)",
                 "0 0 40px rgba(255, 107, 0, 0.5)",
                 "0 0 20px rgba(0, 255, 136, 0.5)",
@@ -585,9 +660,11 @@ export default function LandingPage() {
             <span className="inline-block">
               Sync your career trajectory with
               <m.span
-                className="text-[#00d4ff] font-semibold mx-2"
+                className="font-semibold mx-2"
                 animate={{
-                  color: ["#00d4ff", "#ff6b00", "#00ff88", "#00d4ff"],
+                  color: theme.theme === 'light'
+                    ? ["#4f46e5", "#f59e0b", "#10b981", "#4f46e5"]
+                    : ["#00d4ff", "#ff6b00", "#00ff88", "#00d4ff"],
                 }}
                 transition={{
                   duration: 6,
@@ -607,13 +684,19 @@ export default function LandingPage() {
               onClick={() => user ? window.location.href = '/dashboard' : window.location.href = '/login'}
               whileHover={{
                 scale: 1.05,
-                boxShadow: "0 0 40px rgba(255, 107, 0, 0.6)",
+                boxShadow: theme.theme === 'light'
+                  ? "0 8px 30px rgba(37,99,235,0.08)"
+                  : "0 0 40px rgba(255, 107, 0, 0.6)",
               }}
               whileTap={{ scale: 0.95 }}
               className="group relative px-6 py-3 sm:px-12 sm:py-6 text-white font-bold text-lg sm:text-xl rounded-2xl overflow-hidden"
               style={{
-                background: "linear-gradient(135deg, #ff6b00 0%, #ff8c00 100%)",
-                boxShadow: "0 0 20px rgba(255, 107, 0, 0.4)",
+                background: theme.theme === 'light'
+                  ? "linear-gradient(135deg, #4f46e5 0%, #9333ea 100%)"
+                  : "linear-gradient(135deg, #ff6b00 0%, #ff8c00 100%)",
+                boxShadow: theme.theme === 'light'
+                  ? "0 6px 16px rgba(15,23,42,0.06)"
+                  : "0 0 20px rgba(255, 107, 0, 0.4)",
               }}
             >
               <m.div
@@ -627,15 +710,17 @@ export default function LandingPage() {
                   ease: "easeInOut",
                 }}
                 style={{
-                  background: "linear-gradient(45deg, rgba(0, 212, 255, 0.3), rgba(255, 107, 0, 0.3))",
+                  background: theme.theme === 'light'
+                    ? "linear-gradient(45deg, rgba(99, 102, 241, 0.2), rgba(245, 158, 11, 0.2))"
+                    : "linear-gradient(45deg, rgba(0, 212, 255, 0.3), rgba(255, 107, 0, 0.3))",
                 }}
               />
               {/* Floating particles */}
               <div className="absolute inset-0 overflow-hidden rounded-2xl">
-                {[...Array(5)].map((_, i) => (
+                {[...Array(isLight ? 3 : 5)].map((_, i) => (
                   <m.div
                     key={i}
-                    className="absolute w-1 h-1 bg-white rounded-full opacity-60"
+                    className={`absolute ${isLight ? 'w-1 h-1' : 'w-1 h-1'} rounded-full`}
                     animate={{
                       y: [0, -20, 0],
                       x: [0, Math.sin(i) * 15, 0],
@@ -647,8 +732,9 @@ export default function LandingPage() {
                       delay: i * 0.2,
                     }}
                     style={{
-                      left: `${20 + i * 15}%`,
+                      left: `${20 + i * 18}%`,
                       top: `${60}%`,
+                      background: isLight ? 'rgba(37,99,235,0.12)' : 'rgba(255,255,255,0.6)'
                     }}
                   />
                 ))}
@@ -659,16 +745,26 @@ export default function LandingPage() {
               href="#features"
               whileHover={{
                 scale: 1.05,
-                backgroundColor: "rgba(0, 212, 255, 0.1)",
+                backgroundColor: theme.theme === 'light'
+                  ? "rgba(99, 102, 241, 0.08)"
+                  : "rgba(0, 212, 255, 0.1)",
               }}
               whileTap={{ scale: 0.95 }}
-              className="group relative px-6 py-3 sm:px-12 sm:py-6 text-white font-bold text-lg sm:text-xl rounded-2xl border-2 border-[#00d4ff] hover:bg-[#00d4ff]/10 transition-all duration-300 overflow-hidden"
+              className="group relative px-6 py-3 sm:px-12 sm:py-6 text-white font-bold text-lg sm:text-xl rounded-2xl border-2 transition-all duration-300 overflow-hidden"
+              style={{
+                borderColor: theme.textAccent,
+              }}
             >
               {/* Liquid border effect */}
               <m.div
                 className="absolute inset-0 rounded-2xl border-2 border-transparent"
                 animate={{
-                  borderImage: [
+                  borderImage: theme.theme === 'light' ? [
+                    "linear-gradient(45deg, #4f46e5, #f59e0b) 1",
+                    "linear-gradient(135deg, #f59e0b, #10b981) 1",
+                    "linear-gradient(225deg, #10b981, #4f46e5) 1",
+                    "linear-gradient(45deg, #4f46e5, #f59e0b) 1",
+                  ] : [
                     "linear-gradient(45deg, #00d4ff, #ff6b00) 1",
                     "linear-gradient(135deg, #ff6b00, #00ff88) 1",
                     "linear-gradient(225deg, #00ff88, #00d4ff) 1",
@@ -694,7 +790,16 @@ export default function LandingPage() {
             className="mt-12 md:mt-24 flex justify-center"
           >
             <m.div
-              className="group relative flex items-center gap-6 px-4 py-4 sm:px-10 sm:py-6 rounded-3xl bg-gradient-to-r from-[#1a3a52]/80 to-[#0f2540]/80 backdrop-blur-xl border border-[#00d4ff]/30 overflow-hidden cursor-pointer"
+              className="group relative flex items-center gap-6 px-4 py-4 sm:px-10 sm:py-6 rounded-3xl backdrop-blur-xl overflow-hidden cursor-pointer"
+              style={{
+                background: theme.theme === 'light'
+                  ? 'linear-gradient(to right, rgba(255, 255, 255, 0.8), rgba(249, 250, 251, 0.8))'
+                  : 'linear-gradient(to right, rgba(26, 58, 82, 0.8), rgba(15, 37, 64, 0.8))',
+                borderColor: theme.borderMedium,
+                borderWidth: '1px',
+                borderStyle: 'solid',
+                transformStyle: "preserve-3d",
+              }}
               whileHover={{
                 scale: 1.05,
                 rotateY: 5,
@@ -704,9 +809,6 @@ export default function LandingPage() {
                 type: "spring",
                 stiffness: 300,
                 damping: 20,
-              }}
-              style={{
-                transformStyle: "preserve-3d",
               }}
             >
               {/* Morphing background */}
@@ -722,7 +824,9 @@ export default function LandingPage() {
                   ease: "easeInOut",
                 }}
                 style={{
-                  background: "linear-gradient(45deg, rgba(0, 212, 255, 0.2), rgba(255, 107, 0, 0.2))",
+                  background: theme.theme === 'light'
+                    ? "linear-gradient(45deg, rgba(99, 102, 241, 0.15), rgba(245, 158, 11, 0.15))"
+                    : "linear-gradient(45deg, rgba(0, 212, 255, 0.2), rgba(255, 107, 0, 0.2))",
                 }}
               />
 
@@ -746,7 +850,9 @@ export default function LandingPage() {
                     style={{
                       left: `${15 + i * 10}%`,
                       top: `${40}%`,
-                      backgroundColor: i % 2 === 0 ? "#00d4ff" : "#ff6b00",
+                      backgroundColor: i % 2 === 0 
+                        ? (theme.theme === 'light' ? '#4f46e5' : '#00d4ff')
+                        : (theme.theme === 'light' ? '#f59e0b' : '#ff6b00'),
                     }}
                   />
                 ))}
@@ -754,14 +860,21 @@ export default function LandingPage() {
 
               <div className="flex items-center gap-4 relative z-10">
                 <m.div
-                  className="w-4 h-4 rounded-full bg-[#00d4ff] shadow-lg shadow-[#00d4ff]/50"
+                  className="w-4 h-4 rounded-full shadow-lg"
                   animate={{
-                    scale: [1, 1.3, 1],
-                    boxShadow: [
+                    scale: [1, 1.15, 1],
+                    boxShadow: theme.theme === 'light' ? [
+                      "0 6px 14px rgba(15,23,42,0.06)",
+                      "0 8px 20px rgba(15,23,42,0.06)",
+                      "0 6px 14px rgba(15,23,42,0.06)",
+                    ] : [
                       "0 0 10px rgba(0, 212, 255, 0.5)",
                       "0 0 20px rgba(0, 212, 255, 0.8)",
                       "0 0 10px rgba(0, 212, 255, 0.5)",
                     ],
+                  }}
+                  style={{
+                    backgroundColor: theme.textAccent
                   }}
                   transition={{
                     duration: 2,
@@ -769,9 +882,9 @@ export default function LandingPage() {
                     ease: "easeInOut",
                   }}
                 />
-                <span className="text-white font-bold text-lg">15,000+ Professionals Connected</span>
+                <span className="font-bold text-lg" style={{ color: theme.textPrimary }}>15,000+ Professionals Connected</span>
                 <m.div
-                  className="w-3 h-3 rounded-full bg-[#ff6b00] shadow-lg shadow-[#ff6b00]/50"
+                  className="w-3 h-3 rounded-full shadow-lg"
                   animate={{
                     scale: [1, 1.2, 1],
                     opacity: [0.7, 1, 0.7],
@@ -781,6 +894,12 @@ export default function LandingPage() {
                     repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut",
                     delay: 0.5,
+                  }}
+                  style={{
+                    backgroundColor: theme.statusInterview,
+                    boxShadow: theme.theme === 'light'
+                      ? '0 6px 12px rgba(245, 158, 11, 0.08)'
+                      : '0 0 15px rgba(255, 107, 0, 0.5)'
                   }}
                 />
               </div>
@@ -800,24 +919,24 @@ export default function LandingPage() {
             ease: "easeInOut",
           }}
         >
-          <div className="w-6 h-10 border-2 border-[#00d4ff]/50 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-[#00d4ff] rounded-full mt-2 animate-pulse"></div>
+          <div className="w-6 h-10 border-2 rounded-full flex justify-center" style={{ borderColor: theme.borderMedium }}>
+            <div className="w-1 h-3 rounded-full mt-2 animate-pulse" style={{ backgroundColor: theme.textAccent }}></div>
           </div>
         </m.div>
       </section>
 
       {/* Features Section with Fluid Layout */}
-      <section id="features" className="relative py-12 md:py-24 px-4 md:px-6 bg-gradient-to-b from-[#0a1428] to-[#1a2d4d] overflow-hidden scroll-mt-24">
+      <section id="features" className="relative py-12 md:py-24 px-4 md:px-6 overflow-hidden scroll-mt-24" style={{ background: theme.theme === 'light' ? 'linear-gradient(to bottom, #f0f4f8, #e1e8ed)' : 'linear-gradient(to bottom, #0a1428, #1a2d4d)' }}>
         {/* Dynamic fluid background */}
         <div className="absolute inset-0 hidden md:block">
           {/* Organic flowing shapes */}
-          {[...Array(20)].map((_, i) => (
+          {[...Array(isLight ? 10 : 20)].map((_, i) => (
             <m.div
               key={i}
               className="absolute opacity-10"
               animate={{
-                x: [0, Math.sin(i) * 100, 0],
-                y: [0, Math.cos(i) * 80, 0],
+                x: [0, Math.sin(i) * (isLight ? 40 : 100), 0],
+                y: [0, Math.cos(i) * (isLight ? 30 : 80), 0],
                 scale: [1, 1.5, 0.8, 1],
                 borderRadius: ["50% 30% 70% 20%", "30% 70% 20% 50%", "70% 20% 50% 30%", "50% 30% 70% 20%"],
               }}
@@ -832,12 +951,20 @@ export default function LandingPage() {
                 height: `${40 + i * 10}px`,
                 left: `${(i * 5) % 100}%`,
                 top: `${(i * 7) % 100}%`,
-                background: i % 3 === 0
-                  ? "linear-gradient(45deg, rgba(0, 212, 255, 0.3), rgba(255, 107, 0, 0.3))"
-                  : i % 3 === 1
-                  ? "linear-gradient(135deg, rgba(255, 107, 0, 0.3), rgba(0, 255, 136, 0.3))"
-                  : "linear-gradient(225deg, rgba(0, 255, 136, 0.3), rgba(0, 212, 255, 0.3))",
-                filter: "blur(20px)",
+                background: theme.theme === 'light' ? (
+                  i % 3 === 0
+                    ? "linear-gradient(45deg, rgba(99, 102, 241, 0.2), rgba(245, 158, 11, 0.2))"
+                    : i % 3 === 1
+                    ? "linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(16, 185, 129, 0.2))"
+                    : "linear-gradient(225deg, rgba(16, 185, 129, 0.2), rgba(99, 102, 241, 0.2))"
+                ) : (
+                  i % 3 === 0
+                    ? "linear-gradient(45deg, rgba(0, 212, 255, 0.3), rgba(255, 107, 0, 0.3))"
+                    : i % 3 === 1
+                    ? "linear-gradient(135deg, rgba(255, 107, 0, 0.3), rgba(0, 255, 136, 0.3))"
+                    : "linear-gradient(225deg, rgba(0, 255, 136, 0.3), rgba(0, 212, 255, 0.3))"
+                ),
+                filter: isLight ? "blur(10px)" : "blur(20px)",
               }}
             />
           ))}
@@ -854,7 +981,11 @@ export default function LandingPage() {
               ease: "linear",
             }}
             style={{
-              backgroundImage: `
+              backgroundImage: theme.theme === 'light' ? `
+                radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(245, 158, 11, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.08) 0%, transparent 50%)
+              ` : `
                 radial-gradient(circle at 20% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(255, 107, 0, 0.1) 0%, transparent 50%),
                 radial-gradient(circle at 40% 40%, rgba(0, 255, 136, 0.1) 0%, transparent 50%)
@@ -877,7 +1008,11 @@ export default function LandingPage() {
               className="text-3xl sm:text-4xl md:text-6xl lg:text-8xl font-black mb-4 md:mb-6 leading-none"
               animate={{
                 backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                textShadow: [
+                textShadow: theme.theme === 'light' ? [
+                  "0 1px 2px rgba(0,0,0,0.06)",
+                  "0 2px 6px rgba(0,0,0,0.08)",
+                  "0 1px 2px rgba(0,0,0,0.06)",
+                ] : [
                   "0 0 30px rgba(0, 212, 255, 0.5)",
                   "0 0 50px rgba(255, 107, 0, 0.5)",
                   "0 0 30px rgba(0, 255, 136, 0.5)",
@@ -890,7 +1025,9 @@ export default function LandingPage() {
                 ease: "easeInOut",
               }}
               style={{
-                background: "linear-gradient(135deg, #ffffff 0%, #00d4ff 30%, #ff6b00 60%, #00ff88 90%, #ffffff 100%)",
+                background: theme.theme === 'light'
+                  ? "linear-gradient(135deg, #1e293b 0%, #4f46e5 30%, #f59e0b 60%, #10b981 90%, #1e293b 100%)"
+                  : "linear-gradient(135deg, #ffffff 0%, #00d4ff 30%, #ff6b00 60%, #00ff88 90%, #ffffff 100%)",
                 backgroundSize: "300% 300%",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
@@ -900,7 +1037,8 @@ export default function LandingPage() {
               Sync Features
             </m.h2>
             <m.p
-              className="text-sm sm:text-base md:text-xl lg:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed font-light px-4"
+              className="text-sm sm:text-base md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-light px-4"
+              style={{ color: theme.textSecondary }}
               animate={{
                 opacity: [0.6, 1, 0.6],
               }}
@@ -912,9 +1050,11 @@ export default function LandingPage() {
             >
               Experience the future of career management with
               <m.span
-                className="text-[#00d4ff] font-semibold mx-2"
+                className="font-semibold mx-2"
                 animate={{
-                  color: ["#00d4ff", "#ff6b00", "#00ff88", "#00d4ff"],
+                  color: theme.theme === 'light'
+                    ? ["#4f46e5", "#f59e0b", "#10b981", "#4f46e5"]
+                    : ["#00d4ff", "#ff6b00", "#00ff88", "#00d4ff"],
                 }}
                 transition={{
                   duration: 4,
@@ -941,54 +1081,54 @@ export default function LandingPage() {
                 icon: Target,
                 title: "Smart Targeting",
                 description: "AI-powered opportunity matching with predictive career trajectory analysis and intelligent connection recommendations.",
-                color: "from-[#00d4ff] to-[#0088cc]",
-                shadowColor: "rgba(0, 212, 255, 0.4)",
-                gradient: "linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 0, 0.1))",
+                color: theme.theme === 'light' ? "from-[#4f46e5] to-[#6366f1]" : "from-[#00d4ff] to-[#0088cc]",
+                shadowColor: theme.theme === 'light' ? "rgba(99, 102, 241, 0.3)" : "rgba(0, 212, 255, 0.4)",
+                gradient: theme.theme === 'light' ? "linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(245, 158, 11, 0.08))" : "linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 0, 0.1))",
                 size: "large",
               },
               {
                 icon: BarChart3,
                 title: "Sync Analytics",
                 description: "Real-time career performance metrics with advanced data visualization and trend analysis for optimal decision making.",
-                color: "from-[#ff6b00] to-[#ff8c00]",
-                shadowColor: "rgba(255, 107, 0, 0.4)",
-                gradient: "linear-gradient(225deg, rgba(255, 107, 0, 0.1), rgba(0, 255, 136, 0.1))",
+                color: theme.theme === 'light' ? "from-[#f59e0b] to-[#fb923c]" : "from-[#ff6b00] to-[#ff8c00]",
+                shadowColor: theme.theme === 'light' ? "rgba(245, 158, 11, 0.3)" : "rgba(255, 107, 0, 0.4)",
+                gradient: theme.theme === 'light' ? "linear-gradient(225deg, rgba(245, 158, 11, 0.08), rgba(16, 185, 129, 0.08))" : "linear-gradient(225deg, rgba(255, 107, 0, 0.1), rgba(0, 255, 136, 0.1))",
                 size: "medium",
               },
               {
                 icon: Clock,
                 title: "Time Sync",
                 description: "Intelligent scheduling with automated deadline tracking, priority management, and productivity optimization.",
-                color: "from-[#00d4ff] to-[#ff6b00]",
-                shadowColor: "rgba(0, 212, 255, 0.4)",
-                gradient: "linear-gradient(315deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 0, 0.1))",
+                color: theme.theme === 'light' ? "from-[#4f46e5] to-[#f59e0b]" : "from-[#00d4ff] to-[#ff6b00]",
+                shadowColor: theme.theme === 'light' ? "rgba(99, 102, 241, 0.3)" : "rgba(0, 212, 255, 0.4)",
+                gradient: theme.theme === 'light' ? "linear-gradient(315deg, rgba(99, 102, 241, 0.08), rgba(245, 158, 11, 0.08))" : "linear-gradient(315deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 0, 0.1))",
                 size: "large",
               },
               {
                 icon: Users,
                 title: "Network Sync",
                 description: "Seamless professional networking with automated introductions, relationship management, and opportunity alerts.",
-                color: "from-[#00ff88] to-[#00d4ff]",
-                shadowColor: "rgba(0, 255, 136, 0.4)",
-                gradient: "linear-gradient(45deg, rgba(0, 255, 136, 0.1), rgba(0, 212, 255, 0.1))",
+                color: theme.theme === 'light' ? "from-[#10b981] to-[#4f46e5]" : "from-[#00ff88] to-[#00d4ff]",
+                shadowColor: theme.theme === 'light' ? "rgba(16, 185, 129, 0.3)" : "rgba(0, 255, 136, 0.4)",
+                gradient: theme.theme === 'light' ? "linear-gradient(45deg, rgba(16, 185, 129, 0.08), rgba(99, 102, 241, 0.08))" : "linear-gradient(45deg, rgba(0, 255, 136, 0.1), rgba(0, 212, 255, 0.1))",
                 size: "medium",
               },
               {
                 icon: Shield,
                 title: "Secure Sync",
                 description: "Enterprise-grade data protection with end-to-end encryption, privacy controls, and secure career data management.",
-                color: "from-[#ff8c00] to-[#00ff88]",
-                shadowColor: "rgba(255, 140, 0, 0.4)",
-                gradient: "linear-gradient(135deg, rgba(255, 140, 0, 0.1), rgba(0, 255, 136, 0.1))",
+                color: theme.theme === 'light' ? "from-[#fb923c] to-[#10b981]" : "from-[#ff8c00] to-[#00ff88]",
+                shadowColor: theme.theme === 'light' ? "rgba(251, 146, 60, 0.3)" : "rgba(255, 140, 0, 0.4)",
+                gradient: theme.theme === 'light' ? "linear-gradient(135deg, rgba(251, 146, 60, 0.08), rgba(16, 185, 129, 0.08))" : "linear-gradient(135deg, rgba(255, 140, 0, 0.1), rgba(0, 255, 136, 0.1))",
                 size: "large",
               },
               {
                 icon: Zap,
                 title: "AI Sync",
                 description: "Next-generation AI assistance with personalized career coaching, opportunity prediction, and intelligent recommendations.",
-                color: "from-[#00d4ff] to-[#00ff88]",
-                shadowColor: "rgba(0, 212, 255, 0.4)",
-                gradient: "linear-gradient(225deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 136, 0.1))",
+                color: theme.theme === 'light' ? "from-[#4f46e5] to-[#10b981]" : "from-[#00d4ff] to-[#00ff88]",
+                shadowColor: theme.theme === 'light' ? "rgba(99, 102, 241, 0.3)" : "rgba(0, 212, 255, 0.4)",
+                gradient: theme.theme === 'light' ? "linear-gradient(225deg, rgba(99, 102, 241, 0.08), rgba(16, 185, 129, 0.08))" : "linear-gradient(225deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 136, 0.1))",
                 size: "medium",
               },
             ].map((feature, index) => (
@@ -1012,8 +1152,10 @@ export default function LandingPage() {
                     : 'p-5 md:p-8'
                 }`}
                 style={{
-                  background: "linear-gradient(135deg, rgba(26, 58, 82, 0.8), rgba(15, 37, 64, 0.8))",
-                  border: "1px solid rgba(0, 212, 255, 0.2)",
+                  background: theme.theme === 'light'
+                    ? "linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(249, 250, 251, 0.9))"
+                    : "linear-gradient(135deg, rgba(26, 58, 82, 0.8), rgba(15, 37, 64, 0.8))",
+                  border: `1px solid ${theme.borderLight}`,
                   transformStyle: "preserve-3d",
                   perspective: "1000px",
                   gridRow: feature.size === 'large' && index % 3 === 1 ? 'span 2' : 'span 1',
@@ -1038,15 +1180,15 @@ export default function LandingPage() {
 
                 {/* Fluid particle system */}
                 <div className="absolute inset-0 overflow-hidden rounded-3xl hidden md:block">
-                  {[...Array(feature.size === 'large' ? 12 : 8)].map((_, i) => (
+                  {[...Array(isLight ? (feature.size === 'large' ? 6 : 4) : (feature.size === 'large' ? 12 : 8))].map((_, i) => (
                     <m.div
                       key={i}
-                      className="absolute w-1 h-1 rounded-full opacity-70"
+                      className={`absolute ${isLight ? 'w-1 h-1' : 'w-1 h-1'} rounded-full opacity-70`}
                       animate={{
                         y: [0, -40, 0],
-                        x: [0, Math.sin(i * 1.2) * (feature.size === 'large' ? 30 : 20), 0],
+                        x: [0, Math.sin(i * 1.2) * (isLight ? (feature.size === 'large' ? 20 : 12) : (feature.size === 'large' ? 30 : 20)), 0],
                         scale: [0, 1.5, 0],
-                        opacity: [0, 0.8, 0],
+                        opacity: isLight ? [0, 0.5, 0] : [0, 0.8, 0],
                       }}
                       transition={{
                         duration: 4 + i * 0.3,
@@ -1098,10 +1240,11 @@ export default function LandingPage() {
                 {/* Fluid content */}
                 <div style={{ transform: "translateZ(15px)" }}>
                   <m.h3
-                    className={`font-bold text-white mb-3 md:mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r transition-all duration-500 ${
+                    className={`font-bold mb-3 md:mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r transition-all duration-500 ${
                       feature.size === 'large' ? 'text-lg md:text-2xl' : 'text-base md:text-xl'
                     }`}
                     style={{
+                      color: theme.textPrimary,
                       background: `linear-gradient(135deg, #${feature.color.split('from-[')[1].split(']')[0]}, #${feature.color.split('to-[')[1].split(']')[0]})`,
                       backgroundClip: "text",
                       WebkitBackgroundClip: "text",
@@ -1109,9 +1252,11 @@ export default function LandingPage() {
                   >
                     {feature.title}
                   </m.h3>
-                  <p className={`text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors duration-300 ${
+                  <p className={`leading-relaxed transition-colors duration-300 ${
                     feature.size === 'large' ? 'text-sm md:text-base' : 'text-xs md:text-sm'
-                  }`}>
+                  }`}
+                    style={{ color: theme.textSecondary }}
+                  >
                     {feature.description}
                   </p>
                 </div>
@@ -1140,14 +1285,17 @@ export default function LandingPage() {
       </section>
 
       {/* Dashboard Preview */}
-      <section id="how-it-works" className="relative py-20 px-6 bg-gradient-to-b from-[#1a2d4d] to-[#0a1428] overflow-hidden scroll-mt-24">
+      <section id="how-it-works" className="relative py-20 px-6 overflow-hidden scroll-mt-24" style={{ background: theme.theme === 'light' ? 'linear-gradient(to bottom, #e1e8ed, #f0f4f8)' : 'linear-gradient(to bottom, #1a2d4d, #0a1428)' }}>
         {/* HUD-style background */}
         <div className="absolute inset-0">
           {/* Grid overlay */}
           <div
             className="absolute inset-0 opacity-10"
             style={{
-              backgroundImage: `
+              backgroundImage: theme.theme === 'light' ? `
+                linear-gradient(rgba(99, 102, 241, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.08) 1px, transparent 1px)
+              ` : `
                 linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px)
               `,
@@ -1167,7 +1315,9 @@ export default function LandingPage() {
               ease: "linear",
             }}
             style={{
-              background: 'linear-gradient(45deg, transparent 30%, rgba(0, 212, 255, 0.03) 50%, transparent 70%)',
+              background: theme.theme === 'light'
+                ? 'linear-gradient(45deg, transparent 30%, rgba(99, 102, 241, 0.02) 50%, transparent 70%)'
+                : 'linear-gradient(45deg, transparent 30%, rgba(0, 212, 255, 0.03) 50%, transparent 70%)',
               backgroundSize: '200% 200%',
             }}
           />
@@ -1182,9 +1332,13 @@ export default function LandingPage() {
             className="text-center mb-12"
           >
             <m.h2
-              className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 text-white leading-none"
+              className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 leading-none"
               animate={{
-                textShadow: [
+                textShadow: theme.theme === 'light' ? [
+                  "0 1px 2px rgba(0,0,0,0.08)",
+                  "0 2px 4px rgba(0,0,0,0.10)",
+                  "0 1px 2px rgba(0,0,0,0.08)",
+                ] : [
                   "0 0 20px rgba(0, 212, 255, 0.6)",
                   "0 0 40px rgba(255, 107, 0, 0.6)",
                   "0 0 20px rgba(0, 255, 136, 0.6)",
@@ -1198,7 +1352,9 @@ export default function LandingPage() {
                 ease: "easeInOut",
               }}
               style={{
-                background: "linear-gradient(135deg, #ffffff 0%, #00d4ff 40%, #ff6b00 70%, #00ff88 100%)",
+                background: theme.theme === 'light'
+                  ? "linear-gradient(135deg, #1e293b 0%, #4f46e5 40%, #f59e0b 70%, #10b981 100%)"
+                  : "linear-gradient(135deg, #ffffff 0%, #00d4ff 40%, #ff6b00 70%, #00ff88 100%)",
                 backgroundSize: "300% 300%",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
@@ -1208,7 +1364,8 @@ export default function LandingPage() {
               CareerSync Hub
             </m.h2>
             <m.p
-              className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto font-light"
+              className="text-xl md:text-2xl max-w-2xl mx-auto font-light"
+              style={{ color: theme.textSecondary }}
               animate={{
                 opacity: [0.7, 1, 0.7],
               }}
@@ -1241,25 +1398,38 @@ export default function LandingPage() {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="relative rounded-3xl overflow-hidden border-2 border-[#00d4ff]/50 shadow-2xl shadow-[#00d4ff]/30 backdrop-blur-xl group"
+            className="relative rounded-3xl overflow-hidden border-2 shadow-2xl backdrop-blur-xl group"
             style={{
-              background: "linear-gradient(135deg, rgba(10, 20, 40, 0.95), rgba(26, 61, 83, 0.95))",
+              background: theme.theme === 'light'
+                ? "linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(249, 250, 251, 0.95))"
+                : "linear-gradient(135deg, rgba(10, 20, 40, 0.95), rgba(26, 61, 83, 0.95))",
+              borderColor: theme.borderMedium,
+              boxShadow: theme.theme === 'light'
+                ? `0 0 30px rgba(99, 102, 241, 0.2)`
+                : `0 0 30px rgba(0, 212, 255, 0.3)`,
             }}
             whileHover={{
-              boxShadow: "0 0 60px rgba(0, 212, 255, 0.4)",
+              boxShadow: theme.theme === 'light'
+                ? "0 0 60px rgba(99, 102, 241, 0.3)"
+                : "0 0 60px rgba(0, 212, 255, 0.4)",
             }}
           >
             {/* Advanced HUD corners with animation */}
-            <div className="absolute top-0 left-0 w-10 h-10 border-l-2 border-t-2 border-[#00d4ff]/70"></div>
-            <div className="absolute top-0 right-0 w-10 h-10 border-r-2 border-t-2 border-[#00d4ff]/70"></div>
-            <div className="absolute bottom-0 left-0 w-10 h-10 border-l-2 border-b-2 border-[#00d4ff]/70"></div>
-            <div className="absolute bottom-0 right-0 w-10 h-10 border-r-2 border-b-2 border-[#00d4ff]/70"></div>
+            <div className="absolute top-0 left-0 w-10 h-10 border-l-2 border-t-2" style={{ borderColor: theme.borderStrong }}></div>
+            <div className="absolute top-0 right-0 w-10 h-10 border-r-2 border-t-2" style={{ borderColor: theme.borderStrong }}></div>
+            <div className="absolute bottom-0 left-0 w-10 h-10 border-l-2 border-b-2" style={{ borderColor: theme.borderStrong }}></div>
+            <div className="absolute bottom-0 right-0 w-10 h-10 border-r-2 border-b-2" style={{ borderColor: theme.borderStrong }}></div>
 
             {/* Animated border effect */}
             <m.div
               className="absolute inset-0 rounded-3xl border border-transparent"
               animate={{
-                borderImage: [
+                borderImage: theme.theme === 'light' ? [
+                  "linear-gradient(45deg, rgba(99, 102, 241, 0.4), rgba(245, 158, 11, 0.4), rgba(16, 185, 129, 0.4), rgba(99, 102, 241, 0.4)) 1",
+                  "linear-gradient(135deg, rgba(245, 158, 11, 0.4), rgba(16, 185, 129, 0.4), rgba(99, 102, 241, 0.4), rgba(245, 158, 11, 0.4)) 1",
+                  "linear-gradient(225deg, rgba(16, 185, 129, 0.4), rgba(99, 102, 241, 0.4), rgba(245, 158, 11, 0.4), rgba(16, 185, 129, 0.4)) 1",
+                  "linear-gradient(315deg, rgba(99, 102, 241, 0.4), rgba(245, 158, 11, 0.4), rgba(16, 185, 129, 0.4), rgba(99, 102, 241, 0.4)) 1",
+                ] : [
                   "linear-gradient(45deg, rgba(0, 212, 255, 0.5), rgba(255, 107, 0, 0.5), rgba(0, 255, 136, 0.5), rgba(0, 212, 255, 0.5)) 1",
                   "linear-gradient(135deg, rgba(255, 107, 0, 0.5), rgba(0, 255, 136, 0.5), rgba(0, 212, 255, 0.5), rgba(255, 107, 0, 0.5)) 1",
                   "linear-gradient(225deg, rgba(0, 255, 136, 0.5), rgba(0, 212, 255, 0.5), rgba(255, 107, 0, 0.5), rgba(0, 255, 136, 0.5)) 1",
@@ -1278,10 +1448,10 @@ export default function LandingPage() {
 
             {/* Interactive background particles */}
             <div className="absolute inset-0 overflow-hidden rounded-3xl hidden md:block">
-              {[...Array(25)].map((_, i) => (
+              {[...Array(isLight ? 12 : 25)].map((_, i) => (
                 <m.div
                   key={i}
-                  className="absolute w-1 h-1 rounded-full opacity-40"
+                        className={`absolute ${isLight ? 'w-1 h-1' : 'w-1 h-1'} rounded-full opacity-40`}
                   animate={{
                     y: [0, -30, 0],
                     x: [0, Math.sin(i * 0.8) * 25, 0],
@@ -1351,7 +1521,7 @@ export default function LandingPage() {
                     {/* Floating particles for active tab */}
                     {activeTab === tab && (
                       <div className="absolute inset-0 overflow-hidden rounded-xl">
-                        {[...Array(6)].map((_, i) => (
+                        {[...Array(isLight ? 3 : 6)].map((_, i) => (
                           <m.div
                             key={i}
                             className="absolute w-1 h-1 bg-[#00d4ff] rounded-full opacity-60"
@@ -1667,7 +1837,7 @@ export default function LandingPage() {
         {/* Morphing background with fluid dynamics */}
         <div className="absolute inset-0">
           {/* Primary morphing shapes */}
-          {[...Array(15)].map((_, i) => (
+          {[...Array(isLight ? 8 : 15)].map((_, i) => (
             <m.div
               key={i}
               className="absolute opacity-20"
@@ -1723,7 +1893,7 @@ export default function LandingPage() {
           />
 
           {/* Dynamic particle field */}
-          {[...Array(40)].map((_, i) => (
+              {[...Array(isLight ? 20 : 40)].map((_, i) => (
             <m.div
               key={`particle-${i}`}
               className="absolute w-1 h-1 rounded-full"
@@ -1783,7 +1953,7 @@ export default function LandingPage() {
               >
                 {/* Animated background particles */}
                 <div className="absolute inset-0 overflow-hidden rounded-3xl">
-                  {[...Array(5)].map((_, i) => (
+                  {[...Array(isLight ? 3 : 5)].map((_, i) => (
                     <m.div
                       key={i}
                       className="absolute w-1 h-1 rounded-full opacity-60"
@@ -1896,7 +2066,7 @@ export default function LandingPage() {
         {/* Dynamic background effects */}
         <div className="absolute inset-0">
           {/* Floating geometric shapes */}
-          {[...Array(12)].map((_, i) => (
+                  {[...Array(isLight ? 6 : 12)].map((_, i) => (
             <m.div
               key={i}
               className={`absolute rounded-lg opacity-10 ${
@@ -2023,7 +2193,7 @@ export default function LandingPage() {
 
                 {/* Floating particles */}
                 <div className="absolute inset-0 overflow-hidden rounded-3xl">
-                  {[...Array(8)].map((_, i) => (
+                  {[...Array(isLight ? 4 : 8)].map((_, i) => (
                     <m.div
                       key={i}
                       className="absolute w-1 h-1 rounded-full opacity-70"
