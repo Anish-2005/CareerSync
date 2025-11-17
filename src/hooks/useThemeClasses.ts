@@ -2,54 +2,53 @@ import { useTheme } from '@/contexts/ThemeContext'
 
 export function useThemeClasses() {
   const { theme } = useTheme()
-  const isDark = theme === 'dark'
   
   return {
-    // Background classes
+    theme,
+    // Inline style objects for backgrounds
     bgPrimary: theme === 'light' 
-      ? 'bg-gradient-to-b from-[#f0f4f8] via-[#e1e8ed] to-[#f0f4f8]'
-      : 'bg-gradient-to-b from-[#0a1428] via-[#1a2d4d] to-[#0a1428]',
+      ? { background: 'linear-gradient(to bottom, #f0f4f8, #e1e8ed, #f0f4f8)' }
+      : { background: 'linear-gradient(to bottom, #0a1428, #1a2d4d, #0a1428)' },
     
     bgCard: theme === 'light'
-      ? 'bg-white/95 border-indigo-200/50'
-      : 'bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border-[#00d4ff]/20',
+      ? { backgroundColor: 'rgba(255, 255, 255, 0.95)', borderColor: 'rgba(99, 102, 241, 0.2)' }
+      : { background: 'linear-gradient(to bottom right, rgba(26, 58, 82, 0.6), rgba(15, 37, 64, 0.6))', borderColor: 'rgba(0, 212, 255, 0.2)' },
     
     bgNav: theme === 'light'
-      ? 'bg-white/90 border-indigo-200/30'
-      : 'bg-[#0a1428]/90 border-[#00d4ff]/20',
+      ? { backgroundColor: 'rgba(255, 255, 255, 0.9)', borderColor: 'rgba(99, 102, 241, 0.2)' }
+      : { backgroundColor: 'rgba(10, 20, 40, 0.9)', borderColor: 'rgba(0, 212, 255, 0.2)' },
     
     bgModal: theme === 'light'
-      ? 'bg-gradient-to-br from-white to-gray-50'
-      : 'bg-gradient-to-br from-[#1a3a52] to-[#0f2540]',
+      ? { background: 'linear-gradient(to bottom right, #ffffff, #f9fafb)' }
+      : { background: 'linear-gradient(to bottom right, #1a3a52, #0f2540)' },
     
     bgInput: theme === 'light'
-      ? 'bg-white border-indigo-200'
-      : 'bg-[#0f2540] border-[#00d4ff]/20',
+      ? { backgroundColor: '#ffffff', borderColor: 'rgba(99, 102, 241, 0.3)' }
+      : { backgroundColor: '#0f2540', borderColor: 'rgba(0, 212, 255, 0.2)' },
     
-    // Text classes
-    textPrimary: theme === 'light' ? 'text-slate-900' : 'text-white',
-    textSecondary: theme === 'light' ? 'text-slate-600' : 'text-gray-400',
-    textTertiary: theme === 'light' ? 'text-slate-500' : 'text-gray-500',
-    textAccent: theme === 'light' ? 'text-indigo-600' : 'text-[#00d4ff]',
+    bgButton: theme === 'light'
+      ? { background: 'linear-gradient(to right, #4f46e5, #9333ea)' }
+      : { background: 'linear-gradient(to right, #ff6b00, #00d4ff)' },
     
-    // Gradient text
+    bgButtonSecondary: theme === 'light'
+      ? { backgroundColor: '#ffffff', borderColor: 'rgba(99, 102, 241, 0.3)', color: '#4f46e5' }
+      : { backgroundColor: 'rgba(0, 212, 255, 0.2)', borderColor: 'rgba(0, 212, 255, 0.5)', color: '#00d4ff' },
+    
+    // Color values
+    textPrimary: theme === 'light' ? '#0f172a' : '#ffffff',
+    textSecondary: theme === 'light' ? '#475569' : '#9ca3af',
+    textTertiary: theme === 'light' ? '#64748b' : '#6b7280',
+    textAccent: theme === 'light' ? '#4f46e5' : '#00d4ff',
+    
+    // Gradient for text
     gradientText: theme === 'light'
-      ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-amber-500 bg-clip-text text-transparent'
-      : 'bg-gradient-to-r from-[#ffffff] via-[#00d4ff] to-[#ff6b00] bg-clip-text text-transparent',
+      ? { background: 'linear-gradient(to right, #4f46e5, #9333ea, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }
+      : { background: 'linear-gradient(to right, #ffffff, #00d4ff, #ff6b00)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' },
     
-    // Border classes
-    borderLight: theme === 'light' ? 'border-indigo-100' : 'border-[#00d4ff]/20',
-    borderMedium: theme === 'light' ? 'border-indigo-200' : 'border-[#00d4ff]/30',
-    borderStrong: theme === 'light' ? 'border-indigo-400' : 'border-[#00d4ff]/50',
-    
-    // Button classes
-    buttonPrimary: theme === 'light'
-      ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700'
-      : 'bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white hover:shadow-[#ff6b00]/50',
-    
-    buttonSecondary: theme === 'light'
-      ? 'bg-white border-indigo-200 text-indigo-600 hover:border-indigo-400 hover:bg-indigo-50'
-      : 'bg-[#00d4ff]/20 border-[#00d4ff]/50 text-[#00d4ff] hover:bg-[#00d4ff]/30',
+    // Border colors
+    borderLight: theme === 'light' ? 'rgba(99, 102, 241, 0.15)' : 'rgba(0, 212, 255, 0.2)',
+    borderMedium: theme === 'light' ? 'rgba(99, 102, 241, 0.3)' : 'rgba(0, 212, 255, 0.3)',
+    borderStrong: theme === 'light' ? 'rgba(99, 102, 241, 0.5)' : 'rgba(0, 212, 255, 0.5)',
     
     // Status colors
     statusApplied: theme === 'light' ? '#4f46e5' : '#00d4ff',
@@ -57,14 +56,18 @@ export function useThemeClasses() {
     statusOffer: theme === 'light' ? '#10b981' : '#00ff88',
     statusRejected: theme === 'light' ? '#ef4444' : '#ff4444',
     
-    // Accent colors
-    accentPrimary: theme === 'light' ? '#4f46e5' : '#00d4ff',
-    accentSecondary: theme === 'light' ? '#f59e0b' : '#ff6b00',
-    accentSuccess: theme === 'light' ? '#10b981' : '#00ff88',
+    // Background effects for morphing shapes
+    morphShape1: theme === 'light'
+      ? 'linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(245, 158, 11, 0.2))'
+      : 'linear-gradient(135deg, rgba(255, 107, 0, 0.3), rgba(0, 212, 255, 0.3))',
     
-    // Hover effects
-    hoverCard: theme === 'light'
-      ? 'hover:bg-white hover:border-indigo-300 hover:shadow-lg'
-      : 'hover:border-[#00d4ff]/50',
+    morphShape2: theme === 'light'
+      ? 'linear-gradient(225deg, rgba(16, 185, 129, 0.15), rgba(99, 102, 241, 0.15))'
+      : 'linear-gradient(225deg, rgba(0, 255, 136, 0.2), rgba(255, 107, 0, 0.2))',
+    
+    // Particle colors
+    particleColors: theme === 'light'
+      ? ['#4f46e5', '#f59e0b', '#10b981']
+      : ['#00d4ff', '#ff6b00', '#00ff88'],
   }
 }

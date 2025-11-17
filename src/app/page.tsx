@@ -213,7 +213,7 @@ export default function LandingPage() {
               />
               <img src="/csync.png" alt="CareerSync" className="w-full h-full object-contain relative z-10" />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] bg-clip-text text-transparent">
+            <span className={`text-xl font-bold ${theme.gradientText}`}>
               CareerSync
             </span>
           </m.div>
@@ -236,11 +236,11 @@ export default function LandingPage() {
                   scale: 1.1,
                   textShadow: "0 0 10px rgba(0, 212, 255, 0.5)",
                 }}
-                className="text-gray-300 hover:text-[#00d4ff] transition-all duration-300 text-sm font-medium relative group"
+                className={`${theme.textSecondary} hover:${theme.textAccent} transition-all duration-300 text-sm font-medium relative group`}
               >
                 {link.label}
                 <m.div
-                  className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-[#00d4ff] to-[#ff6b00] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+                  className={`absolute -bottom-1 left-0 right-0 h-0.5 ${theme.buttonPrimary} scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left`}
                 />
               </m.a>
             ))}
@@ -253,7 +253,7 @@ export default function LandingPage() {
               onClick={() => setMobileOpen((s) => !s)}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="md:hidden p-2 rounded-md text-gray-300 hover:bg-[#00d4ff]/20 hover:text-[#00d4ff] transition-all duration-300 relative overflow-hidden"
+              className={`md:hidden p-2 rounded-md ${theme.textSecondary} ${theme.buttonSecondary} transition-all duration-300 relative overflow-hidden`}
               aria-label="Toggle menu"
             >
               <m.div
@@ -279,7 +279,7 @@ export default function LandingPage() {
                       boxShadow: "0 0 20px rgba(0, 212, 255, 0.4)",
                     }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-6 py-2 text-white text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 bg-[#00d4ff]/10 hover:bg-[#00d4ff]/20"
+                    className={`px-6 py-2 ${theme.textPrimary} text-sm font-medium rounded-full ${theme.buttonSecondary} transition-all duration-300`}
                   >
                     Dashboard
                   </m.a>
@@ -293,7 +293,7 @@ export default function LandingPage() {
                       boxShadow: "0 0 25px rgba(255, 107, 0, 0.6)",
                     }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
+                    className={`px-6 py-2 ${theme.textPrimary} text-sm font-bold rounded-full ${theme.buttonPrimary} hover:shadow-lg transition-all duration-300`}
                   >
                     Logout
                   </m.button>
@@ -310,7 +310,7 @@ export default function LandingPage() {
                       boxShadow: "0 0 20px rgba(0, 212, 255, 0.4)",
                     }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-6 py-2 text-white text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 bg-[#00d4ff]/10 hover:bg-[#00d4ff]/20"
+                    className={`px-6 py-2 ${theme.textPrimary} text-sm font-medium rounded-full ${theme.buttonSecondary} transition-all duration-300`}
                   >
                     Login
                   </m.a>
@@ -324,7 +324,7 @@ export default function LandingPage() {
                       boxShadow: "0 0 25px rgba(255, 107, 0, 0.6)",
                     }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
+                    className={`px-6 py-2 ${theme.textPrimary} text-sm font-bold rounded-full ${theme.buttonPrimary} hover:shadow-lg transition-all duration-300`}
                   >
                     Sign Up
                   </m.a>
@@ -341,7 +341,7 @@ export default function LandingPage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: "100%" }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
-                className="md:hidden absolute top-full left-0 right-0 bg-[#081226]/95 border-t border-[#00d4ff]/20 backdrop-blur-sm z-40 shadow-2xl shadow-[#00d4ff]/10"
+                className={`md:hidden absolute top-full left-0 right-0 ${theme.bgNav} border-t ${theme.borderLight} backdrop-blur-sm z-40 shadow-2xl`}
               >
                 <div className="px-6 py-6 flex flex-col gap-6">
                   {[
@@ -357,21 +357,21 @@ export default function LandingPage() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1, duration: 0.3 }}
                       onClick={() => setMobileOpen(false)}
-                      className="text-gray-300 hover:text-[#00d4ff] transition-colors duration-300 text-lg font-medium py-2 border-b border-[#00d4ff]/10 hover:border-[#00d4ff]/30"
+                      className={`${theme.textSecondary} hover:${theme.textAccent} transition-colors duration-300 text-lg font-medium py-2 border-b ${theme.borderLight}`}
                     >
                       {link.label}
                     </m.a>
                   ))}
-                  <div className="flex flex-col gap-4 pt-4 border-t border-[#00d4ff]/20">
+                  <div className={`flex flex-col gap-4 pt-4 border-t ${theme.borderLight}`}>
                     {user ? (
                       <>
-                        <a href="/dashboard" onClick={() => setMobileOpen(false)} className="px-6 py-3 text-white bg-[#00d4ff]/20 border border-[#00d4ff]/50 rounded-lg text-center font-medium hover:bg-[#00d4ff]/30 transition-all duration-300">Dashboard</a>
-                        <button onClick={() => { setMobileOpen(false); logout(); }} className="px-6 py-3 text-white bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] rounded-lg text-center font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300">Logout</button>
+                        <a href="/dashboard" onClick={() => setMobileOpen(false)} className={`px-6 py-3 ${theme.textPrimary} ${theme.buttonSecondary} rounded-lg text-center font-medium transition-all duration-300`}>Dashboard</a>
+                        <button onClick={() => { setMobileOpen(false); logout(); }} className={`px-6 py-3 ${theme.textPrimary} ${theme.buttonPrimary} rounded-lg text-center font-bold hover:shadow-lg transition-all duration-300`}>Logout</button>
                       </>
                     ) : (
                       <>
-                        <a href="/login" onClick={() => setMobileOpen(false)} className="px-6 py-3 text-white border border-[#00d4ff]/30 rounded-lg text-center font-medium hover:bg-[#00d4ff]/10 transition-all duration-300">Login</a>
-                        <a href="/login" onClick={() => setMobileOpen(false)} className="px-6 py-3 text-white bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] rounded-lg text-center font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300">Sign Up</a>
+                        <a href="/login" onClick={() => setMobileOpen(false)} className={`px-6 py-3 ${theme.textPrimary} ${theme.buttonSecondary} rounded-lg text-center font-medium transition-all duration-300`}>Login</a>
+                        <a href="/login" onClick={() => setMobileOpen(false)} className={`px-6 py-3 ${theme.textPrimary} ${theme.buttonPrimary} rounded-lg text-center font-bold hover:shadow-lg transition-all duration-300`}>Sign Up</a>
                       </>
                     )}
                   </div>
@@ -493,7 +493,7 @@ export default function LandingPage() {
           {/* Innovative badge with morphing effect */}
           <m.div
             variants={itemVariants}
-            className="relative inline-flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-8 sm:py-4 rounded-full border border-[#00d4ff]/30 bg-[#00d4ff]/5 backdrop-blur-xl overflow-hidden"
+            className={`relative inline-flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-8 sm:py-4 rounded-full border ${theme.borderMedium} ${theme.buttonSecondary} backdrop-blur-xl overflow-hidden`}
             whileHover={{ scale: 1.05 }}
           >
             {/* Morphing background */}
@@ -524,7 +524,7 @@ export default function LandingPage() {
                 ease: "easeInOut",
               }}
             />
-            <span className="text-[#00d4ff] font-semibold relative z-10 text-[10px] sm:text-sm md:text-base">Next-Generation Career Intelligence</span>
+            <span className={`${theme.textAccent} font-semibold relative z-10 text-[10px] sm:text-sm md:text-base`}>Next-Generation Career Intelligence</span>
             <m.div
               className="w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-[#ff6b00]"
               animate={{
@@ -543,13 +543,8 @@ export default function LandingPage() {
           {/* Fluid morphing headline */}
           <m.h1
             variants={itemVariants}
-            className="mt-8 text-[12vw] sm:text-5xl md:text-7xl lg:text-9xl font-black mb-6 sm:mb-8 leading-tight tracking-tight"
+            className={`mt-8 text-[12vw] sm:text-5xl md:text-7xl lg:text-9xl font-black mb-6 sm:mb-8 leading-tight tracking-tight ${theme.gradientText}`}
             style={{
-              background: "linear-gradient(135deg, #ffffff 0%, #00d4ff 25%, #ff6b00 50%, #00ff88 75%, #ffffff 100%)",
-              backgroundSize: "400% 400%",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
               filter: "drop-shadow(0 0 40px rgba(0, 212, 255, 0.3))",
             }}
             animate={{
@@ -577,7 +572,7 @@ export default function LandingPage() {
           {/* Dynamic subheading with typing effect */}
           <m.p
             variants={itemVariants}
-            className="text-sm sm:text-base md:text-2xl text-gray-300 max-w-xl md:max-w-4xl mx-auto mb-8 md:mb-16 leading-relaxed font-light"
+            className={`text-sm sm:text-base md:text-2xl ${theme.textSecondary} max-w-xl md:max-w-4xl mx-auto mb-8 md:mb-16 leading-relaxed font-light`}
             animate={{
               opacity: [0.7, 1, 0.7],
             }}
