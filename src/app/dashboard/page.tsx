@@ -817,7 +817,7 @@ export default function DashboardPage() {
                   className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 rounded-full bg-gradient-to-r from-[#ff6b00]/20 to-[#00ff88]/20 border border-[#ff6b00]/50 self-start sm:self-center"
                 >
                   <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-[#ff6b00]" />
-                  <span className="text-sm sm:text-base text-white font-bold">{streak} day streak!</span>
+                  <span className="text-sm sm:text-base font-bold" style={{ color: theme.textPrimary }}>{streak} day streak!</span>
                 </m.div>
               )}
             </div>
@@ -826,7 +826,8 @@ export default function DashboardPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className="text-base sm:text-lg text-gray-300 italic flex items-center gap-2"
+              className="text-base sm:text-lg italic flex items-center gap-2"
+              style={{ color: theme.textSecondary }}
             >
               <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-[#00ff88]" />
               {motivationalQuote}
@@ -905,7 +906,7 @@ export default function DashboardPage() {
                   <div className="text-2xl sm:text-4xl font-black mb-1 sm:mb-2" style={{ color: stat.color }}>
                     {stat.value}
                   </div>
-                  <div className="text-xs sm:text-sm font-bold text-white mb-1">{stat.label}</div>
+                  <div className="text-xs sm:text-sm font-bold mb-1" style={{ color: theme.textPrimary }}>{stat.label}</div>
                   <div className="text-xs text-gray-400 hidden sm:block">{stat.subtitle}</div>
                 </div>
               </m.div>
@@ -924,24 +925,24 @@ export default function DashboardPage() {
                 <div className="flex items-center gap-3 mb-4">
                   <Sparkles className="w-6 h-6 text-[#00ff88]" />
                   <PartyPopper className="w-6 h-6 text-[#00ff88]" />
-                  <h3 className="text-xl font-bold text-white">Secret Stats Unlocked!</h3>
+                  <h3 className="text-xl font-bold" style={{ color: theme.textPrimary }}>Secret Stats Unlocked!</h3>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="text-center">
                     <div className="text-3xl font-black text-[#00ff88]">{stats.avgDaysToResponse}</div>
-                    <div className="text-sm text-gray-300">Avg Days to Response</div>
+                    <div className="text-sm" style={{ color: theme.textSecondary }}>Avg Days to Response</div>
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-black text-[#ff6b00]">{stats.successRate}%</div>
-                    <div className="text-sm text-gray-300">Success Rate</div>
+                    <div className="text-sm" style={{ color: theme.textSecondary }}>Success Rate</div>
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-black text-[#00d4ff]">{stats.highPriority}</div>
-                    <div className="text-sm text-gray-300">High Priority</div>
+                    <div className="text-sm" style={{ color: theme.textSecondary }}>High Priority</div>
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-black text-[#00ff88]">{stats.withdrawn}</div>
-                    <div className="text-sm text-gray-300">Withdrawn</div>
+                    <div className="text-sm" style={{ color: theme.textSecondary }}>Withdrawn</div>
                   </div>
                 </div>
                 <button
@@ -1024,8 +1025,8 @@ export default function DashboardPage() {
                 <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#00d4ff]/20 to-[#ff6b00]/20 flex items-center justify-center">
                   <div className="w-8 h-8 border-4 border-[#00d4ff] border-t-transparent rounded-full animate-spin"></div>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-400 mb-2">Loading applications...</h3>
-                <p className="text-gray-500">Fetching your job applications</p>
+                <h3 className="text-2xl font-bold mb-2" style={{ color: theme.textPrimary }}>Loading applications...</h3>
+                <p style={{ color: theme.textSecondary }}>Fetching your job applications</p>
               </m.div>
             )}
 
@@ -1039,8 +1040,8 @@ export default function DashboardPage() {
                 <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#ff4444]/20 to-[#ff6b00]/20 flex items-center justify-center">
                   <XCircle className="w-10 h-10 text-[#ff4444]" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-400 mb-2">Failed to load applications</h3>
-                <p className="text-gray-500 mb-6">{error}</p>
+                <h3 className="text-2xl font-bold mb-2" style={{ color: theme.textPrimary }}>Failed to load applications</h3>
+                <p style={{ color: theme.textSecondary }} className="mb-6">{error}</p>
                 <m.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -1103,10 +1104,10 @@ export default function DashboardPage() {
                               {app.company.charAt(0)}
                             </div>
                             <div className="min-w-0">
-                              <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-[#00d4ff] transition-colors truncate">
+                              <h3 className="text-lg sm:text-xl font-bold group-hover:text-[#00d4ff] transition-colors truncate" style={{ color: theme.textPrimary }}>
                                 {app.company}
                               </h3>
-                              <p className="text-gray-400 text-sm truncate">{app.position}</p>
+                              <p className="text-sm truncate" style={{ color: theme.textSecondary }}>{app.position}</p>
                             </div>
                           </div>
 
@@ -1128,18 +1129,18 @@ export default function DashboardPage() {
 
                         {/* Details */}
                         <div className="space-y-1 sm:space-y-2 mb-3 sm:mb-4 text-xs sm:text-sm">
-                          <div className="flex items-center gap-2 text-gray-400">
+                          <div className="flex items-center gap-2" style={{ color: theme.textSecondary }}>
                             <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-[#00d4ff]" />
                             <span className="truncate">{new Date(app.applicationDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
                           </div>
                           {app.location && (
-                            <div className="flex items-center gap-2 text-gray-400">
+                            <div className="flex items-center gap-2" style={{ color: theme.textSecondary }}>
                               <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-[#ff6b00]" />
                               <span className="truncate">{app.location}</span>
                             </div>
                           )}
                           {app.salary && (
-                            <div className="flex items-center gap-2 text-gray-400">
+                            <div className="flex items-center gap-2" style={{ color: theme.textSecondary }}>
                               <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-[#00ff88]" />
                               <span className="truncate">{app.salary}</span>
                             </div>
@@ -1149,7 +1150,7 @@ export default function DashboardPage() {
                         {/* Progress Bar */}
                         <div className="mb-3 sm:mb-4">
                           <div className="flex items-center justify-between mb-1 sm:mb-2">
-                            <span className="text-xs text-gray-400">Progress</span>
+                            <span className="text-xs" style={{ color: theme.textSecondary }}>Progress</span>
                             <span className="text-xs font-bold" style={{ color: statusColor }}>
                               {app.progress}%
                             </span>
@@ -1226,8 +1227,8 @@ export default function DashboardPage() {
                 <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#00d4ff]/20 to-[#ff6b00]/20 flex items-center justify-center">
                   <Briefcase className="w-10 h-10 text-gray-500" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-400 mb-2">No applications found</h3>
-                <p className="text-gray-500 mb-6">
+                <h3 className="text-2xl font-bold mb-2" style={{ color: theme.textPrimary }}>No applications found</h3>
+                <p style={{ color: theme.textSecondary }} className="mb-6">
                   {searchQuery ? "Try adjusting your search" : "Start tracking your job applications"}
                 </p>
                 <m.button
@@ -1262,7 +1263,7 @@ export default function DashboardPage() {
                 className={`relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-8 rounded-3xl ${theme.bgModal} shadow-2xl`}
               >
                 <div className="flex items-center justify-between mb-4 sm:mb-6">
-                  <h2 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2 sm:gap-3">
+                  <h2 className="text-2xl sm:text-3xl font-bold flex items-center gap-2 sm:gap-3" style={{ color: theme.textPrimary }}>
                     <Rocket className="w-6 h-6 sm:w-8 sm:h-8 text-[#00d4ff]" />
                     New Application
                   </h2>
@@ -1279,7 +1280,7 @@ export default function DashboardPage() {
                 <form onSubmit={handleAddApplication} className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-bold text-gray-400 mb-2">Company *</label>
+                      <label className="block text-sm font-bold mb-2" style={{ color: theme.textSecondary }}>Company *</label>
                       <input
                         type="text"
                         value={formData.company}
@@ -1290,7 +1291,7 @@ export default function DashboardPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-bold text-gray-400 mb-2">Position *</label>
+                      <label className="block text-sm font-bold mb-2" style={{ color: theme.textSecondary }}>Position *</label>
                       <input
                         type="text"
                         value={formData.position}
@@ -1304,7 +1305,7 @@ export default function DashboardPage() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-bold text-gray-400 mb-2">Location</label>
+                      <label className="block text-sm font-bold mb-2" style={{ color: theme.textSecondary }}>Location</label>
                       <input
                         type="text"
                         value={formData.location}
@@ -1314,7 +1315,7 @@ export default function DashboardPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-bold text-gray-400 mb-2">Salary Range</label>
+                      <label className="block text-sm font-bold mb-2" style={{ color: theme.textSecondary }}>Salary Range</label>
                       <input
                         type="text"
                         value={formData.salary}
@@ -1326,7 +1327,7 @@ export default function DashboardPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-bold text-gray-400 mb-2">Job URL</label>
+                    <label className="block text-sm font-bold mb-2" style={{ color: theme.textSecondary }}>Job URL</label>
                     <input
                       type="url"
                       value={formData.jobUrl}
@@ -1338,7 +1339,7 @@ export default function DashboardPage() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-bold text-gray-400 mb-2">Status *</label>
+                      <label className="block text-sm font-bold mb-2" style={{ color: theme.textSecondary }}>Status *</label>
                       <select
                         value={formData.status}
                         onChange={(e) => setFormData({ ...formData, status: e.target.value as Application['status'] })}
@@ -1352,7 +1353,7 @@ export default function DashboardPage() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-bold text-gray-400 mb-2">Priority</label>
+                      <label className="block text-sm font-bold mb-2" style={{ color: theme.textSecondary }}>Priority</label>
                       <select
                         value={formData.priority}
                         onChange={(e) => setFormData({ ...formData, priority: e.target.value as Application['priority'] })}
@@ -1366,7 +1367,7 @@ export default function DashboardPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-bold text-gray-400 mb-2">Contact Info</label>
+                    <label className="block text-sm font-bold mb-2" style={{ color: theme.textSecondary }}>Contact Info</label>
                     <input
                       type="text"
                       value={formData.contactInfo}
@@ -1377,7 +1378,7 @@ export default function DashboardPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-bold text-gray-400 mb-2">Notes</label>
+                    <label className="block text-sm font-bold mb-2" style={{ color: theme.textSecondary }}>Notes</label>
                     <textarea
                       rows={4}
                       value={formData.notes}
@@ -1431,7 +1432,7 @@ export default function DashboardPage() {
                 className={`relative w-full max-w-3xl max-h-[90vh] overflow-y-auto p-4 sm:p-8 rounded-3xl ${theme.bgModal} shadow-2xl`}
               >
                 <div className="flex items-center justify-between mb-4 sm:mb-6">
-                  <h2 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2 sm:gap-3">
+                  <h2 className="text-2xl sm:text-3xl font-bold flex items-center gap-2 sm:gap-3" style={{ color: theme.textPrimary }}>
                     <Building2 className="w-6 h-6 sm:w-8 sm:h-8 text-[#00d4ff]" />
                     Application Details
                   </h2>
@@ -1457,8 +1458,8 @@ export default function DashboardPage() {
                       {selectedApp.company.charAt(0)}
                     </div>
                     <div className="flex-1 text-center sm:text-left">
-                      <h3 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2">{selectedApp.company}</h3>
-                      <p className="text-lg sm:text-xl text-gray-300">{selectedApp.position}</p>
+                      <h3 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2" style={{ color: theme.textPrimary }}>{selectedApp.company}</h3>
+                      <p className="text-lg sm:text-xl" style={{ color: theme.textPrimary }}>{selectedApp.position}</p>
                     </div>
                     <div className="p-3 sm:p-4 bg-white/5 rounded-lg flex items-center justify-center">
                       <div className="scale-125 sm:scale-150">{getPriorityIcon(selectedApp.priority)}</div>
@@ -1468,7 +1469,7 @@ export default function DashboardPage() {
                   {/* Status */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
-                      <div className="text-sm text-gray-400 mb-2">Status</div>
+                      <div className="text-sm mb-2" style={{ color: theme.textSecondary }}>Status</div>
                       <div
                         className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full text-base sm:text-lg font-bold"
                         style={{
@@ -1483,7 +1484,7 @@ export default function DashboardPage() {
                     </div>
 
                     <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
-                      <div className="text-sm text-gray-400 mb-2">Progress</div>
+                      <div className="text-sm mb-2" style={{ color: theme.textSecondary }}>Progress</div>
                       <div className="flex items-center gap-3">
                         <div className="flex-1 h-3 bg-[#1a3a52] rounded-full overflow-hidden">
                           <div
@@ -1505,30 +1506,30 @@ export default function DashboardPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {selectedApp.location && (
                       <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
-                        <div className="flex items-center gap-2 text-gray-400 text-sm mb-1">
+                        <div className="flex items-center gap-2 text-sm mb-1" style={{ color: theme.textSecondary }}>
                           <MapPin className="w-4 h-4 text-[#ff6b00]" />
                           Location
                         </div>
-                        <div className="text-white font-semibold">{selectedApp.location}</div>
+                        <div style={{ color: theme.textPrimary }} className="font-semibold">{selectedApp.location}</div>
                       </div>
                     )}
 
                     {selectedApp.salary && (
                       <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
-                        <div className="flex items-center gap-2 text-gray-400 text-sm mb-1">
+                        <div className="flex items-center gap-2 text-sm mb-1" style={{ color: theme.textSecondary }}>
                           <DollarSign className="w-4 h-4 text-[#00ff88]" />
                           Salary Range
                         </div>
-                        <div className="text-white font-semibold">{selectedApp.salary}</div>
+                        <div style={{ color: theme.textPrimary }} className="font-semibold">{selectedApp.salary}</div>
                       </div>
                     )}
 
                     <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
-                      <div className="flex items-center gap-2 text-gray-400 text-sm mb-1">
+                      <div className="flex items-center gap-2 text-sm mb-1" style={{ color: theme.textSecondary }}>
                         <Calendar className="w-4 h-4 text-[#00d4ff]" />
                         Applied On
                       </div>
-                      <div className="text-white font-semibold">
+                      <div style={{ color: theme.textPrimary }} className="font-semibold">
                         {new Date(selectedApp.applicationDate).toLocaleDateString("en-US", {
                           month: "long",
                           day: "numeric",
@@ -1538,11 +1539,11 @@ export default function DashboardPage() {
                     </div>
 
                     <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
-                      <div className="flex items-center gap-2 text-gray-400 text-sm mb-1">
+                      <div className="flex items-center gap-2 text-sm mb-1" style={{ color: theme.textSecondary }}>
                         <Clock className="w-4 h-4 text-[#00d4ff]" />
                         Last Updated
                       </div>
-                      <div className="text-white font-semibold">
+                      <div style={{ color: theme.textPrimary }} className="font-semibold">
                         {new Date(selectedApp.lastUpdated).toLocaleDateString("en-US", {
                           month: "long",
                           day: "numeric",
@@ -1555,22 +1556,22 @@ export default function DashboardPage() {
                   {/* Contact Info */}
                   {selectedApp.contactInfo && (
                     <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
-                      <div className="flex items-center gap-2 text-gray-400 text-sm mb-2">
+                      <div className="flex items-center gap-2 text-sm mb-2" style={{ color: theme.textSecondary }}>
                         <Users className="w-4 h-4 text-[#00d4ff]" />
                         Contact Information
                       </div>
-                      <div className="text-white font-semibold">{selectedApp.contactInfo}</div>
+                      <div style={{ color: theme.textPrimary }} className="font-semibold">{selectedApp.contactInfo}</div>
                     </div>
                   )}
 
                   {/* Notes */}
                   {selectedApp.notes && (
                     <div className="p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20">
-                      <div className="flex items-center gap-2 text-gray-400 text-sm mb-2">
+                      <div className="flex items-center gap-2 text-sm mb-2" style={{ color: theme.textSecondary }}>
                         <FileText className="w-4 h-4 text-[#00d4ff]" />
                         Notes
                       </div>
-                      <div className="text-white whitespace-pre-wrap">{selectedApp.notes}</div>
+                      <div style={{ color: theme.textPrimary }} className="whitespace-pre-wrap">{selectedApp.notes}</div>
                     </div>
                   )}
 
@@ -1622,10 +1623,10 @@ export default function DashboardPage() {
                 className={`relative w-full max-w-4xl max-h-[90vh] overflow-y-auto p-4 sm:p-8 rounded-3xl ${theme.bgModal} shadow-2xl`}
               >
                 <div className="flex items-center justify-between mb-4 sm:mb-6">
-                  <h2 className="text-2xl sm:text-3xl font-bold text-white flex items-center gap-2 sm:gap-3">
+                  <h2 className="text-2xl sm:text-3xl font-bold flex items-center gap-2 sm:gap-3" style={{ color: theme.textPrimary }}>
                     <Trophy className="w-6 h-6 sm:w-8 sm:h-8 text-[#00ff88]" />
                     Achievements
-                    <span className="text-base sm:text-lg text-gray-400">({unlockedAchievements.length}/{achievements.length})</span>
+                    <span className="text-base sm:text-lg" style={{ color: theme.textSecondary }}>({unlockedAchievements.length}/{achievements.length})</span>
                   </h2>
                   <m.button
                     whileHover={{ scale: 1.1, rotate: 90 }}
@@ -1640,7 +1641,7 @@ export default function DashboardPage() {
                 {/* Progress Bar */}
                 <div className="mb-4 sm:mb-6">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-gray-400">Overall Progress</span>
+                    <span className="text-sm" style={{ color: theme.textSecondary }}>Overall Progress</span>
                     <span className="text-sm font-bold text-[#00ff88]">
                       {Math.round((unlockedAchievements.length / achievements.length) * 100)}%
                     </span>
@@ -1659,21 +1660,21 @@ export default function DashboardPage() {
                 <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
                   <div className="p-3 sm:p-4 rounded-xl bg-[#0f2540]/60 border border-[#00d4ff]/20 text-center">
                     <div className="text-xl sm:text-2xl font-bold text-[#00d4ff] mb-1">{userStats.totalApplications}</div>
-                    <div className="text-xs text-gray-400">Total Applications</div>
+                    <div className="text-xs" style={{ color: theme.textSecondary }}>Total Applications</div>
                   </div>
                   <div className="p-3 sm:p-4 rounded-xl bg-[#0f2540]/60 border border-[#ff6b00]/20 text-center">
                     <div className="text-xl sm:text-2xl font-bold text-[#ff6b00] mb-1 flex items-center justify-center gap-1">
                       <Flame className="w-4 h-4 sm:w-5 sm:h-5" />
                       {streak}
                     </div>
-                    <div className="text-xs text-gray-400">Current Streak</div>
+                    <div className="text-xs" style={{ color: theme.textSecondary }}>Current Streak</div>
                   </div>
                   <div className="p-3 sm:p-4 rounded-xl bg-[#0f2540]/60 border border-[#00ff88]/20 text-center">
                     <div className="text-xl sm:text-2xl font-bold text-[#00ff88] mb-1 flex items-center justify-center gap-1">
                       <Award className="w-4 h-4 sm:w-5 sm:h-5" />
                       {userStats.longestStreak}
                     </div>
-                    <div className="text-xs text-gray-400">Longest Streak</div>
+                    <div className="text-xs" style={{ color: theme.textSecondary }}>Longest Streak</div>
                   </div>
                 </div>
 
@@ -1701,13 +1702,11 @@ export default function DashboardPage() {
                           }`} />
                         </div>
                         <div className="flex-1">
-                          <h3 className={`text-base sm:text-lg font-bold mb-1 flex items-center gap-2 ${
-                            achievement.unlocked ? 'text-white' : 'text-gray-500'
-                          }`}>
+                          <h3 className={`text-base sm:text-lg font-bold mb-1 flex items-center gap-2`} style={{ color: achievement.unlocked ? theme.textPrimary : theme.textSecondary }}>
                             {achievement.name}
                             {achievement.unlocked && <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-[#00ff88]" />}
                           </h3>
-                          <p className={`text-sm sm:text-base ${achievement.unlocked ? 'text-gray-300' : 'text-gray-600'}`}>
+                          <p className={`text-sm sm:text-base ${achievement.unlocked ? '' : 'text-gray-600'}`} style={achievement.unlocked ? { color: theme.textSecondary } : {}}>
                             {achievement.description}
                           </p>
                         </div>
