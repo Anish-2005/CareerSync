@@ -706,7 +706,6 @@ export default function ProfilePage() {
           const errorData = await response.json()
           errorMessage = errorData.error || errorData.message || 'Upload failed'
         } catch (parseError) {
-          // If response is not JSON, try to get text
           try {
             const errorText = await response.text()
             errorMessage = errorText || 'Upload failed'
@@ -721,8 +720,6 @@ export default function ProfilePage() {
       console.log('Upload response data:', data)
       console.log('Document from response:', data.document)
 
-      // Update profile state directly
-      // Determine uploaded document(s) returned by the API and merge with existing documents
       const uploadedDoc = data.document ?? data.uploadedDocument ?? null
       const updatedDocuments = uploadedDoc
         ? [...(profile!.documents || []), uploadedDoc]
@@ -730,7 +727,6 @@ export default function ProfilePage() {
         ? data.documents
         : [...(profile!.documents || [])]
 
-      // Create a completely new profile object to ensure re-render
       const updatedProfile = {
         _id: profile!._id,
         userId: profile!.userId,
@@ -746,7 +742,6 @@ export default function ProfilePage() {
       setProfile(updatedProfile)
       console.log('Profile state updated, new documents:', updatedDocuments)
 
-      // Reset file input
       event.target.value = ''
 
     } catch (error) {
@@ -772,7 +767,6 @@ export default function ProfilePage() {
         throw new Error('Download failed')
       }
 
-      // Create blob and download
       const blob = await response.blob()
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
@@ -892,16 +886,24 @@ export default function ProfilePage() {
     })
   }
 
+  // --- RENDER HANDLING USING theme hook's inline style objects ---
+  // Fallback helpers
+  const safeBgPrimary = (theme.bgPrimary as React.CSSProperties) || {}
+  const safeBgNav = (theme.bgNav as React.CSSProperties) || {}
+  const safeBorderLight = theme.borderLight || (theme.borderMedium || "#e2e8f0")
+  const safeMorph1 = theme.morphShape1 || "linear-gradient(135deg, rgba(255,107,0,0.3), rgba(0,212,255,0.3))"
+  const safeMorph2 = theme.morphShape2 || "linear-gradient(225deg, rgba(0,255,136,0.2), rgba(255,107,0,0.2))"
+
   if (loading) {
     return (
       <RouteGuard>
-        <div className={`min-h-screen flex items-center justify-center ${theme.bgPrimary}`}>
+        <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", ...(safeBgPrimary as any) }}>
           <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#00d4ff]/20 to-[#ff6b00]/20 flex items-center justify-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full" style={{ background: "linear-gradient(to bottom right, rgba(0,212,255,0.12), rgba(255,107,0,0.12))", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <div className="w-8 h-8 border-4 border-[#00d4ff] border-t-transparent rounded-full animate-spin"></div>
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Loading Profile...</h3>
-            <p className="text-gray-400">Fetching your profile data</p>
+            <h3 className="text-xl font-bold mb-2" style={{ color: theme.textPrimary }}>Loading Profile...</h3>
+            <p style={{ color: theme.textSecondary }}>Fetching your profile data</p>
           </div>
         </div>
       </RouteGuard>
@@ -911,16 +913,17 @@ export default function ProfilePage() {
   if (error && !profile) {
     return (
       <RouteGuard>
-        <div className={`min-h-screen flex items-center justify-center ${theme.bgPrimary}`}>
+        <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", ...(safeBgPrimary as any) }}>
           <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#ff4444]/20 to-[#ff6b00]/20 flex items-center justify-center">
-              <X className="w-8 h-8 text-[#ff4444]" />
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full" style={{ background: "linear-gradient(to bottom right, rgba(255,68,68,0.12), rgba(255,107,0,0.12))", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <X className="w-8 h-8" style={{ color: "#ff4444" }} />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Failed to Load Profile</h3>
-            <p className="text-gray-400 mb-6">{error}</p>
+            <h3 className="text-xl font-bold mb-2" style={{ color: theme.textPrimary }}>Failed to Load Profile</h3>
+            <p style={{ color: theme.textSecondary }} className="mb-6">{error}</p>
             <button
               onClick={fetchProfile}
-              className="px-6 py-3 text-white font-bold rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
+              className="px-6 py-3 font-bold rounded-xl"
+              style={{ color: "#fff", background: "linear-gradient(90deg,#ff6b00,#00d4ff)", boxShadow: "0 10px 30px rgba(0,0,0,0.15)" }}
             >
               Try Again
             </button>
@@ -936,1238 +939,1285 @@ export default function ProfilePage() {
 
   return (
     <RouteGuard>
-      <div
-        className={`min-h-screen overflow-hidden ${theme.bgPrimary}`}
-        style={{ fontFamily: '"Geist", sans-serif' }}
-      >
-      {/* Error Notification */}
-      <AnimatePresence>
-        {error && (
-          <m.div
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -50 }}
-            className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full mx-4"
-          >
-            <div className="p-4 rounded-xl bg-gradient-to-br from-[#ff4444]/90 to-[#ff6b00]/90 backdrop-blur-md border border-[#ff4444]/50 shadow-lg flex items-center gap-3">
-              <X className="w-5 h-5 text-white flex-shrink-0" />
-              <p className="text-white font-semibold flex-1">{error}</p>
-              <button
-                onClick={() => setError(null)}
-                className="p-1 rounded-full hover:bg-white/20 transition-all"
-              >
-                <X className="w-4 h-4 text-white" />
-              </button>
-            </div>
-          </m.div>
-        )}
-      </AnimatePresence>
-
-      {/* Navigation */}
-      <m.nav
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md ${theme.bgNav} border-b ${theme.borderLight}`}
-      >
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2 sm:py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
+      <div style={{ minHeight: "100vh", overflow: "hidden", fontFamily: '"Geist", sans-serif', ...(safeBgPrimary as any) }}>
+        {/* Error Notification */}
+        <AnimatePresence>
+          {error && (
             <m.div
-              whileHover={{ scale: 1.05 }}
-              className="flex items-center gap-1.5 sm:gap-3 cursor-pointer"
-              onClick={() => window.location.href = '/'}
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -50 }}
+              style={{ position: "fixed", top: 80, left: "50%", transform: "translateX(-50%)", zIndex: 50, maxWidth: 640, width: "calc(100% - 2rem)" }}
             >
-              <div className="relative w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center">
-                <img src="/csync.png" alt="CareerSync" className="w-full h-full object-contain" />
+              <div style={{ padding: 16, borderRadius: 16, background: "linear-gradient(90deg, rgba(255,68,68,0.95), rgba(255,107,0,0.95))", backdropFilter: "blur(6px)", border: `1px solid rgba(255,68,68,0.2)`, boxShadow: "0 10px 30px rgba(0,0,0,0.4)", display: "flex", alignItems: "center", gap: 12 }}>
+                <X style={{ width: 20, height: 20, color: "#fff", flexShrink: 0 }} />
+                <p style={{ color: "#fff", fontWeight: 700, flex: 1 }}>{error}</p>
+                <button onClick={() => setError(null)} style={{ padding: 6, borderRadius: 8, background: "transparent", border: "none", color: "#fff" }}>
+                  <X style={{ width: 16, height: 16 }} />
+                </button>
               </div>
-              <span className="text-sm sm:text-xl font-bold bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] bg-clip-text text-transparent">
-                CareerSync
-              </span>
             </m.div>
+          )}
+        </AnimatePresence>
 
-            {/* Desktop Buttons */}
-            <div className="hidden sm:flex items-center gap-3">
-              <ThemeToggle />
-              <m.a
-                href="/dashboard"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-6 py-2 text-white text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
-              >
-                Dashboard
-              </m.a>
-              <m.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => logout()}
-                className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
-              >
-                Sign Out
-              </m.button>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <div className="sm:hidden flex items-center gap-2">
-              <ThemeToggle />
-              <m.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowMobileMenu(!showMobileMenu)}
-                className="p-1.5 text-white rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
-              >
-                {showMobileMenu ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-              </m.button>
-            </div>
-          </div>
-
-          {/* Mobile Menu Dropdown */}
-          <AnimatePresence>
-            {showMobileMenu && (
-              <m.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="sm:hidden mt-3 pb-2"
-              >
-                <div className="flex flex-col gap-2">
-                  <m.a
-                    href="/dashboard"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full px-4 py-3 text-left text-white text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
-                  >
-                    <BarChart3 className="w-4 h-4" />
-                    Dashboard
-                  </m.a>
-
-                  <m.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => {
-                      logout()
-                      setShowMobileMenu(false)
-                    }}
-                    className="w-full px-4 py-3 text-left text-white text-sm font-bold rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300 flex items-center gap-2"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    Sign Out
-                  </m.button>
-                </div>
-              </m.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </m.nav>
-
-      {/* Background Effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Morphing shapes */}
-        <m.div
-          className="absolute top-1/4 left-1/4 w-96 h-96 opacity-20"
-          animate={{
-            borderRadius: ["50% 20% 80% 30%", "30% 80% 20% 70%", "80% 30% 50% 20%", "50% 20% 80% 30%"],
-            rotate: [0, 90, 180, 360],
-            scale: [1, 1.2, 0.8, 1],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut",
-          }}
-          style={{
-            background: "linear-gradient(135deg, rgba(255, 107, 0, 0.3), rgba(0, 212, 255, 0.3))",
-            filter: "blur(40px)",
-          }}
-        />
-        <m.div
-          className="absolute bottom-1/4 right-1/4 w-80 h-80 opacity-15"
-          animate={{
-            borderRadius: ["20% 80% 30% 70%", "70% 30% 80% 20%", "30% 70% 20% 80%", "20% 80% 30% 70%"],
-            rotate: [360, 270, 180, 0],
-            scale: [0.8, 1.3, 1, 0.8],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "easeInOut",
-          }}
-          style={{
-            background: "linear-gradient(225deg, rgba(0, 255, 136, 0.2), rgba(255, 107, 0, 0.2))",
-            filter: "blur(30px)",
-          }}
-        />
-      </div>
-
-      {/* Main Content */}
-      <div className="relative z-10 pt-20 sm:pt-24 pb-12 px-4 sm:px-6 max-w-7xl mx-auto">
-        {/* Header */}
-        <m.div
-          initial={{ opacity: 0, y: 20 }}
+        {/* Navigation */}
+        <m.nav
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="mb-8 sm:mb-12"
+          style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, backdropFilter: "blur(8px)", ...(safeBgNav as any), borderBottom: `1px solid ${safeBorderLight}` }}
         >
-          <h1
-            className="text-4xl sm:text-6xl md:text-7xl font-black mb-4 leading-none"
-            style={{
-              background: "linear-gradient(135deg, #ffffff 0%, #00d4ff 30%, #ff6b00 60%, #00ff88 90%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-             My Profile
-          </h1>
-          <p className="text-base sm:text-xl text-gray-400">Manage your professional profile and career information</p>
-        </m.div>
+          <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2 sm:py-4">
+            <div className="flex items-center justify-between">
+              {/* Logo */}
+              <m.div
+                whileHover={{ scale: 1.05 }}
+                className="flex items-center gap-1.5 sm:gap-3 cursor-pointer"
+                onClick={() => window.location.href = '/'}
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <div className="relative w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center">
+                  <img src="/csync.png" alt="CareerSync" className="w-full h-full object-contain" />
+                </div>
+                <span style={{ fontSize: 18, fontWeight: 800, background: (theme.gradientText as any)?.background, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text", color: theme.textPrimary }}>
+                  CareerSync
+                </span>
+              </m.div>
 
-        {/* Tab Navigation */}
-        <m.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="mb-6 sm:mb-8"
-        >
-          <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2">
-            {[
-              { label: "Profile", value: "profile", icon: User },
-              { label: "Experience", value: "experience", icon: Briefcase },
-              { label: "Education", value: "education", icon: GraduationCap },
-              { label: "Settings", value: "settings", icon: Settings },
-            ].map((tab) => {
-              const Icon = tab.icon
-              return (
-                <m.button
-                  key={tab.value}
-                  onClick={() => setActiveTab(tab.value as typeof activeTab)}
+              {/* Desktop Buttons */}
+              <div className="hidden sm:flex items-center gap-3">
+                <ThemeToggle />
+                <m.a
+                  href="/dashboard"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`px-3 py-2 sm:px-6 sm:py-3 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all duration-300 flex items-center gap-1 sm:gap-2 ${
-                    activeTab === tab.value
-                      ? "bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white shadow-lg"
-                      : "bg-[#1a3a52]/60 border border-[#00d4ff]/20 text-gray-400 hover:text-white hover:border-[#00d4ff]/50"
-                  }`}
+                  className="px-6 py-2 text-sm font-medium rounded-full"
+                  style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}`, paddingLeft: 20, paddingRight: 20 }}
                 >
-                  <Icon className="w-3 h-3 sm:w-4 sm:h-4" />
-                  {tab.label}
+                  Dashboard
+                </m.a>
+                <m.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => logout()}
+                  className="px-6 py-2 text-sm font-bold rounded-full"
+                  style={{ color: "#fff", borderRadius: 9999, background: "linear-gradient(90deg,#ff6b00,#ff8c00)", paddingLeft: 20, paddingRight: 20 }}
+                >
+                  Sign Out
                 </m.button>
-              )
-            })}
-          </div>
-        </m.div>
+              </div>
 
-        {/* Tab Content */}
-        <AnimatePresence mode="wait">
+              {/* Mobile Menu Button */}
+              <div className="sm:hidden flex items-center gap-2">
+                <ThemeToggle />
+                <m.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowMobileMenu(!showMobileMenu)}
+                  className="p-1.5 rounded-full"
+                  style={{ color: theme.textPrimary, border: `1px solid ${theme.borderMedium}`, background: "transparent" }}
+                >
+                  {showMobileMenu ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+                </m.button>
+              </div>
+            </div>
+
+            {/* Mobile Menu Dropdown */}
+            <AnimatePresence>
+              {showMobileMenu && (
+                <m.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="sm:hidden mt-3 pb-2"
+                >
+                  <div className="flex flex-col gap-2">
+                    <m.a
+                      href="/dashboard"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl flex items-center gap-2"
+                      style={{ color: theme.textPrimary, border: `1px solid ${theme.borderMedium}` }}
+                    >
+                      <BarChart3 className="w-4 h-4" />
+                      Dashboard
+                    </m.a>
+
+                    <m.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        logout()
+                        setShowMobileMenu(false)
+                      }}
+                      className="w-full px-4 py-3 text-left text-sm font-bold rounded-xl flex items-center gap-2"
+                      style={{ color: "#fff", background: "linear-gradient(90deg,#ff6b00,#ff8c00)" }}
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Sign Out
+                    </m.button>
+                  </div>
+                </m.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </m.nav>
+
+        {/* Background Effects */}
+        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "hidden" }}>
           <m.div
-            key={activeTab}
+            className="absolute top-1/4 left-1/4"
+            animate={{
+              borderRadius: ["50% 20% 80% 30%", "30% 80% 20% 70%", "80% 30% 50% 20%", "50% 20% 80% 30%"],
+              rotate: [0, 90, 180, 360],
+              scale: [1, 1.2, 0.8, 1],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+            style={{
+              position: "absolute",
+              top: "25%",
+              left: "25%",
+              width: 384,
+              height: 384,
+              opacity: 0.2,
+              filter: "blur(40px)",
+              background: safeMorph1,
+            }}
+          />
+          <m.div
+            className="absolute bottom-1/4 right-1/4"
+            animate={{
+              borderRadius: ["20% 80% 30% 70%", "70% 30% 80% 20%", "30% 70% 20% 80%", "20% 80% 30% 70%"],
+              rotate: [360, 270, 180, 0],
+              scale: [0.8, 1.3, 1, 0.8],
+            }}
+            transition={{
+              duration: 25,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+            style={{
+              position: "absolute",
+              bottom: "25%",
+              right: "25%",
+              width: 320,
+              height: 320,
+              opacity: 0.15,
+              filter: "blur(30px)",
+              background: safeMorph2,
+            }}
+          />
+        </div>
+
+        {/* Main Content */}
+        <div className="relative z-10 pt-20 sm:pt-24 pb-12 px-4 sm:px-6 max-w-7xl mx-auto">
+          {/* Header */}
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+            transition={{ duration: 0.8 }}
+            className="mb-8 sm:mb-12"
           >
-            {/* Profile Tab */}
-            {activeTab === "profile" && (
-              <div className="space-y-8">
-                {/* Profile Header */}
-                <m.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="relative p-4 sm:p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20 overflow-hidden"
-                >
-                  {/* Background glow */}
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300 blur-xl"
-                    style={{ background: "linear-gradient(135deg, rgba(0, 212, 255, 0.4), transparent)" }}
-                  />
+            <h1
+              className="text-4xl sm:text-6xl md:text-7xl font-black mb-4 leading-none"
+              style={{
+                background: (theme.gradientText as any)?.background ?? 'linear-gradient(135deg, #ffffff 0%, #00d4ff 30%, #ff6b00 60%)',
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                color: theme.textPrimary,
+              }}
+            >
+               My Profile
+            </h1>
+            <p style={{ color: theme.textSecondary }} className="text-base sm:text-xl">Manage your professional profile and career information</p>
+          </m.div>
 
-                  <div className="relative z-10 flex flex-col md:flex-row items-start gap-6 sm:gap-8">
-                    {/* Avatar */}
-                    <div className="relative">
-                      <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl bg-gradient-to-br from-[#ff6b00] to-[#00d4ff] flex items-center justify-center text-white text-3xl sm:text-4xl font-bold shadow-lg">
-                        {(profile.personalInfo.firstName + ' ' + profile.personalInfo.lastName).split(" ").map((n: string) => n[0]).join("")}
+          {/* Tab Navigation */}
+          <m.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="mb-6 sm:mb-8"
+          >
+            <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2">
+              {[
+                { label: "Profile", value: "profile", icon: User },
+                { label: "Experience", value: "experience", icon: Briefcase },
+                { label: "Education", value: "education", icon: GraduationCap },
+                { label: "Settings", value: "settings", icon: Settings },
+              ].map((tab) => {
+                const Icon = tab.icon
+                const active = activeTab === tab.value
+                return (
+                  <m.button
+                    key={tab.value}
+                    onClick={() => setActiveTab(tab.value as typeof activeTab)}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-3 py-2 sm:px-6 sm:py-3 rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all duration-300 flex items-center gap-1 sm:gap-2"
+                    style={{
+                      ...(active
+                        ? { background: "linear-gradient(90deg,#ff6b00,#00d4ff)", color: "#fff", boxShadow: "0 10px 30px rgba(0,0,0,0.25)" }
+                        : { background: "rgba(26,58,82,0.38)", border: `1px solid ${theme.borderMedium}`, color: theme.textTertiary }),
+                    }}
+                  >
+                    <Icon className="w-3 h-3 sm:w-4 sm:h-4" />
+                    {tab.label}
+                  </m.button>
+                )
+              })}
+            </div>
+          </m.div>
+
+          {/* Tab Content */}
+          <AnimatePresence mode="wait">
+            <m.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+            >
+              {/* Profile Tab */}
+              {activeTab === "profile" && (
+                <div className="space-y-8">
+                  {/* Profile Header */}
+                  <m.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="relative p-4 sm:p-8 rounded-3xl overflow-hidden"
+                    style={{
+                      background: theme.bgCard ? (theme.bgCard as any).background || (theme.bgCard as any).backgroundColor : undefined,
+                      border: `1px solid ${(theme.bgCard as any)?.borderColor ?? theme.borderMedium}`,
+                      boxShadow: (theme.bgCard as any)?.boxShadow ?? undefined,
+                    }}
+                  >
+                    {/* Background glow */}
+                    <div
+                      className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300 blur-xl"
+                      style={{ background: "linear-gradient(135deg, rgba(0, 212, 255, 0.14), transparent)" }}
+                    />
+
+                    <div className="relative z-10 flex flex-col md:flex-row items-start gap-6 sm:gap-8">
+                      {/* Avatar */}
+                      <div className="relative">
+                        <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl flex items-center justify-center text-white text-3xl sm:text-4xl font-bold" style={{ background: "linear-gradient(90deg,#ff6b00,#00d4ff)", boxShadow: "0 10px 30px rgba(0,0,0,0.25)" }}>
+                          {(profile.personalInfo.firstName + ' ' + profile.personalInfo.lastName).split(" ").map((n: string) => n[0]).join("")}
+                        </div>
+                        <m.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          className="absolute -bottom-2 -right-2 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-white"
+                          style={{ background: "#00d4ff", border: "4px solid rgba(10,20,40,1)" }}
+                        >
+                          <Camera className="w-4 h-4 sm:w-5 sm:h-5" />
+                        </m.button>
                       </div>
-                      <m.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="absolute -bottom-2 -right-2 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#00d4ff] border-4 border-[#0a1428] flex items-center justify-center text-white shadow-lg"
-                      >
-                        <Camera className="w-4 h-4 sm:w-5 sm:h-5" />
-                      </m.button>
-                    </div>
 
-                    {/* Profile Info */}
-                    <div className="flex-1 space-y-3 sm:space-y-4">
-                      <div>
-                        <h2 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">{profile.personalInfo.firstName} {profile.personalInfo.lastName}</h2>
-                        <p className="text-lg sm:text-xl text-[#00d4ff] font-semibold">Software Engineer</p>
-                        <p className="text-sm sm:text-base text-gray-400">{profile.personalInfo.location}</p>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                        <div className="flex items-center gap-2 sm:gap-3 text-gray-400">
-                          <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-[#00d4ff]" />
-                          <span className="text-sm sm:text-base truncate">{profile.personalInfo.email}</span>
+                      {/* Profile Info */}
+                      <div className="flex-1 space-y-3 sm:space-y-4">
+                        <div>
+                          <h2 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2" style={{ color: theme.textPrimary }}>{profile.personalInfo.firstName} {profile.personalInfo.lastName}</h2>
+                          <p className="text-lg sm:text-xl font-semibold mb-2" style={{ color: theme.textAccent }}>Software Engineer</p>
+                          <p className="text-sm sm:text-base" style={{ color: theme.textSecondary }}>{profile.personalInfo.location}</p>
                         </div>
-                        <div className="flex items-center gap-2 sm:gap-3 text-gray-400">
-                          <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-[#00d4ff]" />
-                          <span className="text-sm sm:text-base truncate">{profile.personalInfo.phone}</span>
-                        </div>
-                        <div className="flex items-center gap-2 sm:gap-3 text-gray-400">
-                          <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-[#00d4ff]" />
-                          <span className="text-sm sm:text-base truncate">{profile.personalInfo.location}</span>
-                        </div>
-                        <div className="flex items-center gap-2 sm:gap-3 text-gray-400">
-                          <Briefcase className="w-4 h-4 sm:w-5 sm:h-5 text-[#00d4ff]" />
-                          <span className="text-sm sm:text-base">{profile.experience.length} positions</span>
-                        </div>
-                      </div>
 
-                      <p className="text-sm sm:text-base text-gray-300 leading-relaxed">{profile.personalInfo.summary}</p>
-                    </div>
-
-                    {/* Edit Button */}
-                    <div className="flex gap-3">
-                      <m.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={handleEditProfile}
-                        className="px-4 py-2 sm:px-6 sm:py-3 bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] rounded-xl font-bold hover:bg-[#00d4ff]/30 transition-all text-sm sm:text-base flex items-center gap-1 sm:gap-2"
-                      >
-                        <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
-                        Edit Profile
-                      </m.button>
-                    </div>
-                  </div>
-                </m.div>
-
-                {/* Skills Section */}
-                <m.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="p-4 sm:p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20"
-                >
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
-                    <Star className="w-5 h-5 sm:w-6 sm:h-6 text-[#00ff88]" />
-                    Skills & Expertise
-                  </h3>
-
-                  <div className="flex flex-wrap gap-2 sm:gap-3">
-                    {profile.skills.map((skill, idx) => (
-                      <m.span
-                        key={skill.id}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: idx * 0.05 }}
-                        className="px-3 py-1 sm:px-4 sm:py-2 bg-gradient-to-r from-[#00d4ff]/20 to-[#ff6b00]/20 border border-[#00d4ff]/30 rounded-full text-[#00d4ff] font-semibold text-xs sm:text-sm"
-                      >
-                        {skill.name}
-                      </m.span>
-                    ))}
-                  </div>
-                </m.div>
-
-                {/* Resume Section */}
-                <m.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                  className="p-4 sm:p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20"
-                >
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
-                    <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-[#00ff88]" />
-                    Documents & Files
-                  </h3>
-
-                  {/* Upload Section */}
-                  <div className="mb-4 sm:mb-6">
-                    <label className="block">
-                      <div className="flex items-center justify-center w-full p-4 sm:p-6 border-2 border-dashed border-[#00d4ff]/50 rounded-xl hover:border-[#00d4ff] transition-colors cursor-pointer bg-[#0f2540]/50">
-                        <div className="text-center">
-                          <Upload className="w-6 h-6 sm:w-8 sm:h-8 text-[#00d4ff] mx-auto mb-2" />
-                          <p className="text-white font-semibold mb-1 text-sm sm:text-base">
-                            {uploading ? 'Uploading...' : 'Upload Document'}
-                          </p>
-                          <p className="text-gray-400 text-xs sm:text-sm">
-                            PDF, DOC, DOCX, TXT up to 10MB
-                          </p>
-                        </div>
-                        <input
-                          type="file"
-                          className="hidden"
-                          accept=".pdf,.doc,.docx,.txt"
-                          onChange={handleFileUpload}
-                          disabled={uploading}
-                        />
-                      </div>
-                    </label>
-                  </div>
-
-                  {/* Documents List */}
-                  <div className="space-y-3 sm:space-y-4">
-                    {(profile.documents || []).map((doc, idx) => (
-                      <m.div
-                        key={doc.id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: idx * 0.1 }}
-                        className="flex items-center justify-between p-3 sm:p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20"
-                      >
-                        <div className="flex items-center gap-2 sm:gap-4">
-                          <FileText className="w-4 h-4 sm:w-8 sm:h-8 text-[#00d4ff] flex-shrink-0" />
-                          <div className="min-w-0 flex-1">
-                            <p className="text-white font-semibold text-sm sm:text-base truncate">{doc.originalName}</p>
-                            <p className="text-gray-400 text-xs sm:text-sm">
-                              {(doc.size / 1024 / 1024).toFixed(2)} MB • {new Date(doc.uploadedAt).toLocaleDateString()}
-                            </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                          <div className="flex items-center gap-2 sm:gap-3" style={{ color: theme.textSecondary }}>
+                            <Mail className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: theme.textAccent }} />
+                            <span className="text-sm sm:text-base truncate">{profile.personalInfo.email}</span>
+                          </div>
+                          <div className="flex items-center gap-2 sm:gap-3" style={{ color: theme.textSecondary }}>
+                            <Phone className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: theme.textAccent }} />
+                            <span className="text-sm sm:text-base truncate">{profile.personalInfo.phone}</span>
+                          </div>
+                          <div className="flex items-center gap-2 sm:gap-3" style={{ color: theme.textSecondary }}>
+                            <MapPin className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: theme.textAccent }} />
+                            <span className="text-sm sm:text-base truncate">{profile.personalInfo.location}</span>
+                          </div>
+                          <div className="flex items-center gap-2 sm:gap-3" style={{ color: theme.textSecondary }}>
+                            <Briefcase className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: theme.textAccent }} />
+                            <span className="text-sm sm:text-base">{profile.experience.length} positions</span>
                           </div>
                         </div>
-                        <div className="flex gap-2 flex-shrink-0">
-                          <m.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => handleFileDownload(doc.id, doc.originalName)}
-                            className="px-3 py-2 sm:px-4 sm:py-2 bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] rounded-lg font-bold hover:bg-[#00d4ff]/30 transition-all text-xs sm:text-sm"
-                          >
-                            Download
-                          </m.button>
-                        </div>
-                      </m.div>
-                    ))}
 
-                    {(!profile.documents || profile.documents.length === 0) && (
-                      <div className="text-center py-6 sm:py-8">
-                        <FileText className="w-10 h-10 sm:w-12 sm:h-12 text-gray-500 mx-auto mb-4" />
-                        <p className="text-gray-400 text-sm sm:text-base">No documents uploaded yet</p>
-                        <p className="text-gray-500 text-xs sm:text-sm">Upload your resume, certificates, or other documents</p>
+                        <p className="text-sm sm:text-base leading-relaxed" style={{ color: theme.textTertiary }}>{profile.personalInfo.summary}</p>
                       </div>
-                    )}
-                  </div>
-                </m.div>
 
-                {/* Social Links */}
-                <m.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 }}
-                  className="p-4 sm:p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20"
-                >
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
-                    <Globe className="w-5 h-5 sm:w-6 sm:h-6 text-[#00ff88]" />
-                    Professional Links
-                  </h3>
+                      {/* Edit Button */}
+                      <div className="flex gap-3">
+                        <m.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={handleEditProfile}
+                          className="px-4 py-2 sm:px-6 sm:py-3 rounded-xl font-bold"
+                          style={{ background: "rgba(0,212,255,0.12)", border: `1px solid ${theme.borderMedium}`, color: theme.textAccent }}
+                        >
+                          <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
+                          <span style={{ marginLeft: 8 }}>Edit Profile</span>
+                        </m.button>
+                      </div>
+                    </div>
+                  </m.div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-                    {[
-                      { label: "LinkedIn", url: profile.personalInfo.linkedinUrl, icon: Linkedin },
-                      { label: "GitHub", url: profile.personalInfo.githubUrl, icon: Github },
-                      { label: "Portfolio", url: profile.personalInfo.portfolioUrl, icon: Globe },
-                    ].map((link, idx) => {
-                      const Icon = link.icon
-                      return (
+                  {/* Skills Section */}
+                  <m.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="p-4 sm:p-8 rounded-3xl"
+                    style={{
+                      background: theme.bgCard ? (theme.bgCard as any).background || (theme.bgCard as any).backgroundColor : undefined,
+                      border: `1px solid ${theme.borderMedium}`,
+                    }}
+                  >
+                    <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6" style={{ color: theme.textPrimary, display: "flex", alignItems: "center", gap: 10 }}>
+                      <Star className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: "#00ff88" }} />
+                      <span>Skills & Expertise</span>
+                    </h3>
+
+                    <div className="flex flex-wrap gap-2 sm:gap-3">
+                      {profile.skills.map((skill, idx) => (
+                        <m.span
+                          key={skill.id}
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: idx * 0.05 }}
+                          className="px-3 py-1 sm:px-4 sm:py-2 rounded-full font-semibold text-xs sm:text-sm"
+                          style={{ background: "linear-gradient(90deg, rgba(0,212,255,0.08), rgba(255,107,0,0.06))", border: `1px solid ${theme.borderMedium}`, color: theme.textAccent }}
+                        >
+                          {skill.name}
+                        </m.span>
+                      ))}
+                    </div>
+                  </m.div>
+
+                  {/* Resume Section */}
+                  <m.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="p-4 sm:p-8 rounded-3xl"
+                    style={{
+                      background: theme.bgCard ? (theme.bgCard as any).background || (theme.bgCard as any).backgroundColor : undefined,
+                      border: `1px solid ${theme.borderMedium}`,
+                    }}
+                  >
+                    <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6" style={{ color: theme.textPrimary, display: "flex", alignItems: "center", gap: 10 }}>
+                      <FileText className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: "#00ff88" }} />
+                      <span>Documents & Files</span>
+                    </h3>
+
+                    {/* Upload Section */}
+                    <div className="mb-4 sm:mb-6">
+                      <label className="block">
+                        <div className="flex items-center justify-center w-full p-4 sm:p-6 border-2 border-dashed rounded-xl transition-colors cursor-pointer" style={{ borderColor: `rgba(0,212,255,0.35)`, background: (theme.bgInput as any)?.backgroundColor ? `${(theme.bgInput as any).backgroundColor}80` : undefined }}>
+                          <div className="text-center">
+                            <Upload className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2" style={{ color: theme.textAccent }} />
+                            <p className="font-semibold mb-1 text-sm sm:text-base" style={{ color: theme.textPrimary }}>
+                              {uploading ? 'Uploading...' : 'Upload Document'}
+                            </p>
+                            <p style={{ color: theme.textTertiary }} className="text-xs sm:text-sm">
+                              PDF, DOC, DOCX, TXT up to 10MB
+                            </p>
+                          </div>
+                          <input
+                            type="file"
+                            className="hidden"
+                            accept=".pdf,.doc,.docx,.txt"
+                            onChange={handleFileUpload}
+                            disabled={uploading}
+                          />
+                        </div>
+                      </label>
+                    </div>
+
+                    {/* Documents List */}
+                    <div className="space-y-3 sm:space-y-4">
+                      {(profile.documents || []).map((doc, idx) => (
                         <m.div
-                          key={link.label}
+                          key={doc.id}
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: idx * 0.1 }}
-                          className="p-3 sm:p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300"
+                          className="flex items-center justify-between p-3 sm:p-4 rounded-xl"
+                          style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}` }}
                         >
-                          <div className="flex items-center gap-2 sm:gap-3 mb-2">
-                            <Icon className="w-4 h-4 sm:w-6 sm:h-6 text-[#00d4ff]" />
-                            <span className="text-white font-semibold text-sm sm:text-base">{link.label}</span>
+                          <div className="flex items-center gap-2 sm:gap-4">
+                            <FileText className="w-4 h-4 sm:w-8 sm:h-8 flex-shrink-0" style={{ color: theme.textAccent }} />
+                            <div className="min-w-0 flex-1">
+                              <p className="font-semibold text-sm sm:text-base" style={{ color: theme.textPrimary, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{doc.originalName}</p>
+                              <p style={{ color: theme.textTertiary }} className="text-xs sm:text-sm">
+                                {(doc.size / 1024 / 1024).toFixed(2)} MB • {new Date(doc.uploadedAt).toLocaleDateString()}
+                              </p>
+                            </div>
                           </div>
-                          {link.url ? (
-                            <a
-                              href={link.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[#00d4ff] hover:text-[#00d4ff]/80 transition-colors text-xs sm:text-sm font-semibold"
+                          <div className="flex gap-2 flex-shrink-0">
+                            <m.button
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={() => handleFileDownload(doc.id, doc.originalName)}
+                              className="px-3 py-2 sm:px-4 sm:py-2 rounded-lg font-bold text-xs sm:text-sm"
+                              style={{ background: "rgba(0,212,255,0.12)", border: `1px solid ${theme.borderMedium}`, color: theme.textAccent }}
                             >
-                              Go to Profile
-                            </a>
-                          ) : (
-                            <span className="text-gray-500 text-xs sm:text-sm italic">Not provided</span>
-                          )}
+                              Download
+                            </m.button>
+                          </div>
                         </m.div>
-                      )
-                    })}
-                  </div>
-                </m.div>
-              </div>
-            )}
+                      ))}
 
-            {/* Experience Tab */}
-            {activeTab === "experience" && (
-              <div className="space-y-4 sm:space-y-6">
-                {profile.experience.map((exp, idx) => (
-                  <m.div
-                    key={exp.id}
-                    initial={{ opacity: 0, x: -30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="p-4 sm:p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300"
-                  >
-                    <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-4 sm:mb-6 gap-4">
-                      <div className="flex-1">
-                        <h3 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2">{exp.position}</h3>
-                        <p className="text-lg sm:text-xl text-[#00d4ff] font-semibold mb-2">{exp.company}</p>
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-gray-400 text-xs sm:text-sm">
-                          <span className="flex items-center gap-1 sm:gap-2">
-                            <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
-                            {new Date(exp.startDate).toLocaleDateString("en-US", { month: "short", year: "numeric" })} - {
-                              exp.current ? "Present" : exp.endDate ? new Date(exp.endDate).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "Present"
-                            }
-                          </span>
-                          {exp.current && (
-                            <span className="px-2 py-1 sm:px-3 sm:py-1 bg-[#00ff88]/20 border border-[#00ff88]/50 text-[#00ff88] rounded-full text-xs font-bold">
-                              CURRENT
-                            </span>
-                          )}
+                      {(!profile.documents || profile.documents.length === 0) && (
+                        <div className="text-center py-6 sm:py-8">
+                          <FileText className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-4" style={{ color: theme.textTertiary }} />
+                          <p style={{ color: theme.textTertiary }} className="text-sm sm:text-base">No documents uploaded yet</p>
+                          <p style={{ color: theme.textSecondary }} className="text-xs sm:text-sm">Upload your resume, certificates, or other documents</p>
                         </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <m.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => handleEditExperience(exp.id)}
-                          className="p-2 rounded-lg bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] hover:bg-[#00d4ff]/30 transition-all"
-                        >
-                          <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
-                        </m.button>
-                        <m.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => handleDeleteExperience(exp.id)}
-                          className="p-2 rounded-lg bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444] hover:bg-[#ff4444]/30 transition-all"
-                        >
-                          <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
-                        </m.button>
-                      </div>
-                    </div>
-
-                    <p className="text-sm sm:text-base text-gray-300 leading-relaxed">{exp.description}</p>
-                  </m.div>
-                ))}
-
-                <m.button
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: profile.experience.length * 0.1 }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleAddExperience}
-                  className="w-full p-6 sm:p-8 rounded-3xl border-2 border-dashed border-[#00d4ff]/50 text-[#00d4ff] hover:border-[#00d4ff] hover:bg-[#00d4ff]/5 transition-all duration-300 flex items-center justify-center gap-3 font-bold text-sm sm:text-base"
-                >
-                  <Plus className="w-5 h-5 sm:w-6 sm:h-6" />
-                  Add New Experience
-                </m.button>
-              </div>
-            )}
-
-            {/* Education Tab */}
-            {activeTab === "education" && (
-              <div className="space-y-4 sm:space-y-6">
-                {profile.education.map((edu, idx) => (
-                  <m.div
-                    key={edu.id}
-                    initial={{ opacity: 0, x: -30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="p-4 sm:p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300"
-                  >
-                    <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-4 sm:mb-6 gap-4">
-                      <div className="flex-1">
-                        <h3 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2">{edu.degree} in {edu.field}</h3>
-                        <p className="text-lg sm:text-xl text-[#00d4ff] font-semibold mb-2">{edu.institution}</p>
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-gray-400 text-xs sm:text-sm">
-                          <span className="flex items-center gap-1 sm:gap-2">
-                            <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
-                            {new Date(edu.startDate).toLocaleDateString("en-US", { month: "short", year: "numeric" })} - {
-                              edu.current ? "Present" : edu.endDate ? new Date(edu.endDate).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "Present"
-                            }
-                          </span>
-                          {edu.current && (
-                            <span className="px-2 py-1 sm:px-3 sm:py-1 bg-[#00ff88]/20 border border-[#00ff88]/50 text-[#00ff88] rounded-full text-xs font-bold">
-                              CURRENT
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <m.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => handleEditEducation(edu.id)}
-                          className="p-2 rounded-lg bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] hover:bg-[#00d4ff]/30 transition-all"
-                        >
-                          <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
-                        </m.button>
-                        <m.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => handleDeleteEducation(edu.id)}
-                          className="p-2 rounded-lg bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444] hover:bg-[#ff4444]/30 transition-all"
-                        >
-                          <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
-                        </m.button>
-                      </div>
+                      )}
                     </div>
                   </m.div>
-                ))}
 
-                <m.button
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: profile.education.length * 0.1 }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleAddEducation}
-                  className="w-full p-6 sm:p-8 rounded-3xl border-2 border-dashed border-[#00d4ff]/50 text-[#00d4ff] hover:border-[#00d4ff] hover:bg-[#00d4ff]/5 transition-all duration-300 flex items-center justify-center gap-3 font-bold text-sm sm:text-base"
-                >
-                  <Plus className="w-5 h-5 sm:w-6 sm:h-6" />
-                  Add New Education
-                </m.button>
-              </div>
-            )}
+                  {/* Social Links */}
+                  <m.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 }}
+                    className="p-4 sm:p-8 rounded-3xl"
+                    style={{
+                      background: theme.bgCard ? (theme.bgCard as any).background || (theme.bgCard as any).backgroundColor : undefined,
+                      border: `1px solid ${theme.borderMedium}`,
+                    }}
+                  >
+                    <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6" style={{ color: theme.textPrimary, display: "flex", alignItems: "center", gap: 10 }}>
+                      <Globe className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: "#00ff88" }} />
+                      <span>Professional Links</span>
+                    </h3>
 
-            {/* Settings Tab */}
-            {activeTab === "settings" && (
-              <div className="space-y-6 sm:space-y-8">
-                {/* Account Settings */}
-                <m.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="p-4 sm:p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20"
-                >
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
-                    <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-[#00ff88]" />
-                    Account Settings
-                  </h3>
-
-                  <div className="space-y-4 sm:space-y-6">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 gap-3">
-                      <div>
-                        <p className="text-white font-semibold text-sm sm:text-base">Email Notifications</p>
-                        <p className="text-gray-400 text-xs sm:text-sm">Receive updates about your applications</p>
-                      </div>
-                      <m.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="px-3 py-2 sm:px-4 sm:py-2 bg-[#00ff88]/20 border border-[#00ff88]/50 text-[#00ff88] rounded-lg font-bold hover:bg-[#00ff88]/30 transition-all text-xs sm:text-sm self-start sm:self-center"
-                      >
-                        <Check className="w-3 h-3 sm:w-4 sm:h-4" />
-                      </m.button>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                      {[
+                        { label: "LinkedIn", url: profile.personalInfo.linkedinUrl, icon: Linkedin },
+                        { label: "GitHub", url: profile.personalInfo.githubUrl, icon: Github },
+                        { label: "Portfolio", url: profile.personalInfo.portfolioUrl, icon: Globe },
+                      ].map((link, idx) => {
+                        const Icon = link.icon
+                        return (
+                          <m.div
+                            key={link.label}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: idx * 0.1 }}
+                            className="p-3 sm:p-4 rounded-xl hover:border-2 transition-all duration-300"
+                            style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}` }}
+                          >
+                            <div className="flex items-center gap-2 sm:gap-3 mb-2">
+                              <Icon className="w-4 h-4 sm:w-6 sm:h-6" style={{ color: theme.textAccent }} />
+                              <span className="font-semibold text-sm sm:text-base" style={{ color: theme.textPrimary }}>{link.label}</span>
+                            </div>
+                            {link.url ? (
+                              <a
+                                href={link.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-sm sm:text-sm font-semibold"
+                                style={{ color: theme.textAccent }}
+                              >
+                                Go to Profile
+                              </a>
+                            ) : (
+                              <span style={{ color: theme.textTertiary }} className="text-xs sm:text-sm italic">Not provided</span>
+                            )}
+                          </m.div>
+                        )
+                      })}
                     </div>
+                  </m.div>
+                </div>
+              )}
 
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 gap-3">
-                      <div>
-                        <p className="text-white font-semibold text-sm sm:text-base">Profile Visibility</p>
-                        <p className="text-gray-400 text-xs sm:text-sm">Make your profile visible to recruiters</p>
+              {/* Experience Tab */}
+              {activeTab === "experience" && (
+                <div className="space-y-4 sm:space-y-6">
+                  {profile.experience.map((exp, idx) => (
+                    <m.div
+                      key={exp.id}
+                      initial={{ opacity: 0, x: -30 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.1 }}
+                      className="p-4 sm:p-8 rounded-3xl hover:border-2 transition-all duration-300"
+                      style={{ background: theme.bgCard ? (theme.bgCard as any).background || (theme.bgCard as any).backgroundColor : undefined, border: `1px solid ${theme.borderMedium}` }}
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-4 sm:mb-6 gap-4">
+                        <div className="flex-1">
+                          <h3 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2" style={{ color: theme.textPrimary }}>{exp.position}</h3>
+                          <p className="text-lg sm:text-xl font-semibold mb-2" style={{ color: theme.textAccent }}>{exp.company}</p>
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4" style={{ color: theme.textTertiary }}>
+                            <span className="flex items-center gap-1 sm:gap-2">
+                              <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
+                              {new Date(exp.startDate).toLocaleDateString("en-US", { month: "short", year: "numeric" })} - {
+                                exp.current ? "Present" : exp.endDate ? new Date(exp.endDate).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "Present"
+                              }
+                            </span>
+                            {exp.current && (
+                              <span className="px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-bold" style={{ background: "rgba(0,255,136,0.12)", border: `1px solid rgba(0,255,136,0.28)`, color: "#00ff88" }}>
+                                CURRENT
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <m.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => handleEditExperience(exp.id)}
+                            className="p-2 rounded-lg"
+                            style={{ background: "rgba(0,212,255,0.12)", border: `1px solid ${theme.borderMedium}`, color: theme.textAccent }}
+                          >
+                            <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
+                          </m.button>
+                          <m.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => handleDeleteExperience(exp.id)}
+                            className="p-2 rounded-lg"
+                            style={{ background: "rgba(255,68,68,0.12)", border: `1px solid rgba(255,68,68,0.28)`, color: "#ff4444" }}
+                          >
+                            <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                          </m.button>
+                        </div>
                       </div>
-                      <m.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="px-3 py-2 sm:px-4 sm:py-2 bg-[#00ff88]/20 border border-[#00ff88]/50 text-[#00ff88] rounded-lg font-bold hover:bg-[#00ff88]/30 transition-all text-xs sm:text-sm self-start sm:self-center"
-                      >
-                        <Check className="w-3 h-3 sm:w-4 sm:h-4" />
-                      </m.button>
-                    </div>
 
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 gap-3">
-                      <div>
-                        <p className="text-white font-semibold text-sm sm:text-base">Data Export</p>
-                        <p className="text-gray-400 text-xs sm:text-sm">Download all your application data</p>
+                      <p className="text-sm sm:text-base leading-relaxed" style={{ color: theme.textTertiary }}>{exp.description}</p>
+                    </m.div>
+                  ))}
+
+                  <m.button
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: profile.experience.length * 0.1 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleAddExperience}
+                    className="w-full p-6 sm:p-8 rounded-3xl font-bold text-sm sm:text-base"
+                    style={{ border: `2px dashed ${theme.borderMedium}`, background: "transparent", color: theme.textAccent }}
+                  >
+                    <Plus className="w-5 h-5 sm:w-6 sm:h-6" />
+                    <span style={{ marginLeft: 8 }}>Add New Experience</span>
+                  </m.button>
+                </div>
+              )}
+
+              {/* Education Tab */}
+              {activeTab === "education" && (
+                <div className="space-y-4 sm:space-y-6">
+                  {profile.education.map((edu, idx) => (
+                    <m.div
+                      key={edu.id}
+                      initial={{ opacity: 0, x: -30 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.1 }}
+                      className="p-4 sm:p-8 rounded-3xl hover:border-2 transition-all duration-300"
+                      style={{ background: theme.bgCard ? (theme.bgCard as any).background || (theme.bgCard as any).backgroundColor : undefined, border: `1px solid ${theme.borderMedium}` }}
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-4 sm:mb-6 gap-4">
+                        <div className="flex-1">
+                          <h3 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2" style={{ color: theme.textPrimary }}>{edu.degree} in {edu.field}</h3>
+                          <p className="text-lg sm:text-xl font-semibold mb-2" style={{ color: theme.textAccent }}>{edu.institution}</p>
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4" style={{ color: theme.textTertiary }}>
+                            <span className="flex items-center gap-1 sm:gap-2">
+                              <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
+                              {new Date(edu.startDate).toLocaleDateString("en-US", { month: "short", year: "numeric" })} - {
+                                edu.current ? "Present" : edu.endDate ? new Date(edu.endDate).toLocaleDateString("en-US", { month: "short", year: "numeric" }) : "Present"
+                              }
+                            </span>
+                            {edu.current && (
+                              <span className="px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-bold" style={{ background: "rgba(0,255,136,0.12)", border: `1px solid rgba(0,255,136,0.28)`, color: "#00ff88" }}>
+                                CURRENT
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <m.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => handleEditEducation(edu.id)}
+                            className="p-2 rounded-lg"
+                            style={{ background: "rgba(0,212,255,0.12)", border: `1px solid ${theme.borderMedium}`, color: theme.textAccent }}
+                          >
+                            <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
+                          </m.button>
+                          <m.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => handleDeleteEducation(edu.id)}
+                            className="p-2 rounded-lg"
+                            style={{ background: "rgba(255,68,68,0.12)", border: `1px solid rgba(255,68,68,0.28)`, color: "#ff4444" }}
+                          >
+                            <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                          </m.button>
+                        </div>
                       </div>
-                      <m.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="px-3 py-2 sm:px-4 sm:py-2 bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] rounded-lg font-bold hover:bg-[#00d4ff]/30 transition-all text-xs sm:text-sm self-start sm:self-center"
-                      >
-                        Export
-                      </m.button>
-                    </div>
-                  </div>
-                </m.div>
+                    </m.div>
+                  ))}
 
-                {/* Privacy Settings */}
-                <m.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="p-4 sm:p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20"
-                >
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2 sm:gap-3">
-                    <Bell className="w-5 h-5 sm:w-6 sm:h-6 text-[#00ff88]" />
-                    Privacy & Security
-                  </h3>
+                  <m.button
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: profile.education.length * 0.1 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleAddEducation}
+                    className="w-full p-6 sm:p-8 rounded-3xl font-bold text-sm sm:text-base"
+                    style={{ border: `2px dashed ${theme.borderMedium}`, background: "transparent", color: theme.textAccent }}
+                  >
+                    <Plus className="w-5 h-5 sm:w-6 sm:h-6" />
+                    <span style={{ marginLeft: 8 }}>Add New Education</span>
+                  </m.button>
+                </div>
+              )}
 
-                  <div className="space-y-4 sm:space-y-6">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 gap-3">
-                      <div>
-                        <p className="text-white font-semibold text-sm sm:text-base">Two-Factor Authentication</p>
-                        <p className="text-gray-400 text-xs sm:text-sm">Add an extra layer of security</p>
+              {/* Settings Tab */}
+              {activeTab === "settings" && (
+                <div className="space-y-6 sm:space-y-8">
+                  {/* Account Settings */}
+                  <m.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-4 sm:p-8 rounded-3xl"
+                    style={{ background: theme.bgCard ? (theme.bgCard as any).background || (theme.bgCard as any).backgroundColor : undefined, border: `1px solid ${theme.borderMedium}` }}
+                  >
+                    <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6" style={{ color: theme.textPrimary, display: "flex", alignItems: "center", gap: 10 }}>
+                      <Shield className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: "#00ff88" }} />
+                      <span>Account Settings</span>
+                    </h3>
+
+                    <div className="space-y-4 sm:space-y-6">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl gap-3" style={{ background: (theme.bgInput as any)?.backgroundColor || "#0f2540", border: `1px solid ${theme.borderMedium}` }}>
+                        <div>
+                          <p style={{ color: theme.textPrimary, fontWeight: 700 }}>Email Notifications</p>
+                          <p style={{ color: theme.textTertiary }}>Receive updates about your applications</p>
+                        </div>
+                        <m.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="px-3 py-2 rounded-lg" style={{ background: "rgba(0,255,136,0.12)", border: `1px solid rgba(0,255,136,0.28)`, color: "#00ff88" }}><Check /></m.button>
                       </div>
-                      <m.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="px-3 py-2 sm:px-4 sm:py-2 bg-[#ff6b00]/20 border border-[#ff6b00]/50 text-[#ff6b00] rounded-lg font-bold hover:bg-[#ff6b00]/30 transition-all text-xs sm:text-sm self-start sm:self-center"
-                      >
-                        Enable
-                      </m.button>
-                    </div>
 
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 gap-3">
-                      <div>
-                        <p className="text-white font-semibold text-sm sm:text-base">Change Password</p>
-                        <p className="text-gray-400 text-xs sm:text-sm">Update your account password</p>
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl gap-3" style={{ background: (theme.bgInput as any)?.backgroundColor || "#0f2540", border: `1px solid ${theme.borderMedium}` }}>
+                        <div>
+                          <p style={{ color: theme.textPrimary, fontWeight: 700 }}>Profile Visibility</p>
+                          <p style={{ color: theme.textTertiary }}>Make your profile visible to recruiters</p>
+                        </div>
+                        <m.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="px-3 py-2 rounded-lg" style={{ background: "rgba(0,255,136,0.12)", border: `1px solid rgba(0,255,136,0.28)`, color: "#00ff88" }}><Check /></m.button>
                       </div>
-                      <m.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="px-3 py-2 sm:px-4 sm:py-2 bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] rounded-lg font-bold hover:bg-[#00d4ff]/30 transition-all text-xs sm:text-sm self-start sm:self-center"
-                      >
-                        Change
-                      </m.button>
-                    </div>
 
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 gap-3">
-                      <div>
-                        <p className="text-red-400 font-semibold text-sm sm:text-base">Delete Account</p>
-                        <p className="text-gray-400 text-xs sm:text-sm">Permanently delete your account and data</p>
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl gap-3" style={{ background: (theme.bgInput as any)?.backgroundColor || "#0f2540", border: `1px solid ${theme.borderMedium}` }}>
+                        <div>
+                          <p style={{ color: theme.textPrimary, fontWeight: 700 }}>Data Export</p>
+                          <p style={{ color: theme.textTertiary }}>Download all your application data</p>
+                        </div>
+                        <m.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="px-3 py-2 rounded-lg" style={{ background: "rgba(0,212,255,0.12)", border: `1px solid ${theme.borderMedium}`, color: theme.textAccent }}>Export</m.button>
                       </div>
-                      <m.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="px-3 py-2 sm:px-4 sm:py-2 bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444] rounded-lg font-bold hover:bg-[#ff4444]/30 transition-all text-xs sm:text-sm self-start sm:self-center"
-                      >
-                        Delete
-                      </m.button>
                     </div>
-                  </div>
-                </m.div>
-              </div>
-            )}
-          </m.div>
-        </AnimatePresence>
-      </div>
+                  </m.div>
 
-      {/* Edit Profile Modal */}
-      <AnimatePresence>
-        {isEditing && (
-          <m.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm"
-            onClick={handleCancelEdit}
-          >
+                  {/* Privacy Settings */}
+                  <m.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="p-4 sm:p-8 rounded-3xl"
+                    style={{ background: theme.bgCard ? (theme.bgCard as any).background || (theme.bgCard as any).backgroundColor : undefined, border: `1px solid ${theme.borderMedium}` }}
+                  >
+                    <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6" style={{ color: theme.textPrimary, display: "flex", alignItems: "center", gap: 10 }}>
+                      <Bell className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: "#00ff88" }} />
+                      <span>Privacy & Security</span>
+                    </h3>
+
+                    <div className="space-y-4 sm:space-y-6">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl gap-3" style={{ background: (theme.bgInput as any)?.backgroundColor || "#0f2540", border: `1px solid ${theme.borderMedium}` }}>
+                        <div>
+                          <p style={{ color: theme.textPrimary, fontWeight: 700 }}>Two-Factor Authentication</p>
+                          <p style={{ color: theme.textTertiary }}>Add an extra layer of security</p>
+                        </div>
+                        <m.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="px-3 py-2 rounded-lg" style={{ background: "rgba(255,107,0,0.12)", border: `1px solid rgba(255,107,0,0.28)`, color: "#ff6b00" }}>Enable</m.button>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl gap-3" style={{ background: (theme.bgInput as any)?.backgroundColor || "#0f2540", border: `1px solid ${theme.borderMedium}` }}>
+                        <div>
+                          <p style={{ color: theme.textPrimary, fontWeight: 700 }}>Change Password</p>
+                          <p style={{ color: theme.textTertiary }}>Update your account password</p>
+                        </div>
+                        <m.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="px-3 py-2 rounded-lg" style={{ background: "rgba(0,212,255,0.12)", border: `1px solid ${theme.borderMedium}`, color: theme.textAccent }}>Change</m.button>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl gap-3" style={{ background: (theme.bgInput as any)?.backgroundColor || "#0f2540", border: `1px solid ${theme.borderMedium}` }}>
+                        <div>
+                          <p style={{ color: "#ff8a8a", fontWeight: 700 }}>Delete Account</p>
+                          <p style={{ color: theme.textTertiary }}>Permanently delete your account and data</p>
+                        </div>
+                        <m.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="px-3 py-2 rounded-lg" style={{ background: "rgba(255,68,68,0.12)", border: `1px solid rgba(255,68,68,0.28)`, color: "#ff4444" }}>Delete</m.button>
+                      </div>
+                    </div>
+                  </m.div>
+                </div>
+              )}
+            </m.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Edit Profile Modal */}
+        <AnimatePresence>
+          {isEditing && (
             <m.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              onClick={(e: React.MouseEvent) => e.stopPropagation()}
-              className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52] to-[#0f2540] border border-[#00d4ff]/30 shadow-2xl"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-6"
+              style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)" }}
+              onClick={handleCancelEdit}
             >
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-3xl font-bold text-white">Edit Profile</h2>
-                <m.button
-                  whileHover={{ scale: 1.1, rotate: 90 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={handleCancelEdit}
-                  className="p-2 rounded-full bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444]"
-                >
-                  <X className="w-6 h-6" />
-                </m.button>
-              </div>
+              <m.div
+                initial={{ scale: 0.9, y: 20 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.9, y: 20 }}
+                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto p-8 rounded-3xl"
+                style={{ background: theme.bgModal ? (theme.bgModal as any).background || (theme.bgModal as any).backgroundColor : undefined, border: `1px solid ${theme.borderMedium}`, boxShadow: "0 30px 60px rgba(0,0,0,0.5)" }}
+              >
+                {/* --- modal content unchanged --- */}
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-3xl font-bold" style={{ color: theme.textPrimary }}>Edit Profile</h2>
+                  <m.button
+                    whileHover={{ scale: 1.1, rotate: 90 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={handleCancelEdit}
+                    className="p-2 rounded-full"
+                    style={{ background: "rgba(255,68,68,0.12)", border: `1px solid rgba(255,68,68,0.28)`, color: "#ff4444" }}
+                  >
+                    <X className="w-6 h-6" />
+                  </m.button>
+                </div>
 
-              <div className="space-y-6">
-                {/* Basic Info */}
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-6">
+                  {/* Basic Info */}
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>First Name *</label>
+                      <input
+                        type="text"
+                        value={editForm?.personalInfo.firstName || ''}
+                        onChange={(e) => setEditForm(editForm ? {
+                          ...editForm,
+                          personalInfo: { ...editForm.personalInfo, firstName: e.target.value }
+                        } : null)}
+                        className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
+                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>Last Name *</label>
+                      <input
+                        type="text"
+                        value={editForm?.personalInfo.lastName || ''}
+                        onChange={(e) => setEditForm(editForm ? {
+                          ...editForm,
+                          personalInfo: { ...editForm.personalInfo, lastName: e.target.value }
+                        } : null)}
+                        className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
+                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>Email *</label>
+                      <input
+                        type="email"
+                        value={editForm?.personalInfo.email || ''}
+                        onChange={(e) => setEditForm(editForm ? {
+                          ...editForm,
+                          personalInfo: { ...editForm.personalInfo, email: e.target.value }
+                        } : null)}
+                        className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
+                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>Phone</label>
+                      <input
+                        type="tel"
+                        value={editForm?.personalInfo.phone || ''}
+                        onChange={(e) => setEditForm(editForm ? {
+                          ...editForm,
+                          personalInfo: { ...editForm.personalInfo, phone: e.target.value }
+                        } : null)}
+                        className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
+                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      />
+                    </div>
+                  </div>
+
                   <div>
-                    <label className="block text-sm font-bold text-gray-400 mb-2">First Name *</label>
+                    <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>Location</label>
                     <input
                       type="text"
-                      value={editForm?.personalInfo.firstName || ''}
+                      value={editForm?.personalInfo.location || ''}
                       onChange={(e) => setEditForm(editForm ? {
                         ...editForm,
-                        personalInfo: { ...editForm.personalInfo, firstName: e.target.value }
+                        personalInfo: { ...editForm.personalInfo, location: e.target.value }
                       } : null)}
-                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                      className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
+                      style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                     />
                   </div>
+
                   <div>
-                    <label className="block text-sm font-bold text-gray-400 mb-2">Last Name *</label>
-                    <input
-                      type="text"
-                      value={editForm?.personalInfo.lastName || ''}
+                    <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>Summary</label>
+                    <textarea
+                      rows={4}
+                      value={editForm?.personalInfo.summary || ''}
                       onChange={(e) => setEditForm(editForm ? {
                         ...editForm,
-                        personalInfo: { ...editForm.personalInfo, lastName: e.target.value }
+                        personalInfo: { ...editForm.personalInfo, summary: e.target.value }
                       } : null)}
-                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
+                      className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all resize-none"
+                      style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                     />
                   </div>
-                </div>
 
-                <div className="grid md:grid-cols-2 gap-6">
+                  {/* Skills */}
                   <div>
-                    <label className="block text-sm font-bold text-gray-400 mb-2">Email *</label>
-                    <input
-                      type="email"
-                      value={editForm?.personalInfo.email || ''}
-                      onChange={(e) => setEditForm(editForm ? {
-                        ...editForm,
-                        personalInfo: { ...editForm.personalInfo, email: e.target.value }
-                      } : null)}
-                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-bold text-gray-400 mb-2">Phone</label>
-                    <input
-                      type="tel"
-                      value={editForm?.personalInfo.phone || ''}
-                      onChange={(e) => setEditForm(editForm ? {
-                        ...editForm,
-                        personalInfo: { ...editForm.personalInfo, phone: e.target.value }
-                      } : null)}
-                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-bold text-gray-400 mb-2">Location</label>
-                  <input
-                    type="text"
-                    value={editForm?.personalInfo.location || ''}
-                    onChange={(e) => setEditForm(editForm ? {
-                      ...editForm,
-                      personalInfo: { ...editForm.personalInfo, location: e.target.value }
-                    } : null)}
-                    className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-bold text-gray-400 mb-2">Summary</label>
-                  <textarea
-                    rows={4}
-                    value={editForm?.personalInfo.summary || ''}
-                    onChange={(e) => setEditForm(editForm ? {
-                      ...editForm,
-                      personalInfo: { ...editForm.personalInfo, summary: e.target.value }
-                    } : null)}
-                    className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all resize-none"
-                  />
-                </div>
-
-                {/* Skills */}
-                <div>
-                  <label className="block text-sm font-bold text-gray-400 mb-2">Skills</label>
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {editForm?.skills.map((skill) => (
-                      <span
-                        key={skill.id}
-                        className="px-3 py-1 bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] rounded-full text-sm flex items-center gap-2"
-                      >
-                        {skill.name}
-                        <button
-                          onClick={() => removeSkill(skill.id)}
-                          className="hover:text-red-400 transition-colors"
-                        >
-                          <X className="w-3 h-3" />
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      placeholder="Add a skill..."
-                      onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
-                          const input = e.target as HTMLInputElement
+                    <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>Skills</label>
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {editForm?.skills.map((skill) => (
+                        <span key={skill.id} className="px-3 py-1 rounded-full text-sm flex items-center gap-2" style={{ background: "rgba(0,212,255,0.08)", border: `1px solid ${theme.borderMedium}`, color: theme.textAccent }}>
+                          {skill.name}
+                          <button onClick={() => removeSkill(skill.id)} className="hover:text-red-400 transition-colors">
+                            <X className="w-3 h-3" />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Add a skill..."
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter') {
+                            const input = e.target as HTMLInputElement
+                            addSkill(input.value)
+                            input.value = ''
+                          }
+                        }}
+                        className="flex-1 px-4 py-2 rounded-xl focus:outline-none transition-all"
+                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      />
+                      <button
+                        onClick={(e) => {
+                          const input = (e.target as HTMLElement).previousElementSibling as HTMLInputElement
                           addSkill(input.value)
                           input.value = ''
-                        }
-                      }}
-                      className="flex-1 px-4 py-2 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
-                    />
-                    <button
-                      onClick={(e) => {
-                        const input = (e.target as HTMLElement).previousElementSibling as HTMLInputElement
-                        addSkill(input.value)
-                        input.value = ''
-                      }}
-                      className="px-4 py-2 bg-[#00d4ff]/20 border border-[#00d4ff]/50 text-[#00d4ff] rounded-xl font-bold hover:bg-[#00d4ff]/30 transition-all"
+                        }}
+                        className="px-4 py-2 rounded-xl font-bold"
+                        style={{ background: "rgba(0,212,255,0.12)", border: `1px solid ${theme.borderMedium}`, color: theme.textAccent }}
+                      >
+                        Add
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Social Links */}
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>LinkedIn</label>
+                      <input
+                        type="url"
+                        value={editForm?.personalInfo.linkedinUrl || ''}
+                        onChange={(e) => setEditForm(editForm ? {
+                          ...editForm,
+                          personalInfo: { ...editForm.personalInfo, linkedinUrl: e.target.value }
+                        } : null)}
+                        className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
+                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>GitHub</label>
+                      <input
+                        type="url"
+                        value={editForm?.personalInfo.githubUrl || ''}
+                        onChange={(e) => setEditForm(editForm ? {
+                          ...editForm,
+                          personalInfo: { ...editForm.personalInfo, githubUrl: e.target.value }
+                        } : null)}
+                        className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
+                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>Portfolio</label>
+                      <input
+                        type="url"
+                        value={editForm?.personalInfo.portfolioUrl || ''}
+                        onChange={(e) => setEditForm(editForm ? {
+                          ...editForm,
+                          personalInfo: { ...editForm.personalInfo, portfolioUrl: e.target.value }
+                        } : null)}
+                        className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
+                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 pt-4">
+                    <m.button
+                      type="button"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={handleCancelEdit}
+                      className="flex-1 px-6 py-3 rounded-xl font-bold"
+                      style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                     >
-                      Add
-                    </button>
+                      Cancel
+                    </m.button>
+                    <m.button
+                      type="button"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={saveProfile}
+                      disabled={saving}
+                      className="flex-1 px-6 py-3 rounded-xl font-bold"
+                      style={{ background: "linear-gradient(90deg,#ff6b00,#00d4ff)", color: "#fff" }}
+                    >
+                      {saving ? 'Saving...' : 'Save Changes'}
+                    </m.button>
                   </div>
                 </div>
-
-                {/* Social Links */}
-                <div className="grid md:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-sm font-bold text-gray-400 mb-2">LinkedIn</label>
-                    <input
-                      type="url"
-                      value={editForm?.personalInfo.linkedinUrl || ''}
-                      onChange={(e) => setEditForm(editForm ? {
-                        ...editForm,
-                        personalInfo: { ...editForm.personalInfo, linkedinUrl: e.target.value }
-                      } : null)}
-                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-bold text-gray-400 mb-2">GitHub</label>
-                    <input
-                      type="url"
-                      value={editForm?.personalInfo.githubUrl || ''}
-                      onChange={(e) => setEditForm(editForm ? {
-                        ...editForm,
-                        personalInfo: { ...editForm.personalInfo, githubUrl: e.target.value }
-                      } : null)}
-                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-bold text-gray-400 mb-2">Portfolio</label>
-                    <input
-                      type="url"
-                      value={editForm?.personalInfo.portfolioUrl || ''}
-                      onChange={(e) => setEditForm(editForm ? {
-                        ...editForm,
-                        personalInfo: { ...editForm.personalInfo, portfolioUrl: e.target.value }
-                      } : null)}
-                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex gap-3 pt-4">
-                  <m.button
-                    type="button"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={handleCancelEdit}
-                    className="flex-1 px-6 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white font-bold hover:border-[#00d4ff]/50 transition-all"
-                  >
-                    Cancel
-                  </m.button>
-                  <m.button
-                    type="button"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={saveProfile}
-                    disabled={saving}
-                    className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {saving ? 'Saving...' : 'Save Changes'}
-                  </m.button>
-                </div>
-              </div>
+              </m.div>
             </m.div>
-          </m.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>
 
-      {/* Add Experience Modal */}
-      <AnimatePresence>
-        {isAddingExperience && (
-          <m.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm"
-            onClick={handleCancelAddExperience}
-          >
+        {/* Add Experience Modal */}
+        <AnimatePresence>
+          {isAddingExperience && (
             <m.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              onClick={(e: React.MouseEvent) => e.stopPropagation()}
-              className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52] to-[#0f2540] border border-[#00d4ff]/30 shadow-2xl"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-6"
+              style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)" }}
+              onClick={handleCancelAddExperience}
             >
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-3xl font-bold text-white">Add New Experience</h2>
-                <m.button
-                  whileHover={{ scale: 1.1, rotate: 90 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={handleCancelAddExperience}
-                  className="p-2 rounded-full bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444]"
-                >
-                  <X className="w-6 h-6" />
-                </m.button>
-              </div>
-
-              <div className="space-y-6">
-                {/* Company and Position */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-bold text-gray-400 mb-2">Company *</label>
-                    <input
-                      type="text"
-                      value={newExperience.company}
-                      onChange={(e) => setNewExperience({ ...newExperience, company: e.target.value })}
-                      placeholder="e.g. Google, Microsoft"
-                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-bold text-gray-400 mb-2">Position *</label>
-                    <input
-                      type="text"
-                      value={newExperience.position}
-                      onChange={(e) => setNewExperience({ ...newExperience, position: e.target.value })}
-                      placeholder="e.g. Software Engineer"
-                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
-                    />
-                  </div>
-                </div>
-
-                {/* Location */}
-                <div>
-                  <label className="block text-sm font-bold text-gray-400 mb-2">Location</label>
-                  <input
-                    type="text"
-                    value={newExperience.location}
-                    onChange={(e) => setNewExperience({ ...newExperience, location: e.target.value })}
-                    placeholder="e.g. San Francisco, CA"
-                    className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
-                  />
-                </div>
-
-                {/* Dates */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-bold text-gray-400 mb-2">Start Date *</label>
-                    <input
-                      type="date"
-                      value={newExperience.startDate}
-                      onChange={(e) => setNewExperience({ ...newExperience, startDate: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-bold text-gray-400 mb-2">End Date</label>
-                    <input
-                      type="date"
-                      value={newExperience.endDate}
-                      onChange={(e) => setNewExperience({ ...newExperience, endDate: e.target.value })}
-                      disabled={newExperience.current}
-                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                    />
-                  </div>
-                </div>
-
-                {/* Current Position Checkbox */}
-                <div className="flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    id="current"
-                    checked={newExperience.current}
-                    onChange={(e) => setNewExperience({ ...newExperience, current: e.target.checked, endDate: e.target.checked ? '' : newExperience.endDate })}
-                    className="w-4 h-4 text-[#00d4ff] bg-[#0f2540] border-[#00d4ff]/20 rounded focus:ring-[#00d4ff] focus:ring-2"
-                  />
-                  <label htmlFor="current" className="text-white font-semibold">I currently work here</label>
-                </div>
-
-                {/* Description */}
-                <div>
-                  <label className="block text-sm font-bold text-gray-400 mb-2">Description</label>
-                  <textarea
-                    rows={4}
-                    value={newExperience.description}
-                    onChange={(e) => setNewExperience({ ...newExperience, description: e.target.value })}
-                    placeholder="Describe your responsibilities, achievements, and key contributions..."
-                    className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all resize-none"
-                  />
-                </div>
-
-                <div className="flex gap-3 pt-4">
+              <m.div
+                initial={{ scale: 0.9, y: 20 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.9, y: 20 }}
+                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8 rounded-3xl"
+                style={{ background: theme.bgModal ? (theme.bgModal as any).background || (theme.bgModal as any).backgroundColor : undefined, border: `1px solid ${theme.borderMedium}` }}
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-3xl font-bold" style={{ color: theme.textPrimary }}>Add New Experience</h2>
                   <m.button
-                    type="button"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    whileHover={{ scale: 1.1, rotate: 90 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={handleCancelAddExperience}
-                    className="flex-1 px-6 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white font-bold hover:border-[#00d4ff]/50 transition-all"
+                    className="p-2 rounded-full"
+                    style={{ background: "rgba(255,68,68,0.12)", border: `1px solid rgba(255,68,68,0.28)`, color: "#ff4444" }}
                   >
-                    Cancel
-                  </m.button>
-                  <m.button
-                    type="button"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={saveNewExperience}
-                    disabled={saving}
-                    className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {saving ? 'Saving...' : 'Add Experience'}
+                    <X className="w-6 h-6" />
                   </m.button>
                 </div>
-              </div>
-            </m.div>
-          </m.div>
-        )}
-      </AnimatePresence>
 
-      {/* Add Education Modal */}
-      <AnimatePresence>
-        {isAddingEducation && (
-          <m.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm"
-            onClick={handleCancelAddEducation}
-          >
+                <div className="space-y-6">
+                  {/* Company and Position */}
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>Company *</label>
+                      <input
+                        type="text"
+                        value={newExperience.company}
+                        onChange={(e) => setNewExperience({ ...newExperience, company: e.target.value })}
+                        placeholder="e.g. Google, Microsoft"
+                        className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
+                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>Position *</label>
+                      <input
+                        type="text"
+                        value={newExperience.position}
+                        onChange={(e) => setNewExperience({ ...newExperience, position: e.target.value })}
+                        placeholder="e.g. Software Engineer"
+                        className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
+                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Location */}
+                  <div>
+                    <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>Location</label>
+                    <input
+                      type="text"
+                      value={newExperience.location}
+                      onChange={(e) => setNewExperience({ ...newExperience, location: e.target.value })}
+                      placeholder="e.g. San Francisco, CA"
+                      className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
+                      style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                    />
+                  </div>
+
+                  {/* Dates */}
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>Start Date *</label>
+                      <input
+                        type="date"
+                        value={newExperience.startDate}
+                        onChange={(e) => setNewExperience({ ...newExperience, startDate: e.target.value })}
+                        className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
+                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>End Date</label>
+                      <input
+                        type="date"
+                        value={newExperience.endDate}
+                        onChange={(e) => setNewExperience({ ...newExperience, endDate: e.target.value })}
+                        disabled={newExperience.current}
+                        className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
+                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary, opacity: newExperience.current ? 0.6 : 1 }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Current Position Checkbox */}
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      id="current"
+                      checked={newExperience.current}
+                      onChange={(e) => setNewExperience({ ...newExperience, current: e.target.checked, endDate: e.target.checked ? '' : newExperience.endDate })}
+                      className="w-4 h-4 rounded"
+                      style={{ accentColor: theme.textAccent }}
+                    />
+                    <label htmlFor="current" style={{ color: theme.textPrimary, fontWeight: 700 }}>I currently work here</label>
+                  </div>
+
+                  {/* Description */}
+                  <div>
+                    <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>Description</label>
+                    <textarea
+                      rows={4}
+                      value={newExperience.description}
+                      onChange={(e) => setNewExperience({ ...newExperience, description: e.target.value })}
+                      placeholder="Describe your responsibilities, achievements, and key contributions..."
+                      className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all resize-none"
+                      style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                    />
+                  </div>
+
+                  <div className="flex gap-3 pt-4">
+                    <m.button
+                      type="button"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={handleCancelAddExperience}
+                      className="flex-1 px-6 py-3 rounded-xl font-bold"
+                      style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                    >
+                      Cancel
+                    </m.button>
+                    <m.button
+                      type="button"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={saveNewExperience}
+                      disabled={saving}
+                      className="flex-1 px-6 py-3 rounded-xl font-bold"
+                      style={{ background: "linear-gradient(90deg,#ff6b00,#00d4ff)", color: "#fff" }}
+                    >
+                      {saving ? 'Saving...' : 'Add Experience'}
+                    </m.button>
+                  </div>
+                </div>
+              </m.div>
+            </m.div>
+          )}
+        </AnimatePresence>
+
+        {/* Add Education Modal (similarly updated styles) */}
+        <AnimatePresence>
+          {isAddingEducation && (
             <m.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              onClick={(e: React.MouseEvent) => e.stopPropagation()}
-              className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52] to-[#0f2540] border border-[#00d4ff]/30 shadow-2xl"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-6"
+              style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(6px)" }}
+              onClick={handleCancelAddEducation}
             >
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-3xl font-bold text-white">Add New Education</h2>
-                <m.button
-                  whileHover={{ scale: 1.1, rotate: 90 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={handleCancelAddEducation}
-                  className="p-2 rounded-full bg-[#ff4444]/20 border border-[#ff4444]/50 text-[#ff4444]"
-                >
-                  <X className="w-6 h-6" />
-                </m.button>
-              </div>
-
-              <div className="space-y-6">
-                {/* Institution and Degree */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-bold text-gray-400 mb-2">Institution *</label>
-                    <input
-                      type="text"
-                      value={newEducation.institution}
-                      onChange={(e) => setNewEducation({ ...newEducation, institution: e.target.value })}
-                      placeholder="e.g. Harvard University"
-                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-bold text-gray-400 mb-2">Degree *</label>
-                    <input
-                      type="text"
-                      value={newEducation.degree}
-                      onChange={(e) => setNewEducation({ ...newEducation, degree: e.target.value })}
-                      placeholder="e.g. Bachelor of Science"
-                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
-                    />
-                  </div>
-                </div>
-
-                {/* Field of Study */}
-                <div>
-                  <label className="block text-sm font-bold text-gray-400 mb-2">Field of Study *</label>
-                  <input
-                    type="text"
-                    value={newEducation.field}
-                    onChange={(e) => setNewEducation({ ...newEducation, field: e.target.value })}
-                    placeholder="e.g. Computer Science"
-                    className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
-                  />
-                </div>
-
-                {/* GPA */}
-                <div>
-                  <label className="block text-sm font-bold text-gray-400 mb-2">GPA (Optional)</label>
-                  <input
-                    type="text"
-                    value={newEducation.gpa}
-                    onChange={(e) => setNewEducation({ ...newEducation, gpa: e.target.value })}
-                    placeholder="e.g. 3.8"
-                    className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all"
-                  />
-                </div>
-
-                {/* Dates */}
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-bold text-gray-400 mb-2">Start Date *</label>
-                    <input
-                      type="date"
-                      value={newEducation.startDate}
-                      onChange={(e) => setNewEducation({ ...newEducation, startDate: e.target.value })}
-                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-bold text-gray-400 mb-2">End Date</label>
-                    <input
-                      type="date"
-                      value={newEducation.endDate}
-                      onChange={(e) => setNewEducation({ ...newEducation, endDate: e.target.value })}
-                      disabled={newEducation.current}
-                      className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white focus:outline-none focus:border-[#00d4ff]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                    />
-                  </div>
-                </div>
-
-                {/* Currently Studying Checkbox */}
-                <div className="flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    id="currentEducation"
-                    checked={newEducation.current}
-                    onChange={(e) => setNewEducation({ ...newEducation, current: e.target.checked, endDate: e.target.checked ? '' : newEducation.endDate })}
-                    className="w-4 h-4 text-[#00d4ff] bg-[#0f2540] border-[#00d4ff]/20 rounded focus:ring-[#00d4ff] focus:ring-2"
-                  />
-                  <label htmlFor="currentEducation" className="text-white font-semibold">I am currently studying here</label>
-                </div>
-
-                {/* Description */}
-                <div>
-                  <label className="block text-sm font-bold text-gray-400 mb-2">Description (Optional)</label>
-                  <textarea
-                    rows={4}
-                    value={newEducation.description}
-                    onChange={(e) => setNewEducation({ ...newEducation, description: e.target.value })}
-                    placeholder="Describe your academic achievements, relevant coursework, or extracurricular activities..."
-                    className="w-full px-4 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4ff]/50 transition-all resize-none"
-                  />
-                </div>
-
-                <div className="flex gap-3 pt-4">
+              <m.div
+                initial={{ scale: 0.9, y: 20 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.9, y: 20 }}
+                onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8 rounded-3xl"
+                style={{ background: theme.bgModal ? (theme.bgModal as any).background || (theme.bgModal as any).backgroundColor : undefined, border: `1px solid ${theme.borderMedium}` }}
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-3xl font-bold" style={{ color: theme.textPrimary }}>Add New Education</h2>
                   <m.button
-                    type="button"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    whileHover={{ scale: 1.1, rotate: 90 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={handleCancelAddEducation}
-                    className="flex-1 px-6 py-3 rounded-xl bg-[#0f2540] border border-[#00d4ff]/20 text-white font-bold hover:border-[#00d4ff]/50 transition-all"
+                    className="p-2 rounded-full"
+                    style={{ background: "rgba(255,68,68,0.12)", border: `1px solid rgba(255,68,68,0.28)`, color: "#ff4444" }}
                   >
-                    Cancel
-                  </m.button>
-                  <m.button
-                    type="button"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={saveNewEducation}
-                    disabled={saving}
-                    className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {saving ? 'Saving...' : 'Add Education'}
+                    <X className="w-6 h-6" />
                   </m.button>
                 </div>
-              </div>
-            </m.div>
-          </m.div>
-        )}
-      </AnimatePresence>
 
-      {/* Edit Experience Modal */}
+                <div className="space-y-6">
+                  {/* Institution and Degree */}
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>Institution *</label>
+                      <input
+                        type="text"
+                        value={newEducation.institution}
+                        onChange={(e) => setNewEducation({ ...newEducation, institution: e.target.value })}
+                        placeholder="e.g. Harvard University"
+                        className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
+                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>Degree *</label>
+                      <input
+                        type="text"
+                        value={newEducation.degree}
+                        onChange={(e) => setNewEducation({ ...newEducation, degree: e.target.value })}
+                        placeholder="e.g. Bachelor of Science"
+                        className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
+                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Field of Study */}
+                  <div>
+                    <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>Field of Study *</label>
+                    <input
+                      type="text"
+                      value={newEducation.field}
+                      onChange={(e) => setNewEducation({ ...newEducation, field: e.target.value })}
+                      placeholder="e.g. Computer Science"
+                      className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
+                      style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                    />
+                  </div>
+
+                  {/* GPA */}
+                  <div>
+                    <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>GPA (Optional)</label>
+                    <input
+                      type="text"
+                      value={newEducation.gpa}
+                      onChange={(e) => setNewEducation({ ...newEducation, gpa: e.target.value })}
+                      placeholder="e.g. 3.8"
+                      className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
+                      style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                    />
+                  </div>
+
+                  {/* Dates */}
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>Start Date *</label>
+                      <input
+                        type="date"
+                        value={newEducation.startDate}
+                        onChange={(e) => setNewEducation({ ...newEducation, startDate: e.target.value })}
+                        className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
+                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>End Date</label>
+                      <input
+                        type="date"
+                        value={newEducation.endDate}
+                        onChange={(e) => setNewEducation({ ...newEducation, endDate: e.target.value })}
+                        disabled={newEducation.current}
+                        className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
+                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary, opacity: newEducation.current ? 0.6 : 1 }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Currently Studying Checkbox */}
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      id="currentEducation"
+                      checked={newEducation.current}
+                      onChange={(e) => setNewEducation({ ...newEducation, current: e.target.checked, endDate: e.target.checked ? '' : newEducation.endDate })}
+                      className="w-4 h-4 rounded"
+                      style={{ accentColor: theme.textAccent }}
+                    />
+                    <label htmlFor="currentEducation" style={{ color: theme.textPrimary, fontWeight: 700 }}>I am currently studying here</label>
+                  </div>
+
+                  {/* Description */}
+                  <div>
+                    <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>Description (Optional)</label>
+                    <textarea
+                      rows={4}
+                      value={newEducation.description}
+                      onChange={(e) => setNewEducation({ ...newEducation, description: e.target.value })}
+                      placeholder="Describe your academic achievements, relevant coursework, or extracurricular activities..."
+                      className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all resize-none"
+                      style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                    />
+                  </div>
+
+                  <div className="flex gap-3 pt-4">
+                    <m.button
+                      type="button"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={handleCancelAddEducation}
+                      className="flex-1 px-6 py-3 rounded-xl font-bold"
+                      style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                    >
+                      Cancel
+                    </m.button>
+                    <m.button
+                      type="button"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={saveNewEducation}
+                      disabled={saving}
+                      className="flex-1 px-6 py-3 rounded-xl font-bold"
+                      style={{ background: "linear-gradient(90deg,#ff6b00,#00d4ff)", color: "#fff" }}
+                    >
+                      {saving ? 'Saving...' : 'Add Education'}
+                    </m.button>
+                  </div>
+                </div>
+              </m.div>
+            </m.div>
+          )}
+        </AnimatePresence>
+{/* Edit Experience Modal */}
       <AnimatePresence>
         {isEditingExperience && (
           <m.div
@@ -2458,7 +2508,7 @@ export default function ProfilePage() {
           </m.div>
         )}
       </AnimatePresence>
-    </div>
-  </RouteGuard>
+      </div>
+    </RouteGuard>
   )
 }
