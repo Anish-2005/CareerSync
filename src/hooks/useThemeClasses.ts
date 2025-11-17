@@ -29,14 +29,14 @@ export function useThemeClasses() {
     
     // Color values
     textPrimary: theme === 'light' ? '#0f172a' : '#ffffff',
-    textSecondary: theme === 'light' ? '#475569' : '#9ca3af',
-    textTertiary: theme === 'light' ? '#64748b' : '#6b7280',
+    textSecondary: theme === 'light' ? '#1e293b' : '#9ca3af',
+    textTertiary: theme === 'light' ? '#292d32ff' : '#6b7280',
     textAccent: theme === 'light' ? '#2563eb' : '#00d4ff',
     
     // Gradient for text
     gradientText: theme === 'light'
-      ? { background: 'linear-gradient(to right, #0f172a, #2563eb, #1d4ed8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }
-      : { background: 'linear-gradient(to right, #ffffff, #00d4ff, #ff6b00)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' },
+      ? { backgroundImage: 'linear-gradient(to right, #2563eb, #f59e0b, #10b981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }
+      : { backgroundImage: 'linear-gradient(to right, #ffffff, #00d4ff, #ff6b00)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' },
     
     // Border colors
     borderLight: theme === 'light' ? '#e2e8f0' : 'rgba(0, 212, 255, 0.2)',

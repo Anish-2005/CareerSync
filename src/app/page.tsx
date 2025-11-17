@@ -21,6 +21,7 @@ import {
 import { useAuth } from "@/contexts/AuthContext"
 import { useTheme } from "@/contexts/ThemeContext"
 import ThemeToggle from "@/components/ThemeToggle"
+import { useThemeClasses } from "@/hooks/useThemeClasses"
 
 // Cast motion to any to avoid strict prop typing issues in this file
 const m = motion as any
@@ -133,55 +134,7 @@ export default function LandingPage() {
   const [scrollY, setScrollY] = useState(0)
   const { user, logout } = useAuth()
   const { theme: mode } = useTheme()
-  const theme = mode === 'light' ? {
-    theme: 'light',
-    bgPrimary: { background: 'linear-gradient(to bottom, #f8fafc, #eef2f7, #f8fafc)' },
-    bgCard: { backgroundColor: '#ffffff', borderColor: '#e2e8f0', boxShadow: '0 2px 8px rgba(15,23,42,0.06)' },
-    bgNav: { backgroundColor: 'rgba(255, 255, 255, 0.85)', borderColor: '#e2e8f0', boxShadow: '0 1px 4px rgba(15,23,42,0.05)' },
-    bgModal: { background: 'linear-gradient(to bottom right, #ffffff, #f9fafb)' },
-    bgInput: { backgroundColor: '#ffffff', borderColor: 'rgba(99, 102, 241, 0.3)' },
-    bgButton: { background: 'linear-gradient(90deg, #4f46e5, #6366f1)', boxShadow: '0 4px 18px rgba(79,70,229,0.25)' },
-    bgButtonSecondary: { backgroundColor: '#f1f5f9', borderColor: '#cbd5e1', color: '#334155' },
-    textPrimary: '#0f172a',
-    textSecondary: '#475569',
-    textTertiary: '#64748b',
-    textAccent: '#2563eb',
-    gradientText: { background: 'linear-gradient(to right, #0f172a, #2563eb, #1d4ed8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' },
-    borderLight: '#e2e8f0',
-    borderMedium: '#cbd5e1',
-    borderStrong: '#94a3b8',
-    statusApplied: '#2563eb',
-    statusInterview: '#f59e0b',
-    statusOffer: '#10b981',
-    statusRejected: '#ef4444',
-    morphShape1: 'linear-gradient(135deg, rgba(37, 99, 235, 0.18), rgba(99, 102, 241, 0.18))',
-    morphShape2: 'linear-gradient(225deg, rgba(99, 102, 241, 0.15), rgba(29, 78, 216, 0.15))',
-    particleColors: ['#2563eb', '#6366f1', '#0ea5e9']
-  } : {
-    theme: 'dark',
-    bgPrimary: { background: 'linear-gradient(to bottom, #0a1428, #1a2d4d, #0a1428)' },
-    bgCard: { background: 'linear-gradient(to bottom right, rgba(26, 58, 82, 0.6), rgba(15, 37, 64, 0.6))', borderColor: 'rgba(0, 212, 255, 0.2)' },
-    bgNav: { backgroundColor: 'rgba(10, 20, 40, 0.9)', borderColor: 'rgba(0, 212, 255, 0.2)' },
-    bgModal: { background: 'linear-gradient(to bottom right, #1a3a52, #0f2540)' },
-    bgInput: { backgroundColor: '#0f2540', borderColor: 'rgba(0, 212, 255, 0.2)' },
-    bgButton: { background: 'linear-gradient(to right, #ff6b00, #00d4ff)' },
-    bgButtonSecondary: { backgroundColor: 'rgba(0, 212, 255, 0.2)', borderColor: 'rgba(0, 212, 255, 0.5)', color: '#00d4ff' },
-    textPrimary: '#ffffff',
-    textSecondary: '#9ca3af',
-    textTertiary: '#6b7280',
-    textAccent: '#00d4ff',
-    gradientText: { background: 'linear-gradient(to right, #ffffff, #00d4ff, #ff6b00)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' },
-    borderLight: 'rgba(0, 212, 255, 0.2)',
-    borderMedium: 'rgba(0, 212, 255, 0.3)',
-    borderStrong: 'rgba(0, 212, 255, 0.5)',
-    statusApplied: '#00d4ff',
-    statusInterview: '#ff6b00',
-    statusOffer: '#00ff88',
-    statusRejected: '#ff4444',
-    morphShape1: 'linear-gradient(135deg, rgba(255, 107, 0, 0.3), rgba(0, 212, 255, 0.3))',
-    morphShape2: 'linear-gradient(225deg, rgba(0, 255, 136, 0.2), rgba(255, 107, 0, 0.2))',
-    particleColors: ['#00d4ff', '#ff6b00', '#00ff88']
-  }
+  const theme = useThemeClasses()
   const isLight = theme.theme === 'light'
 
   useEffect(() => {
@@ -232,15 +185,16 @@ export default function LandingPage() {
 
   return (
     <div
-      className={`overflow-hidden ${theme.bgPrimary}`}
-      style={{ fontFamily: '"Geist", sans-serif' }}
+      className={`overflow-hidden`}
+      style={{ ...theme.bgPrimaryStyle, fontFamily: '"Geist", sans-serif' }}
     >
       {/* Navigation */}
       <m.nav
         initial={{ opacity: 0, y: -100 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
-        className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md ${theme.bgNav} border-b ${theme.borderLight} shadow-lg`}
+        className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b`}
+        style={{ ...theme.bgNavStyle, borderColor: theme.borderLight, boxShadow: '0 1px 4px rgba(15,23,42,0.05)' }}
       >
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <m.div
@@ -263,7 +217,7 @@ export default function LandingPage() {
               />
               <img src="/csync.png" alt="CareerSync" className="w-full h-full object-contain relative z-10" />
             </div>
-            <span className="text-xl font-bold" style={theme.gradientText}>
+            <span className="text-xl font-bold" style={theme.theme === 'light' ? { color: '#0f172a' } : theme.gradientText}>
               CareerSync
             </span>
           </m.div>
@@ -282,11 +236,12 @@ export default function LandingPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 + index * 0.1, duration: 0.5 }}
                 whileHover={{
-                  color: "#00d4ff",
+                  color: theme.textAccent,
                   scale: 1.1,
                   textShadow: "0 0 10px rgba(0, 212, 255, 0.5)",
                 }}
-                className={`${theme.textSecondary} hover:${theme.textAccent} transition-all duration-300 text-sm font-medium relative group`}
+                className={`transition-all duration-300 text-sm font-medium relative group`}
+                style={{ color: theme.textSecondary }}
               >
                 {link.label}
                 <m.div
@@ -305,7 +260,11 @@ export default function LandingPage() {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               className="md:hidden p-2 rounded-md transition-all duration-300 relative overflow-hidden"
-              style={{ ...theme.bgButtonSecondary, color: theme.textSecondary }}
+              style={{ 
+                backgroundColor: theme.theme === 'light' ? 'rgba(255, 255, 255, 0.8)' : 'transparent',
+                color: theme.textSecondary,
+                border: theme.theme === 'light' ? `1px solid ${theme.borderMedium}` : undefined
+              }}
               aria-label="Toggle menu"
             >
               <m.div
@@ -332,7 +291,11 @@ export default function LandingPage() {
                     }}
                     whileTap={{ scale: 0.95 }}
                     className="px-6 py-2 text-sm font-medium rounded-full transition-all duration-300"
-                    style={{ ...theme.bgButtonSecondary }}
+                    style={{ 
+                      backgroundColor: theme.theme === 'light' ? 'rgba(255, 255, 255, 0.8)' : 'transparent',
+                      color: theme.textSecondary,
+                      border: theme.theme === 'light' ? `1px solid ${theme.borderMedium}` : `1px solid ${theme.borderMedium}`
+                    }}
                   >
                     Dashboard
                   </m.a>
@@ -347,7 +310,7 @@ export default function LandingPage() {
                     }}
                     whileTap={{ scale: 0.95 }}
                     className="px-6 py-2 text-sm font-bold rounded-full hover:shadow-lg transition-all duration-300"
-                    style={{ ...theme.bgButton, color: '#ffffff' }}
+                    style={{ ...theme.bgButtonStyle, color: '#ffffff' }}
                   >
                     Logout
                   </m.button>
@@ -365,7 +328,11 @@ export default function LandingPage() {
                     }}
                     whileTap={{ scale: 0.95 }}
                     className="px-6 py-2 text-sm font-medium rounded-full transition-all duration-300"
-                    style={{ ...theme.bgButtonSecondary }}
+                    style={{ 
+                      backgroundColor: theme.theme === 'light' ? 'rgba(255, 255, 255, 0.8)' : 'transparent',
+                      color: theme.textSecondary,
+                      border: theme.theme === 'light' ? `1px solid ${theme.borderMedium}` : `1px solid ${theme.borderMedium}`
+                    }}
                   >
                     Login
                   </m.a>
@@ -380,7 +347,7 @@ export default function LandingPage() {
                     }}
                     whileTap={{ scale: 0.95 }}
                     className="px-6 py-2 text-sm font-bold rounded-full hover:shadow-lg transition-all duration-300"
-                    style={{ ...theme.bgButton, color: '#ffffff' }}
+                    style={{ ...theme.bgButtonStyle, color: '#ffffff' }}
                   >
                     Sign Up
                   </m.a>
@@ -397,7 +364,8 @@ export default function LandingPage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: "100%" }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
-                className={`md:hidden absolute top-full left-0 right-0 ${theme.bgNav} border-t ${theme.borderLight} backdrop-blur-sm z-40 shadow-2xl`}
+                className={`md:hidden absolute top-full left-0 right-0 ${theme.bgNavStyle} border-t backdrop-blur-sm z-40 shadow-2xl`}
+                style={{ borderColor: theme.borderLight }}
               >
                 <div className="px-6 py-6 flex flex-col gap-6">
                   {[
@@ -413,7 +381,8 @@ export default function LandingPage() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1, duration: 0.3 }}
                       onClick={() => setMobileOpen(false)}
-                      className={`${theme.textSecondary} hover:${theme.textAccent} transition-colors duration-300 text-lg font-medium py-2 border-b ${theme.borderLight}`}
+                      className={`transition-colors duration-300 text-lg font-medium py-2 border-b`}
+                      style={{ color: theme.textSecondary, borderColor: theme.borderLight }}
                     >
                       {link.label}
                     </m.a>
@@ -421,13 +390,21 @@ export default function LandingPage() {
                   <div className="flex flex-col gap-4 pt-4 border-t" style={{ borderColor: theme.borderLight }}>
                     {user ? (
                       <>
-                        <a href="/dashboard" onClick={() => setMobileOpen(false)} className="px-6 py-3 rounded-lg text-center font-medium transition-all duration-300" style={{ ...theme.bgButtonSecondary }}>Dashboard</a>
-                        <button onClick={() => { setMobileOpen(false); logout(); }} className="px-6 py-3 rounded-lg text-center font-bold hover:shadow-lg transition-all duration-300" style={{ ...theme.bgButton, color: '#ffffff' }}>Logout</button>
+                        <a href="/dashboard" onClick={() => setMobileOpen(false)} className="px-6 py-3 rounded-lg text-center font-medium transition-all duration-300" style={{ 
+                          backgroundColor: theme.theme === 'light' ? 'rgba(255, 255, 255, 0.8)' : 'transparent',
+                          color: theme.textSecondary,
+                          border: theme.theme === 'light' ? `1px solid ${theme.borderMedium}` : `1px solid ${theme.borderMedium}`
+                        }}>Dashboard</a>
+                        <button onClick={() => { setMobileOpen(false); logout(); }} className="px-6 py-3 rounded-lg text-center font-bold hover:shadow-lg transition-all duration-300" style={{ ...theme.bgButtonStyle, color: '#ffffff' }}>Logout</button>
                       </>
                     ) : (
                       <>
-                        <a href="/login" onClick={() => setMobileOpen(false)} className="px-6 py-3 rounded-lg text-center font-medium transition-all duration-300" style={{ ...theme.bgButtonSecondary }}>Login</a>
-                        <a href="/login" onClick={() => setMobileOpen(false)} className="px-6 py-3 rounded-lg text-center font-bold hover:shadow-lg transition-all duration-300" style={{ ...theme.bgButton, color: '#ffffff' }}>Sign Up</a>
+                        <a href="/login" onClick={() => setMobileOpen(false)} className="px-6 py-3 rounded-lg text-center font-medium transition-all duration-300" style={{ 
+                          backgroundColor: theme.theme === 'light' ? 'rgba(255, 255, 255, 0.8)' : 'transparent',
+                          color: theme.textSecondary,
+                          border: theme.theme === 'light' ? `1px solid ${theme.borderMedium}` : `1px solid ${theme.borderMedium}`
+                        }}>Login</a>
+                        <a href="/login" onClick={() => setMobileOpen(false)} className="px-6 py-3 rounded-lg text-center font-bold hover:shadow-lg transition-all duration-300" style={{ ...theme.bgButtonStyle, color: '#ffffff' }}>Sign Up</a>
                       </>
                     )}
                   </div>
@@ -554,7 +531,7 @@ export default function LandingPage() {
           <m.div
             variants={itemVariants}
             className="relative inline-flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-8 sm:py-4 rounded-full border backdrop-blur-xl overflow-hidden"
-            style={{ ...theme.bgButtonSecondary, borderColor: theme.borderMedium }}
+            style={{ ...theme.bgButtonSecondaryStyle, borderColor: theme.borderMedium }}
             whileHover={{ scale: 1.05 }}
           >
             {/* Morphing background */}
@@ -590,7 +567,11 @@ export default function LandingPage() {
                 backgroundColor: theme.textAccent
               }}
             />
-            <span className={`${theme.textAccent} font-semibold relative z-10 text-[10px] sm:text-sm md:text-base`}>Next-Generation Career Intelligence</span>
+            <span className="text-sm sm:text-base md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-light px-4"
+              style={{ color: theme.textSecondary }}
+              animate={{
+                opacity: [0.6, 1, 0.6],
+              }}>Next-Generation Career Intelligence</span>
             <m.div
               className="w-1 h-1 sm:w-2 sm:h-2 rounded-full"
               animate={{
@@ -658,7 +639,11 @@ export default function LandingPage() {
               ease: "easeInOut",
             }}
           >
-            <span className="inline-block">
+            <m.span className="text-sm sm:text-base md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-light px-4"
+              style={{ color: theme.textSecondary }}
+              animate={{
+                opacity: [0.6, 1, 0.6],
+              }}>
               Sync your career trajectory with
               <m.span
                 className="font-semibold mx-2"
@@ -676,7 +661,7 @@ export default function LandingPage() {
                 intelligent networking
               </m.span>
               and quantum-powered insights.
-            </span>
+            </m.span>
           </m.p>
 
           {/* Innovative CTA buttons with morphing effects */}
@@ -690,7 +675,7 @@ export default function LandingPage() {
                   : "0 0 40px rgba(255, 107, 0, 0.6)",
               }}
               whileTap={{ scale: 0.95 }}
-              className="group relative px-6 py-3 sm:px-12 sm:py-6 text-white font-bold text-lg sm:text-xl rounded-2xl overflow-hidden"
+              className={`group relative px-6 py-3 sm:px-12 sm:py-6 font-bold text-lg sm:text-xl rounded-2xl overflow-hidden ${theme.theme === 'light' ? 'text-gray-900' : 'text-white'}`}
               style={{
                 background: theme.theme === 'light'
                   ? "linear-gradient(135deg, #4f46e5 0%, #9333ea 100%)"
@@ -751,7 +736,7 @@ export default function LandingPage() {
                   : "rgba(0, 212, 255, 0.1)",
               }}
               whileTap={{ scale: 0.95 }}
-              className="group relative px-6 py-3 sm:px-12 sm:py-6 text-white font-bold text-lg sm:text-xl rounded-2xl border-2 transition-all duration-300 overflow-hidden"
+              className={`group relative px-6 py-3 sm:px-12 sm:py-6 font-bold text-lg sm:text-xl rounded-2xl border-2 transition-all duration-300 overflow-hidden ${theme.theme === 'light' ? 'text-gray-900' : 'text-white'}`}
               style={{
                 borderColor: theme.textAccent,
               }}
@@ -927,7 +912,8 @@ export default function LandingPage() {
       </section>
 
       {/* Features Section with Fluid Layout */}
-      <section id="features" className="relative py-12 md:py-24 px-4 md:px-6 overflow-hidden scroll-mt-24" style={{ background: theme.theme === 'light' ? 'linear-gradient(to bottom, #f0f4f8, #e1e8ed)' : 'linear-gradient(to bottom, #0a1428, #1a2d4d)' }}>
+      <section id="features" className="relative py-12 md:py-24 px-4 md:px-6 overflow-hidden scroll-mt-24"
+        style={{ background: theme.theme === 'light' ? 'linear-gradient(to bottom, #f0f4f8, #e1e8ed)' : 'linear-gradient(to bottom, #0a1428, #1a2d4d)' }}>
         {/* Dynamic fluid background */}
         <div className="absolute inset-0 hidden md:block">
           {/* Organic flowing shapes */}
@@ -1286,7 +1272,8 @@ export default function LandingPage() {
       </section>
 
       {/* Dashboard Preview */}
-      <section id="how-it-works" className="relative py-20 px-6 overflow-hidden scroll-mt-24" style={{ background: theme.theme === 'light' ? 'linear-gradient(to bottom, #e1e8ed, #f0f4f8)' : 'linear-gradient(to bottom, #1a2d4d, #0a1428)' }}>
+      <section id="how-it-works" className="relative py-20 px-6 overflow-hidden scroll-mt-24"
+        style={{ background: theme.theme === 'light' ? 'linear-gradient(to bottom, #e1e8ed, #f0f4f8)' : 'linear-gradient(to bottom, #1a2d4d, #0a1428)' }}>
         {/* HUD-style background */}
         <div className="absolute inset-0">
           {/* Grid overlay */}
@@ -1353,16 +1340,17 @@ export default function LandingPage() {
                 ease: "easeInOut",
               }}
               style={{
+                color: theme.theme === 'light' ? '#000000' : undefined,
                 background: theme.theme === 'light'
-                  ? "linear-gradient(135deg, #1e293b 0%, #4f46e5 40%, #f59e0b 70%, #10b981 100%)"
+                  ? undefined
                   : "linear-gradient(135deg, #ffffff 0%, #00d4ff 40%, #ff6b00 70%, #00ff88 100%)",
-                backgroundSize: "300% 300%",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
+                backgroundSize: theme.theme === 'light' ? undefined : "300% 300%",
+                WebkitBackgroundClip: theme.theme === 'light' ? undefined : "text",
+                WebkitTextFillColor: theme.theme === 'light' ? undefined : "transparent",
+                backgroundClip: theme.theme === 'light' ? undefined : "text",
               }}
             >
-              CareerSync Hub
+              Next-Generation Career Intelligence
             </m.h2>
             <m.p
               className="text-xl md:text-2xl max-w-2xl mx-auto font-light"
