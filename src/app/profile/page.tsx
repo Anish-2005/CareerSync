@@ -1318,7 +1318,7 @@ export default function ProfilePage() {
                     {/* Upload Section */}
                     <div className="mb-4 sm:mb-6">
                       <label className="block">
-                        <div className="flex items-center justify-center w-full p-4 sm:p-6 border-2 border-dashed rounded-xl transition-colors cursor-pointer" style={{ borderColor: `rgba(0,212,255,0.35)`, background: (theme.bgInput as any)?.backgroundColor ? `${(theme.bgInput as any).backgroundColor}80` : undefined }}>
+                        <div className="flex items-center justify-center w-full p-4 sm:p-6 border-2 border-dashed rounded-xl transition-colors cursor-pointer" style={{ borderColor: `rgba(0,212,255,0.35)`, background: theme.bgInputStyle?.backgroundColor ? `${theme.bgInputStyle.backgroundColor}80` : undefined }}>
                           <div className="text-center">
                             <Upload className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2" style={{ color: theme.textAccent }} />
                             <p className="font-semibold mb-1 text-sm sm:text-base" style={{ color: theme.textPrimary }}>
@@ -1348,7 +1348,7 @@ export default function ProfilePage() {
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: idx * 0.1 }}
                           className="flex items-center justify-between p-3 sm:p-4 rounded-xl"
-                          style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}` }}
+                          style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}` }}
                         >
                           <div className="flex items-center gap-2 sm:gap-4">
                             <FileText className="w-4 h-4 sm:w-8 sm:h-8 flex-shrink-0" style={{ color: theme.textAccent }} />
@@ -1413,7 +1413,7 @@ export default function ProfilePage() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: idx * 0.1 }}
                             className="p-3 sm:p-4 rounded-xl hover:border-2 transition-all duration-300"
-                            style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}` }}
+                            style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}` }}
                           >
                             <div className="flex items-center gap-2 sm:gap-3 mb-2">
                               <Icon className="w-4 h-4 sm:w-6 sm:h-6" style={{ color: theme.textAccent }} />
@@ -1450,7 +1450,7 @@ export default function ProfilePage() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: idx * 0.1 }}
                       className="p-4 sm:p-8 rounded-3xl hover:border-2 transition-all duration-300"
-                      style={{ background: theme.bgCard ? (theme.bgCard as any).background || (theme.bgCard as any).backgroundColor : undefined, border: `1px solid ${theme.borderMedium}` }}
+                      style={{ background: theme.bgCardStyle?.backgroundColor, border: `1px solid ${theme.borderMedium}` }}
                     >
                       <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-4 sm:mb-6 gap-4">
                         <div className="flex-1">
@@ -1522,7 +1522,7 @@ export default function ProfilePage() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: idx * 0.1 }}
                       className="p-4 sm:p-8 rounded-3xl hover:border-2 transition-all duration-300"
-                      style={{ background: theme.bgCard ? (theme.bgCard as any).background || (theme.bgCard as any).backgroundColor : undefined, border: `1px solid ${theme.borderMedium}` }}
+                      style={{ background: theme.bgCardStyle?.backgroundColor, border: `1px solid ${theme.borderMedium}` }}
                     >
                       <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-4 sm:mb-6 gap-4">
                         <div className="flex-1">
@@ -1590,7 +1590,7 @@ export default function ProfilePage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="p-4 sm:p-8 rounded-3xl"
-                    style={{ background: theme.bgCard ? (theme.bgCard as any).background || (theme.bgCard as any).backgroundColor : undefined, border: `1px solid ${theme.borderMedium}` }}
+                    style={{ background: theme.bgCardStyle?.backgroundColor, border: `1px solid ${theme.borderMedium}` }}
                   >
                     <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6" style={{ color: theme.textPrimary, display: "flex", alignItems: "center", gap: 10 }}>
                       <Shield className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: "#00ff88" }} />
@@ -1598,7 +1598,7 @@ export default function ProfilePage() {
                     </h3>
 
                     <div className="space-y-4 sm:space-y-6">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl gap-3" style={{ background: (theme.bgInput as any)?.backgroundColor || "#0f2540", border: `1px solid ${theme.borderMedium}` }}>
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl gap-3" style={{ background: theme.bgInputStyle?.backgroundColor || "#0f2540", border: `1px solid ${theme.borderMedium}` }}>
                         <div>
                           <p style={{ color: theme.textPrimary, fontWeight: 700 }}>Email Notifications</p>
                           <p style={{ color: theme.textTertiary }}>Receive updates about your applications</p>
@@ -1606,7 +1606,7 @@ export default function ProfilePage() {
                         <m.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="px-3 py-2 rounded-lg" style={{ background: "rgba(0,255,136,0.12)", border: `1px solid rgba(0,255,136,0.28)`, color: "#00ff88" }}><Check /></m.button>
                       </div>
 
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl gap-3" style={{ background: (theme.bgInput as any)?.backgroundColor || "#0f2540", border: `1px solid ${theme.borderMedium}` }}>
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl gap-3" style={{ background: theme.bgInputStyle?.backgroundColor || "#0f2540", border: `1px solid ${theme.borderMedium}` }}>
                         <div>
                           <p style={{ color: theme.textPrimary, fontWeight: 700 }}>Profile Visibility</p>
                           <p style={{ color: theme.textTertiary }}>Make your profile visible to recruiters</p>
@@ -1614,7 +1614,7 @@ export default function ProfilePage() {
                         <m.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="px-3 py-2 rounded-lg" style={{ background: "rgba(0,255,136,0.12)", border: `1px solid rgba(0,255,136,0.28)`, color: "#00ff88" }}><Check /></m.button>
                       </div>
 
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl gap-3" style={{ background: (theme.bgInput as any)?.backgroundColor || "#0f2540", border: `1px solid ${theme.borderMedium}` }}>
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl gap-3" style={{ background: theme.bgInputStyle?.backgroundColor || "#0f2540", border: `1px solid ${theme.borderMedium}` }}>
                         <div>
                           <p style={{ color: theme.textPrimary, fontWeight: 700 }}>Data Export</p>
                           <p style={{ color: theme.textTertiary }}>Download all your application data</p>
@@ -1630,7 +1630,7 @@ export default function ProfilePage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
                     className="p-4 sm:p-8 rounded-3xl"
-                    style={{ background: theme.bgCard ? (theme.bgCard as any).background || (theme.bgCard as any).backgroundColor : undefined, border: `1px solid ${theme.borderMedium}` }}
+                    style={{ background: theme.bgCardStyle?.backgroundColor, border: `1px solid ${theme.borderMedium}` }}
                   >
                     <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6" style={{ color: theme.textPrimary, display: "flex", alignItems: "center", gap: 10 }}>
                       <Bell className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: "#00ff88" }} />
@@ -1638,7 +1638,7 @@ export default function ProfilePage() {
                     </h3>
 
                     <div className="space-y-4 sm:space-y-6">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl gap-3" style={{ background: (theme.bgInput as any)?.backgroundColor || "#0f2540", border: `1px solid ${theme.borderMedium}` }}>
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl gap-3" style={{ background: theme.bgInputStyle?.backgroundColor || "#0f2540", border: `1px solid ${theme.borderMedium}` }}>
                         <div>
                           <p style={{ color: theme.textPrimary, fontWeight: 700 }}>Two-Factor Authentication</p>
                           <p style={{ color: theme.textTertiary }}>Add an extra layer of security</p>
@@ -1646,7 +1646,7 @@ export default function ProfilePage() {
                         <m.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="px-3 py-2 rounded-lg" style={{ background: "rgba(255,107,0,0.12)", border: `1px solid rgba(255,107,0,0.28)`, color: "#ff6b00" }}>Enable</m.button>
                       </div>
 
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl gap-3" style={{ background: (theme.bgInput as any)?.backgroundColor || "#0f2540", border: `1px solid ${theme.borderMedium}` }}>
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl gap-3" style={{ background: theme.bgInputStyle?.backgroundColor || "#0f2540", border: `1px solid ${theme.borderMedium}` }}>
                         <div>
                           <p style={{ color: theme.textPrimary, fontWeight: 700 }}>Change Password</p>
                           <p style={{ color: theme.textTertiary }}>Update your account password</p>
@@ -1654,7 +1654,7 @@ export default function ProfilePage() {
                         <m.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="px-3 py-2 rounded-lg" style={{ background: "rgba(0,212,255,0.12)", border: `1px solid ${theme.borderMedium}`, color: theme.textAccent }}>Change</m.button>
                       </div>
 
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl gap-3" style={{ background: (theme.bgInput as any)?.backgroundColor || "#0f2540", border: `1px solid ${theme.borderMedium}` }}>
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl gap-3" style={{ background: theme.bgInputStyle?.backgroundColor || "#0f2540", border: `1px solid ${theme.borderMedium}` }}>
                         <div>
                           <p style={{ color: "#ff8a8a", fontWeight: 700 }}>Delete Account</p>
                           <p style={{ color: theme.textTertiary }}>Permanently delete your account and data</p>
@@ -1686,7 +1686,7 @@ export default function ProfilePage() {
                 exit={{ scale: 0.9, y: 20 }}
                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
                 className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto p-8 rounded-3xl"
-                style={{ background: theme.bgModal ? (theme.bgModal as any).background || (theme.bgModal as any).backgroundColor : undefined, border: `1px solid ${theme.borderMedium}`, boxShadow: "0 30px 60px rgba(0,0,0,0.5)" }}
+                style={{ background: theme.bgModalStyle?.backgroundColor, border: `1px solid ${theme.borderMedium}`, boxShadow: "0 30px 60px rgba(0,0,0,0.5)" }}
               >
                 {/* --- modal content unchanged --- */}
                 <div className="flex items-center justify-between mb-6">
@@ -1715,7 +1715,7 @@ export default function ProfilePage() {
                           personalInfo: { ...editForm.personalInfo, firstName: e.target.value }
                         } : null)}
                         className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                        style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                       />
                     </div>
                     <div>
@@ -1728,7 +1728,7 @@ export default function ProfilePage() {
                           personalInfo: { ...editForm.personalInfo, lastName: e.target.value }
                         } : null)}
                         className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                        style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                       />
                     </div>
                   </div>
@@ -1744,7 +1744,7 @@ export default function ProfilePage() {
                           personalInfo: { ...editForm.personalInfo, email: e.target.value }
                         } : null)}
                         className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                        style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                       />
                     </div>
                     <div>
@@ -1757,7 +1757,7 @@ export default function ProfilePage() {
                           personalInfo: { ...editForm.personalInfo, phone: e.target.value }
                         } : null)}
                         className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                        style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                       />
                     </div>
                   </div>
@@ -1772,7 +1772,7 @@ export default function ProfilePage() {
                         personalInfo: { ...editForm.personalInfo, location: e.target.value }
                       } : null)}
                       className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                      style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                     />
                   </div>
 
@@ -1786,7 +1786,7 @@ export default function ProfilePage() {
                         personalInfo: { ...editForm.personalInfo, summary: e.target.value }
                       } : null)}
                       className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all resize-none"
-                      style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                     />
                   </div>
 
@@ -1815,7 +1815,7 @@ export default function ProfilePage() {
                           }
                         }}
                         className="flex-1 px-4 py-2 rounded-xl focus:outline-none transition-all"
-                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                        style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                       />
                       <button
                         onClick={(e) => {
@@ -1843,7 +1843,7 @@ export default function ProfilePage() {
                           personalInfo: { ...editForm.personalInfo, linkedinUrl: e.target.value }
                         } : null)}
                         className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                        style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                       />
                     </div>
                     <div>
@@ -1856,7 +1856,7 @@ export default function ProfilePage() {
                           personalInfo: { ...editForm.personalInfo, githubUrl: e.target.value }
                         } : null)}
                         className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                        style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                       />
                     </div>
                     <div>
@@ -1869,7 +1869,7 @@ export default function ProfilePage() {
                           personalInfo: { ...editForm.personalInfo, portfolioUrl: e.target.value }
                         } : null)}
                         className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                        style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                       />
                     </div>
                   </div>
@@ -1881,7 +1881,7 @@ export default function ProfilePage() {
                       whileTap={{ scale: 0.98 }}
                       onClick={handleCancelEdit}
                       className="flex-1 px-6 py-3 rounded-xl font-bold"
-                      style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                     >
                       Cancel
                     </m.button>
@@ -1920,7 +1920,7 @@ export default function ProfilePage() {
                 exit={{ scale: 0.9, y: 20 }}
                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
                 className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8 rounded-3xl"
-                style={{ background: theme.bgModal ? (theme.bgModal as any).background || (theme.bgModal as any).backgroundColor : undefined, border: `1px solid ${theme.borderMedium}` }}
+                style={{ background: theme.bgModalStyle?.backgroundColor, border: `1px solid ${theme.borderMedium}` }}
               >
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-3xl font-bold" style={{ color: theme.textPrimary }}>Add New Experience</h2>
@@ -1946,7 +1946,7 @@ export default function ProfilePage() {
                         onChange={(e) => setNewExperience({ ...newExperience, company: e.target.value })}
                         placeholder="e.g. Google, Microsoft"
                         className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                        style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                       />
                     </div>
                     <div>
@@ -1957,7 +1957,7 @@ export default function ProfilePage() {
                         onChange={(e) => setNewExperience({ ...newExperience, position: e.target.value })}
                         placeholder="e.g. Software Engineer"
                         className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                        style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                       />
                     </div>
                   </div>
@@ -1971,7 +1971,7 @@ export default function ProfilePage() {
                       onChange={(e) => setNewExperience({ ...newExperience, location: e.target.value })}
                       placeholder="e.g. San Francisco, CA"
                       className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                      style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                     />
                   </div>
 
@@ -1984,7 +1984,7 @@ export default function ProfilePage() {
                         value={newExperience.startDate}
                         onChange={(e) => setNewExperience({ ...newExperience, startDate: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                        style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                       />
                     </div>
                     <div>
@@ -1995,7 +1995,7 @@ export default function ProfilePage() {
                         onChange={(e) => setNewExperience({ ...newExperience, endDate: e.target.value })}
                         disabled={newExperience.current}
                         className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary, opacity: newExperience.current ? 0.6 : 1 }}
+                        style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary, opacity: newExperience.current ? 0.6 : 1 }}
                       />
                     </div>
                   </div>
@@ -2022,7 +2022,7 @@ export default function ProfilePage() {
                       onChange={(e) => setNewExperience({ ...newExperience, description: e.target.value })}
                       placeholder="Describe your responsibilities, achievements, and key contributions..."
                       className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all resize-none"
-                      style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                     />
                   </div>
 
@@ -2033,7 +2033,7 @@ export default function ProfilePage() {
                       whileTap={{ scale: 0.98 }}
                       onClick={handleCancelAddExperience}
                       className="flex-1 px-6 py-3 rounded-xl font-bold"
-                      style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                     >
                       Cancel
                     </m.button>
@@ -2072,7 +2072,7 @@ export default function ProfilePage() {
                 exit={{ scale: 0.9, y: 20 }}
                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
                 className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8 rounded-3xl"
-                style={{ background: theme.bgModal ? (theme.bgModal as any).background || (theme.bgModal as any).backgroundColor : undefined, border: `1px solid ${theme.borderMedium}` }}
+                style={{ background: theme.bgModalStyle?.backgroundColor, border: `1px solid ${theme.borderMedium}` }}
               >
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-3xl font-bold" style={{ color: theme.textPrimary }}>Add New Education</h2>
@@ -2098,7 +2098,7 @@ export default function ProfilePage() {
                         onChange={(e) => setNewEducation({ ...newEducation, institution: e.target.value })}
                         placeholder="e.g. Harvard University"
                         className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                        style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                       />
                     </div>
                     <div>
@@ -2109,7 +2109,7 @@ export default function ProfilePage() {
                         onChange={(e) => setNewEducation({ ...newEducation, degree: e.target.value })}
                         placeholder="e.g. Bachelor of Science"
                         className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                        style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                       />
                     </div>
                   </div>
@@ -2123,7 +2123,7 @@ export default function ProfilePage() {
                       onChange={(e) => setNewEducation({ ...newEducation, field: e.target.value })}
                       placeholder="e.g. Computer Science"
                       className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                      style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                     />
                   </div>
 
@@ -2136,7 +2136,7 @@ export default function ProfilePage() {
                       onChange={(e) => setNewEducation({ ...newEducation, gpa: e.target.value })}
                       placeholder="e.g. 3.8"
                       className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                      style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                     />
                   </div>
 
@@ -2149,7 +2149,7 @@ export default function ProfilePage() {
                         value={newEducation.startDate}
                         onChange={(e) => setNewEducation({ ...newEducation, startDate: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                        style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                       />
                     </div>
                     <div>
@@ -2160,7 +2160,7 @@ export default function ProfilePage() {
                         onChange={(e) => setNewEducation({ ...newEducation, endDate: e.target.value })}
                         disabled={newEducation.current}
                         className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                        style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary, opacity: newEducation.current ? 0.6 : 1 }}
+                        style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary, opacity: newEducation.current ? 0.6 : 1 }}
                       />
                     </div>
                   </div>
@@ -2187,7 +2187,7 @@ export default function ProfilePage() {
                       onChange={(e) => setNewEducation({ ...newEducation, description: e.target.value })}
                       placeholder="Describe your academic achievements, relevant coursework, or extracurricular activities..."
                       className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all resize-none"
-                      style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                     />
                   </div>
 
@@ -2198,7 +2198,7 @@ export default function ProfilePage() {
                       whileTap={{ scale: 0.98 }}
                       onClick={handleCancelAddEducation}
                       className="flex-1 px-6 py-3 rounded-xl font-bold"
-                      style={{ background: (theme.bgInput as any)?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                      style={{ background: theme.bgInputStyle?.backgroundColor || '#0f2540', border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
                     >
                       Cancel
                     </m.button>
