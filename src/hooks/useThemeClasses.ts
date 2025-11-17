@@ -2,6 +2,7 @@ import { useTheme } from '@/contexts/ThemeContext'
 
 export function useThemeClasses() {
   const { theme } = useTheme()
+  const isDark = theme === 'dark'
   
   return {
     // Background classes
