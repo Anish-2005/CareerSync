@@ -3,6 +3,7 @@ import dbConnect from '@/lib/mongodb';
 import Profile from '@/models/Profile';
 import User from '@/models/User';
 import { verifyFirebaseToken } from '@/lib/auth-middleware';
+import { adminDb } from '@/lib/firebase-admin';
 
 export async function GET(request: NextRequest) {
   try {
@@ -77,9 +78,23 @@ export async function GET(request: NextRequest) {
 
     console.log('GET: Returning profile');
     console.log('GET: Profile documents:', profile.documents);
-    return NextResponse.json({ profile });
 
-    return NextResponse.json({ profile });
+    // Fetch photoURL from Firestore
+    try {
+      const userProfileRef = adminDb.collection('profiles').doc(decodedToken.uid);
+      const userProfileDoc = await userProfileRef.get();
+      const photoURL = userProfileDoc.exists ? userProfileDoc.data()?.photoURL : null;
+      console.log('GET: PhotoURL from Firestore:', photoURL);
+
+      return NextResponse.json({
+        profile,
+        photoURL
+      });
+    } catch (firestoreError) {
+      console.error('GET: Error fetching photoURL from Firestore:', firestoreError);
+      // Return profile without photoURL if Firestore fetch fails
+      return NextResponse.json({ profile });
+    }
   } catch (error) {
     console.error('GET: Error fetching profile:', error);
     console.error('GET: Error stack:', error instanceof Error ? error.stack : 'Unknown error');

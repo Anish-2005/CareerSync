@@ -43,6 +43,7 @@ const m = motion as any
 interface Profile {
   _id: string
   userId: string
+  photoURL?: string
   personalInfo: {
     firstName: string
     lastName: string
@@ -236,10 +237,16 @@ export default function ProfilePage() {
         })
         if (migratedResponse.ok) {
           const migratedData = await migratedResponse.json()
-          setProfile(migratedData.profile)
+          setProfile({
+            ...migratedData.profile,
+            photoURL: migratedData.photoURL || undefined
+          })
         }
       } else {
-        setProfile(data.profile)
+        setProfile({
+          ...data.profile,
+          photoURL: data.photoURL || undefined
+        })
       }
 
       setError(null)
@@ -783,6 +790,50 @@ export default function ProfilePage() {
     }
   }
 
+  // Handle photo upload
+  const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    try {
+      setUploading(true)
+      const token = await getIdToken()
+
+      const formData = new FormData()
+      formData.append('photo', file)
+
+      const response = await fetch('/api/profile/photo', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to upload photo')
+      }
+
+      const data = await response.json()
+      console.log('Photo uploaded successfully:', data.photoURL)
+
+      // Update the user context with the new photo URL
+      // Note: This assumes the AuthContext has a method to update user data
+      // You may need to implement this in your AuthContext
+
+      // For now, we'll refresh the profile to get the updated photoURL
+      await fetchProfile()
+
+      setError(null)
+    } catch (error) {
+      console.error('Photo upload error:', error)
+      setError('Failed to upload photo')
+    } finally {
+      setUploading(false)
+    }
+  }
+
   const addSkill = (skillName: string, category: string = 'Other') => {
     if (!editForm || !skillName.trim()) return
 
@@ -1212,26 +1263,48 @@ export default function ProfilePage() {
                     <div className="relative z-10 flex flex-col md:flex-row items-start gap-6 sm:gap-8">
                       {/* Avatar */}
                       <div className="relative">
-                        {user?.photoURL ? (
+                        {(profile.photoURL || user?.photoURL) ? (
                           <img
-                            src={user.photoURL}
+                            src={profile.photoURL || user?.photoURL || ''}
                             alt="Profile"
                             className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl object-cover"
                             style={{ boxShadow: "0 10px 30px rgba(0,0,0,0.25)" }}
+                            onError={(e) => {
+                              // Hide the broken image and show fallback
+                              (e.target as HTMLImageElement).style.display = 'none';
+                              const fallback = (e.target as HTMLElement).nextElementSibling as HTMLElement;
+                              if (fallback) fallback.style.display = 'flex';
+                            }}
                           />
-                        ) : (
-                          <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl flex items-center justify-center text-white text-3xl sm:text-4xl font-bold" style={{ background: "linear-gradient(90deg,#ff6b00,#00d4ff)", boxShadow: "0 10px 30px rgba(0,0,0,0.25)" }}>
-                            {(profile.personalInfo.firstName + ' ' + profile.personalInfo.lastName).split(" ").map((n: string) => n[0]).join("")}
-                          </div>
-                        )}
+                        ) : null}
+                        {/* Fallback initials - always rendered but hidden when photo loads */}
+                        <div
+                          className={`w-24 h-24 sm:w-32 sm:h-32 rounded-2xl flex items-center justify-center text-white text-3xl sm:text-4xl font-bold ${(profile.photoURL || user?.photoURL) ? 'hidden' : ''}`}
+                          style={{ background: "linear-gradient(90deg,#ff6b00,#00d4ff)", boxShadow: "0 10px 30px rgba(0,0,0,0.25)" }}
+                        >
+                          {(profile.personalInfo.firstName + ' ' + profile.personalInfo.lastName).split(" ").map((n: string) => n[0]).join("")}
+                        </div>
                         <m.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           className="absolute -bottom-2 -right-2 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-white"
                           style={{ background: "#00d4ff", border: "4px solid rgba(10,20,40,1)" }}
+                          onClick={() => document.getElementById('photo-upload')?.click()}
+                          disabled={uploading}
                         >
-                          <Camera className="w-4 h-4 sm:w-5 sm:h-5" />
+                          {uploading ? (
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          ) : (
+                            <Camera className="w-4 h-4 sm:w-5 sm:h-5" />
+                          )}
                         </m.button>
+                        <input
+                          id="photo-upload"
+                          type="file"
+                          accept="image/*"
+                          onChange={handlePhotoUpload}
+                          className="hidden"
+                        />
                       </div>
 
                       {/* Profile Info */}
