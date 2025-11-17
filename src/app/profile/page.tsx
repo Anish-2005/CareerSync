@@ -979,7 +979,7 @@ export default function ProfilePage() {
                 <div className="relative w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center">
                   <img src="/csync.png" alt="CareerSync" className="w-full h-full object-contain" />
                 </div>
-                <span style={{ fontSize: 18, fontWeight: 800, background: (theme.gradientText as any)?.background, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text", color: theme.textPrimary }}>
+                <span style={{ fontSize: 18, fontWeight: 800, backgroundImage: (theme.gradientText as any)?.background, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text", color: theme.textPrimary }}>
                   CareerSync
                 </span>
               </m.div>
@@ -1125,7 +1125,7 @@ export default function ProfilePage() {
             <h1
               className="text-4xl sm:text-6xl md:text-7xl font-black mb-4 leading-none"
               style={{
-                background: (theme.gradientText as any)?.background ?? 'linear-gradient(135deg, #ffffff 0%, #00d4ff 30%, #ff6b00 60%)',
+                backgroundImage: (theme.gradientText as any)?.background ?? 'linear-gradient(135deg, #ffffff 0%, #00d4ff 30%, #ff6b00 60%)',
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
