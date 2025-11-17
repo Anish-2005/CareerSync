@@ -979,7 +979,7 @@ export default function ProfilePage() {
                 <div className="relative w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center">
                   <img src="/csync.png" alt="CareerSync" className="w-full h-full object-contain" />
                 </div>
-                <span style={{ fontSize: 18, fontWeight: 800, backgroundImage: (theme.gradientText as any)?.background, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text", color: theme.textPrimary }}>
+                <span style={{ fontSize: 18, fontWeight: 800, ...(theme.theme === 'light' ? { color: '#0f172a' } : theme.gradientText) }}>
                   CareerSync
                 </span>
               </m.div>
@@ -1125,7 +1125,9 @@ export default function ProfilePage() {
             <h1
               className="text-4xl sm:text-6xl md:text-7xl font-black mb-4 leading-none"
               style={{
-                backgroundImage: (theme.gradientText as any)?.background ?? 'linear-gradient(135deg, #ffffff 0%, #00d4ff 30%, #ff6b00 60%)',
+                backgroundImage: theme.theme === 'light'
+                  ? 'linear-gradient(135deg, #0c245dff 0%, #0e47a29d 50%, #4f7fc3ff 100%)'
+                  : 'linear-gradient(135deg, #ffffff 0%, #00d4ff 30%, #ff6b00 60%)',
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
@@ -1163,7 +1165,11 @@ export default function ProfilePage() {
                     style={{
                       ...(active
                         ? { background: "linear-gradient(90deg,#ff6b00,#00d4ff)", color: "#fff", boxShadow: "0 10px 30px rgba(0,0,0,0.25)" }
-                        : { background: "rgba(26,58,82,0.38)", border: `1px solid ${theme.borderMedium}`, color: theme.textTertiary }),
+                        : { 
+                            background: theme.theme === 'light' ? 'rgba(248, 250, 252, 0.8)' : "rgba(26,58,82,0.38)", 
+                            border: `1px solid ${theme.borderMedium}`, 
+                            color: theme.textTertiary 
+                          }),
                     }}
                   >
                     <Icon className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -1206,9 +1212,18 @@ export default function ProfilePage() {
                     <div className="relative z-10 flex flex-col md:flex-row items-start gap-6 sm:gap-8">
                       {/* Avatar */}
                       <div className="relative">
-                        <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl flex items-center justify-center text-white text-3xl sm:text-4xl font-bold" style={{ background: "linear-gradient(90deg,#ff6b00,#00d4ff)", boxShadow: "0 10px 30px rgba(0,0,0,0.25)" }}>
-                          {(profile.personalInfo.firstName + ' ' + profile.personalInfo.lastName).split(" ").map((n: string) => n[0]).join("")}
-                        </div>
+                        {user?.photoURL ? (
+                          <img
+                            src={user.photoURL}
+                            alt="Profile"
+                            className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl object-cover"
+                            style={{ boxShadow: "0 10px 30px rgba(0,0,0,0.25)" }}
+                          />
+                        ) : (
+                          <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl flex items-center justify-center text-white text-3xl sm:text-4xl font-bold" style={{ background: "linear-gradient(90deg,#ff6b00,#00d4ff)", boxShadow: "0 10px 30px rgba(0,0,0,0.25)" }}>
+                            {(profile.personalInfo.firstName + ' ' + profile.personalInfo.lastName).split(" ").map((n: string) => n[0]).join("")}
+                          </div>
+                        )}
                         <m.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}

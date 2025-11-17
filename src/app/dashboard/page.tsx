@@ -632,7 +632,7 @@ export default function DashboardPage() {
                 <div className={`relative w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center ${partyMode ? 'animate-bounce' : ''}`}>
                   <img src="/csync.png" alt="CareerSync" className="w-full h-full object-contain" />
                 </div>
-                <span className="text-sm sm:text-xl font-bold bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] bg-clip-text text-transparent">
+                <span className="text-sm sm:text-xl font-bold" style={theme.theme === 'light' ? { color: '#0f172a' } : { backgroundImage: 'linear-gradient(to right, #ff6b00, #00d4ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
                   CareerSync
                 </span>
               </m.div>
@@ -869,7 +869,20 @@ export default function DashboardPage() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
-              style={{ padding: "0.75rem 1.5rem", borderRadius: "0.75rem", border: "1px solid rgba(0,212,255,0.2)", color: theme.textPrimary, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", transition: "all 0.3s", backgroundColor: "rgba(26,58,82,0.6)" }}
+              style={{
+                padding: "0.75rem 1.5rem",
+                borderRadius: "0.75rem",
+                border: "1px solid rgba(0,212,255,0.2)",
+                color: theme.textPrimary,
+                fontWeight: 700,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "0.5rem",
+                transition: "all 0.3s",
+                backgroundColor: theme.theme === 'light' ? "rgba(255, 255, 255, 0.8)" : "rgba(26,58,82,0.6)",
+                boxShadow: theme.theme === 'light' ? "0 2px 8px rgba(0,0,0,0.08)" : undefined
+              }}
               className="sm:px-6 sm:py-3 hover:border-[#00d4ff]/50 text-sm sm:text-base"
             >
               <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -1019,6 +1032,8 @@ export default function DashboardPage() {
                     gap: "0.25rem",
                     ...(selectedTab === tab.value
                       ? { background: "linear-gradient(90deg,#ff6b00,#00d4ff)", color: "#fff", boxShadow: "0 10px 30px rgba(0,0,0,0.25)" }
+                      : theme.theme === 'light'
+                      ? { background: "rgba(255, 255, 255, 0.8)", border: `1px solid rgba(99, 102, 241, 0.2)`, color: "#475569", boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }
                       : { background: "rgba(26,58,82,0.38)", border: `1px solid rgba(0,212,255,0.2)`, color: theme.textTertiary }),
                   }}
                   className="sm:px-6 sm:py-3 sm:text-sm sm:gap-2"
@@ -1031,7 +1046,11 @@ export default function DashboardPage() {
                       borderRadius: "9999px",
                       fontSize: "0.75rem",
                       fontWeight: 700,
-                      ...(selectedTab === tab.value ? { backgroundColor: "rgba(255,255,255,0.2)" } : { backgroundColor: "rgba(0,212,255,0.2)" }),
+                      ...(selectedTab === tab.value
+                        ? { backgroundColor: "rgba(255,255,255,0.2)" }
+                        : theme.theme === 'light'
+                        ? { backgroundColor: "rgba(99, 102, 241, 0.15)", color: "#4f46e5" }
+                        : { backgroundColor: "rgba(0,212,255,0.2)" }),
                     }}
                     className="sm:px-2"
                   >

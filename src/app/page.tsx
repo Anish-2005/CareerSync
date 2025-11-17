@@ -263,7 +263,7 @@ export default function LandingPage() {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               className="md:hidden p-2 rounded-md transition-all duration-300 relative overflow-hidden"
-              style={{ 
+              style={{
                 backgroundColor: theme.theme === 'light' ? 'rgba(255, 255, 255, 0.8)' : 'transparent',
                 color: theme.textSecondary,
                 border: theme.theme === 'light' ? `1px solid ${theme.borderMedium}` : undefined
@@ -294,7 +294,7 @@ export default function LandingPage() {
                     }}
                     whileTap={{ scale: 0.95 }}
                     className="px-6 py-2 text-sm font-medium rounded-full transition-all duration-300"
-                    style={{ 
+                    style={{
                       backgroundColor: theme.theme === 'light' ? 'rgba(255, 255, 255, 0.8)' : 'transparent',
                       color: theme.textSecondary,
                       border: theme.theme === 'light' ? `1px solid ${theme.borderMedium}` : `1px solid ${theme.borderMedium}`
@@ -331,7 +331,7 @@ export default function LandingPage() {
                     }}
                     whileTap={{ scale: 0.95 }}
                     className="px-6 py-2 text-sm font-medium rounded-full transition-all duration-300"
-                    style={{ 
+                    style={{
                       backgroundColor: theme.theme === 'light' ? 'rgba(255, 255, 255, 0.8)' : 'transparent',
                       color: theme.textSecondary,
                       border: theme.theme === 'light' ? `1px solid ${theme.borderMedium}` : `1px solid ${theme.borderMedium}`
@@ -393,7 +393,7 @@ export default function LandingPage() {
                   <div className="flex flex-col gap-4 pt-4 border-t" style={{ borderColor: theme.borderLight }}>
                     {user ? (
                       <>
-                        <a href="/dashboard" onClick={() => setMobileOpen(false)} className="px-6 py-3 rounded-lg text-center font-medium transition-all duration-300" style={{ 
+                        <a href="/dashboard" onClick={() => setMobileOpen(false)} className="px-6 py-3 rounded-lg text-center font-medium transition-all duration-300" style={{
                           backgroundColor: theme.theme === 'light' ? 'rgba(255, 255, 255, 0.8)' : 'transparent',
                           color: theme.textSecondary,
                           border: theme.theme === 'light' ? `1px solid ${theme.borderMedium}` : `1px solid ${theme.borderMedium}`
@@ -402,7 +402,7 @@ export default function LandingPage() {
                       </>
                     ) : (
                       <>
-                        <a href="/login" onClick={() => setMobileOpen(false)} className="px-6 py-3 rounded-lg text-center font-medium transition-all duration-300" style={{ 
+                        <a href="/login" onClick={() => setMobileOpen(false)} className="px-6 py-3 rounded-lg text-center font-medium transition-all duration-300" style={{
                           backgroundColor: theme.theme === 'light' ? 'rgba(255, 255, 255, 0.8)' : 'transparent',
                           color: theme.textSecondary,
                           border: theme.theme === 'light' ? `1px solid ${theme.borderMedium}` : `1px solid ${theme.borderMedium}`
@@ -459,30 +459,30 @@ export default function LandingPage() {
 
           {/* Advanced particle system */}
           <div className="hidden md:block">
-          {[...Array(isLight ? 10 : 30)].map((_, i) => (
-            <m.div
-              key={i}
-              className={`absolute ${isLight ? 'w-1 h-1' : 'w-2 h-2'} rounded-full`}
-              animate={{
-                x: [0, 50, -25, 0],
-                y: [0, -30, 15, 0],
-                scale: [0, 1, 0.5, 1, 0],
-                opacity: isLight ? [0, 0.6, 0.3, 0.6, 0] : [0, 0.8, 0.4, 0.8, 0],
-              }}
-              transition={{
-                duration: 15,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: "easeInOut",
-                delay: i * 0.2,
-              }}
-              style={{
-                background: theme.particleColors[i % 3],
-                left: `${particlePositions[i]?.left || 50}%`,
-                top: `${particlePositions[i]?.top || 50}%`,
-                filter: isLight ? "blur(0.6px)" : "blur(1px)",
-              }}
-            />
-          ))}
+            {[...Array(isLight ? 10 : 30)].map((_, i) => (
+              <m.div
+                key={i}
+                className={`absolute ${isLight ? 'w-1 h-1' : 'w-2 h-2'} rounded-full`}
+                animate={{
+                  x: [0, 50, -25, 0],
+                  y: [0, -30, 15, 0],
+                  scale: [0, 1, 0.5, 1, 0],
+                  opacity: isLight ? [0, 0.6, 0.3, 0.6, 0] : [0, 0.8, 0.4, 0.8, 0],
+                }}
+                transition={{
+                  duration: 15,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                  delay: i * 0.2,
+                }}
+                style={{
+                  background: theme.particleColors[i % 3],
+                  left: `${particlePositions[i]?.left || 50}%`,
+                  top: `${particlePositions[i]?.top || 50}%`,
+                  filter: isLight ? "blur(0.6px)" : "blur(1px)",
+                }}
+              />
+            ))}
           </div>
 
           {/* Liquid-like flowing elements */}
@@ -497,7 +497,7 @@ export default function LandingPage() {
               ease: "easeInOut",
             }}
             style={{
-              background: theme.theme === 'light' 
+              background: theme.theme === 'light'
                 ? "linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.3), transparent)"
                 : "linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.4), transparent)",
               filter: "blur(20px)",
@@ -533,7 +533,7 @@ export default function LandingPage() {
           {/* Innovative badge with morphing effect */}
           <m.div
             variants={itemVariants}
-            className="relative inline-flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-8 sm:py-4 rounded-full border backdrop-blur-xl overflow-hidden"
+            className="relative inline-flex items-center gap-1 sm:gap-2 px-3 py-1.5 sm:px-8 sm:py-2 rounded-full border backdrop-blur-xl overflow-hidden"
             style={{ ...theme.bgButtonSecondaryStyle, borderColor: theme.borderMedium }}
             whileHover={{ scale: 1.05 }}
           >
@@ -554,7 +554,15 @@ export default function LandingPage() {
                   ? "linear-gradient(45deg, rgba(99, 102, 241, 0.08), rgba(245, 158, 11, 0.08))"
                   : "linear-gradient(45deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 0, 0.1))",
               }}
+
             />
+            <span
+              style={{
+                color: theme.theme === "light" ? "#0a1a2f" : "#ffffff"
+              }}
+            >
+              Next-gen Job Tracking System
+            </span>
             <m.div
               className="w-2 h-2 sm:w-3 sm:h-3 rounded-full"
               animate={{
@@ -570,9 +578,7 @@ export default function LandingPage() {
                 backgroundColor: theme.textAccent
               }}
             />
-            <span className="top-5 text-sm sm:text-base md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-light px-4"
-              style={{ color: theme.textSecondary }}
-              >Next-Generation Career Intelligence</span>
+
             <m.div
               className="w-1 h-1 sm:w-2 sm:h-2 rounded-full"
               animate={{
@@ -837,7 +843,7 @@ export default function LandingPage() {
                     style={{
                       left: `${15 + i * 10}%`,
                       top: `${40}%`,
-                      backgroundColor: i % 2 === 0 
+                      backgroundColor: i % 2 === 0
                         ? (theme.theme === 'light' ? '#4f46e5' : '#00d4ff')
                         : (theme.theme === 'light' ? '#f59e0b' : '#ff6b00'),
                     }}
@@ -845,7 +851,7 @@ export default function LandingPage() {
                 ))}
               </div>
 
-              <div className="flex items-center gap-4 relative z-10 pb-8">
+              <div className="flex items-center gap-4 relative z-10">
                 <m.div
                   className="w-4 h-4 rounded-full shadow-lg"
                   animate={{
@@ -943,14 +949,14 @@ export default function LandingPage() {
                   i % 3 === 0
                     ? "linear-gradient(45deg, rgba(99, 102, 241, 0.2), rgba(245, 158, 11, 0.2))"
                     : i % 3 === 1
-                    ? "linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(16, 185, 129, 0.2))"
-                    : "linear-gradient(225deg, rgba(16, 185, 129, 0.2), rgba(99, 102, 241, 0.2))"
+                      ? "linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(16, 185, 129, 0.2))"
+                      : "linear-gradient(225deg, rgba(16, 185, 129, 0.2), rgba(99, 102, 241, 0.2))"
                 ) : (
                   i % 3 === 0
                     ? "linear-gradient(45deg, rgba(0, 212, 255, 0.3), rgba(255, 107, 0, 0.3))"
                     : i % 3 === 1
-                    ? "linear-gradient(135deg, rgba(255, 107, 0, 0.3), rgba(0, 255, 136, 0.3))"
-                    : "linear-gradient(225deg, rgba(0, 255, 136, 0.3), rgba(0, 212, 255, 0.3))"
+                      ? "linear-gradient(135deg, rgba(255, 107, 0, 0.3), rgba(0, 255, 136, 0.3))"
+                      : "linear-gradient(225deg, rgba(0, 255, 136, 0.3), rgba(0, 212, 255, 0.3))"
                 ),
                 filter: isLight ? "blur(10px)" : "blur(20px)",
               }}
@@ -1134,11 +1140,10 @@ export default function LandingPage() {
                   stiffness: 300,
                   damping: 25,
                 }}
-                className={`group relative overflow-hidden rounded-2xl md:rounded-3xl backdrop-blur-xl transition-all duration-700 cursor-pointer ${
-                  feature.size === 'large'
+                className={`group relative overflow-hidden rounded-2xl md:rounded-3xl backdrop-blur-xl transition-all duration-700 cursor-pointer ${feature.size === 'large'
                     ? 'md:col-span-2 lg:col-span-1 p-6 md:p-10'
                     : 'p-5 md:p-8'
-                }`}
+                  }`}
                 style={{
                   background: theme.theme === 'light'
                     ? "linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(249, 250, 251, 0.9))"
@@ -1194,9 +1199,8 @@ export default function LandingPage() {
 
                 {/* Fluid icon container */}
                 <m.div
-                  className={`relative rounded-2xl flex items-center justify-center mb-4 md:mb-8 group-hover:scale-110 transition-transform duration-500 ${
-                    feature.size === 'large' ? 'w-14 h-14 md:w-20 md:h-20' : 'w-12 h-12 md:w-16 md:h-16'
-                  }`}
+                  className={`relative rounded-2xl flex items-center justify-center mb-4 md:mb-8 group-hover:scale-110 transition-transform duration-500 ${feature.size === 'large' ? 'w-14 h-14 md:w-20 md:h-20' : 'w-12 h-12 md:w-16 md:h-16'
+                    }`}
                   style={{
                     background: `linear-gradient(135deg, ${feature.color})`,
                     boxShadow: `0 0 30px ${feature.shadowColor}`,
@@ -1219,9 +1223,8 @@ export default function LandingPage() {
                     }}
                   />
                   <feature.icon
-                    className={`relative z-10 ${
-                      feature.size === 'large' ? 'w-10 h-10' : 'w-8 h-8'
-                    }`}
+                    className={`relative z-10 ${feature.size === 'large' ? 'w-10 h-10' : 'w-8 h-8'
+                      }`}
                     style={{
                       color: theme.theme === 'light' ? '#1e293b' : '#ffffff',
                     }}
@@ -1231,9 +1234,8 @@ export default function LandingPage() {
                 {/* Fluid content */}
                 <div style={{ transform: "translateZ(15px)" }}>
                   <m.h3
-                    className={`font-bold mb-3 md:mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r transition-all duration-500 ${
-                      feature.size === 'large' ? 'text-lg md:text-2xl' : 'text-base md:text-xl'
-                    }`}
+                    className={`font-bold mb-3 md:mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r transition-all duration-500 ${feature.size === 'large' ? 'text-lg md:text-2xl' : 'text-base md:text-xl'
+                      }`}
                     style={{
                       color: theme.textPrimary,
                       backgroundImage: `linear-gradient(135deg, #${feature.color.split('from-[')[1].split(']')[0]}, #${feature.color.split('to-[')[1].split(']')[0]})`,
@@ -1243,9 +1245,8 @@ export default function LandingPage() {
                   >
                     {feature.title}
                   </m.h3>
-                  <p className={`leading-relaxed transition-colors duration-300 ${
-                    feature.size === 'large' ? 'text-sm md:text-base' : 'text-xs md:text-sm'
-                  }`}
+                  <p className={`leading-relaxed transition-colors duration-300 ${feature.size === 'large' ? 'text-sm md:text-base' : 'text-xs md:text-sm'
+                    }`}
                     style={{ color: theme.textSecondary }}
                   >
                     {feature.description}
@@ -1445,7 +1446,7 @@ export default function LandingPage() {
               {[...Array(isLight ? 12 : 25)].map((_, i) => (
                 <m.div
                   key={i}
-                        className={`absolute ${isLight ? 'w-1 h-1' : 'w-1 h-1'} rounded-full opacity-40`}
+                  className={`absolute ${isLight ? 'w-1 h-1' : 'w-1 h-1'} rounded-full opacity-40`}
                   animate={{
                     y: [0, -30, 0],
                     x: [0, Math.sin(i * 0.8) * 25, 0],
@@ -1492,13 +1493,12 @@ export default function LandingPage() {
                   <m.button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`relative flex-1 px-3 py-2 sm:px-6 sm:py-3 text-sm font-bold transition-all duration-500 rounded-xl overflow-hidden ${
-                      activeTab === tab
+                    className={`relative flex-1 px-3 py-2 sm:px-6 sm:py-3 text-sm font-bold transition-all duration-500 rounded-xl overflow-hidden ${activeTab === tab
                         ? "text-[#00d4ff] bg-[#00d4ff]/15 border border-[#00d4ff]/60 shadow-lg shadow-[#00d4ff]/20"
                         : theme.theme === 'light'
-                        ? "text-gray-600 hover:text-[#00d4ff] hover:bg-[#00d4ff]/8 border border-transparent hover:border-[#00d4ff]/30"
-                        : "text-gray-400 hover:text-white hover:bg-[#00d4ff]/8 border border-transparent hover:border-[#00d4ff]/30"
-                    }`}
+                          ? "text-gray-600 hover:text-[#00d4ff] hover:bg-[#00d4ff]/8 border border-transparent hover:border-[#00d4ff]/30"
+                          : "text-gray-400 hover:text-white hover:bg-[#00d4ff]/8 border border-transparent hover:border-[#00d4ff]/30"
+                      }`}
                     whileHover={{
                       scale: 1.05,
                       y: -2,
@@ -1640,10 +1640,9 @@ export default function LandingPage() {
                         >
                           {/* Priority indicator */}
                           <div
-                            className={`absolute left-0 top-0 bottom-0 w-1 ${
-                              app.priority === 'high' ? 'bg-[#ff6b00]' :
-                              app.priority === 'medium' ? 'bg-[#00d4ff]' : 'bg-gray-500'
-                            }`}
+                            className={`absolute left-0 top-0 bottom-0 w-1 ${app.priority === 'high' ? 'bg-[#ff6b00]' :
+                                app.priority === 'medium' ? 'bg-[#00d4ff]' : 'bg-gray-500'
+                              }`}
                           />
 
                           {/* Animated background on hover */}
@@ -1708,11 +1707,10 @@ export default function LandingPage() {
                         {Array.from({ length: 31 }, (_, i) => (
                           <m.div
                             key={i}
-                            className={`aspect-square rounded-lg border border-[#00d4ff]/20 flex items-center justify-center text-xs font-bold cursor-pointer transition-all duration-300 ${
-                              i === 14 ? 'bg-[#00d4ff]/20 border-[#00d4ff] text-[#00d4ff]' :
-                              i === 17 ? 'bg-[#ff6b00]/20 border-[#ff6b00] text-[#ff6b00]' :
-                              'text-gray-400 hover:bg-[#00d4ff]/10'
-                            }`}
+                            className={`aspect-square rounded-lg border border-[#00d4ff]/20 flex items-center justify-center text-xs font-bold cursor-pointer transition-all duration-300 ${i === 14 ? 'bg-[#00d4ff]/20 border-[#00d4ff] text-[#00d4ff]' :
+                                i === 17 ? 'bg-[#ff6b00]/20 border-[#ff6b00] text-[#ff6b00]' :
+                                  'text-gray-400 hover:bg-[#00d4ff]/10'
+                              }`}
                             whileHover={{ scale: 1.1 }}
                           >
                             {i + 1}
@@ -1754,11 +1752,10 @@ export default function LandingPage() {
                                 {interview.company}
                               </p>
                             </div>
-                            <span className={`px-3 py-1 rounded-full text-xs font-bold self-start sm:self-center ${
-                              interview.status === 'confirmed'
+                            <span className={`px-3 py-1 rounded-full text-xs font-bold self-start sm:self-center ${interview.status === 'confirmed'
                                 ? 'bg-[#00ff88]/20 text-[#00ff88] border border-[#00ff88]/50'
                                 : 'bg-[#ff6b00]/20 text-[#ff6b00] border border-[#ff6b00]/50'
-                            }`}>
+                              }`}>
                               {interview.status.toUpperCase()}
                             </span>
                           </div>
@@ -1946,10 +1943,10 @@ export default function LandingPage() {
                 background: i % 4 === 0
                   ? "linear-gradient(45deg, rgba(0, 212, 255, 0.4), rgba(255, 107, 0, 0.4))"
                   : i % 4 === 1
-                  ? "linear-gradient(135deg, rgba(255, 107, 0, 0.4), rgba(0, 255, 136, 0.4))"
-                  : i % 4 === 2
-                  ? "linear-gradient(225deg, rgba(0, 255, 136, 0.4), rgba(0, 212, 255, 0.4))"
-                  : "linear-gradient(315deg, rgba(255, 140, 0, 0.4), rgba(0, 212, 255, 0.4))",
+                    ? "linear-gradient(135deg, rgba(255, 107, 0, 0.4), rgba(0, 255, 136, 0.4))"
+                    : i % 4 === 2
+                      ? "linear-gradient(225deg, rgba(0, 255, 136, 0.4), rgba(0, 212, 255, 0.4))"
+                      : "linear-gradient(315deg, rgba(255, 140, 0, 0.4), rgba(0, 212, 255, 0.4))",
                 filter: "blur(25px)",
               }}
             />
@@ -1977,7 +1974,7 @@ export default function LandingPage() {
           />
 
           {/* Dynamic particle field */}
-              {[...Array(isLight ? 20 : 40)].map((_, i) => (
+          {[...Array(isLight ? 20 : 40)].map((_, i) => (
             <m.div
               key={`particle-${i}`}
               className="absolute w-1 h-1 rounded-full"
@@ -2118,9 +2115,9 @@ export default function LandingPage() {
                   {stat.number}
                 </m.div>
 
-                <p 
+                <p
                   className="font-semibold text-lg transition-colors duration-300"
-                  style={{ 
+                  style={{
                     color: theme.theme === 'light' ? '#64748b' : '#9ca3af',
                   }}
                 >
@@ -2161,14 +2158,13 @@ export default function LandingPage() {
         {/* Dynamic background effects */}
         <div className="absolute inset-0">
           {/* Floating geometric shapes */}
-                  {[...Array(isLight ? 6 : 12)].map((_, i) => (
+          {[...Array(isLight ? 6 : 12)].map((_, i) => (
             <m.div
               key={i}
-              className={`absolute rounded-lg opacity-10 ${
-                i % 3 === 0 ? 'w-16 h-16 bg-[#00d4ff]' :
-                i % 3 === 1 ? 'w-12 h-12 bg-[#ff6b00] rounded-full' :
-                'w-20 h-8 bg-[#00ff88]'
-              }`}
+              className={`absolute rounded-lg opacity-10 ${i % 3 === 0 ? 'w-16 h-16 bg-[#00d4ff]' :
+                  i % 3 === 1 ? 'w-12 h-12 bg-[#ff6b00] rounded-full' :
+                    'w-20 h-8 bg-[#00ff88]'
+                }`}
               animate={{
                 y: [0, -50, 0],
                 x: [0, Math.cos(i) * 30, 0],
@@ -2224,35 +2220,35 @@ export default function LandingPage() {
             viewport={{ once: true }}
           >
             {[
-//               {
-//                 name: "Nexus Core",
-//                 price: "Free",
-//                 description: "Essential connections for career navigation",
-//                 features: ["Track up to 50 opportunities", "Basic neural insights", "Mobile synchronization"],
-//                 highlighted: false,
-//                 color: "#00d4ff",
-//                 icon: "🔗",
-//               },
-//               {
-//                 name: "Quantum Pro",
-//                 price: "$29",
-//                 period: "/month",
-//                 description: "Advanced intelligence for career mastery",
-//                 features: ["Unlimited opportunity tracking", "Quantum analytics", "Neural networking", "AI-powered insights"],
-//                 highlighted: true,
-//                 color: "#ff6b00",
-//                 icon: "⚡",
-//               },
-//               {
-//                 name: "Omni Enterprise",
-//                 price: "$79",
-//                 period: "/month",
-//                 description: "Complete career multiverse access",
-//                 features: ["Everything in Quantum Pro", "Priority neural processing", "Custom integrations", "Team collaboration matrix"],
-//                 highlighted: false,
-//                 color: "#00ff88",
-//                 icon: "🌌",
-//               },
+              //               {
+              //                 name: "Nexus Core",
+              //                 price: "Free",
+              //                 description: "Essential connections for career navigation",
+              //                 features: ["Track up to 50 opportunities", "Basic neural insights", "Mobile synchronization"],
+              //                 highlighted: false,
+              //                 color: "#00d4ff",
+              //                 icon: "🔗",
+              //               },
+              //               {
+              //                 name: "Quantum Pro",
+              //                 price: "$29",
+              //                 period: "/month",
+              //                 description: "Advanced intelligence for career mastery",
+              //                 features: ["Unlimited opportunity tracking", "Quantum analytics", "Neural networking", "AI-powered insights"],
+              //                 highlighted: true,
+              //                 color: "#ff6b00",
+              //                 icon: "⚡",
+              //               },
+              //               {
+              //                 name: "Omni Enterprise",
+              //                 price: "$79",
+              //                 period: "/month",
+              //                 description: "Complete career multiverse access",
+              //                 features: ["Everything in Quantum Pro", "Priority neural processing", "Custom integrations", "Team collaboration matrix"],
+              //                 highlighted: false,
+              //                 color: "#00ff88",
+              //                 icon: "🌌",
+              //               },
               {
                 name: "Nexus Core",
                 price: "Free",
@@ -2297,13 +2293,12 @@ export default function LandingPage() {
                   stiffness: 300,
                   damping: 20,
                 }}
-                className={`group relative p-8 rounded-3xl transition-all duration-500 backdrop-blur-xl overflow-hidden cursor-pointer ${
-                  plan.highlighted
+                className={`group relative p-8 rounded-3xl transition-all duration-500 backdrop-blur-xl overflow-hidden cursor-pointer ${plan.highlighted
                     ? "bg-gradient-to-br from-[#ff6b00]/20 to-[#00d4ff]/20 border-2 border-[#ff6b00] shadow-2xl shadow-[#ff6b00]/30"
                     : theme.theme === 'light'
-                    ? "bg-gradient-to-br from-white/90 to-gray-50/90 border border-gray-200/50"
-                    : "bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20"
-                }`}
+                      ? "bg-gradient-to-br from-white/90 to-gray-50/90 border border-gray-200/50"
+                      : "bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20"
+                  }`}
                 style={{
                   transformStyle: "preserve-3d",
                   perspective: "1000px",
@@ -2478,13 +2473,12 @@ export default function LandingPage() {
                     boxShadow: `0 0 30px ${plan.color}60`,
                   }}
                   whileTap={{ scale: 0.95 }}
-                  className={`w-full py-4 rounded-2xl font-black text-lg transition-all duration-300 relative overflow-hidden ${
-                    plan.highlighted
+                  className={`w-full py-4 rounded-2xl font-black text-lg transition-all duration-300 relative overflow-hidden ${plan.highlighted
                       ? "bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] text-white shadow-lg shadow-[#ff6b00]/50"
                       : theme.theme === 'light'
-                      ? "bg-gray-100 border border-gray-300 text-gray-900 hover:bg-gray-200"
-                      : "bg-[#1a3a52]/50 border border-[#00d4ff]/30 text-white hover:border-[#00d4ff]/50"
-                  }`}
+                        ? "bg-gray-100 border border-gray-300 text-gray-900 hover:bg-gray-200"
+                        : "bg-[#1a3a52]/50 border border-[#00d4ff]/30 text-white hover:border-[#00d4ff]/50"
+                    }`}
                   style={{
                     transform: "translateZ(20px)",
                   }}
@@ -2530,9 +2524,9 @@ export default function LandingPage() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <img src="/csync.png" alt="CareerSync" className="w-8 h-8 object-contain" />
-                <span className="font-bold text-white">CareerSync</span>
+                <span className="font-bold" style={{ color: theme.theme === 'light' ? '#1e293b' : '#ffffff' }}>CareerSync</span>
               </div>
-              <p className="text-gray-400 text-sm">Connect deeply with infinite career possibilities</p>
+              <p className="text-sm" style={{ color: theme.theme === 'light' ? '#64748b' : '#9ca3af' }}>Connect deeply with infinite career possibilities</p>
             </div>
             {[
               {
@@ -2549,7 +2543,7 @@ export default function LandingPage() {
               },
             ].map((col, idx) => (
               <div key={idx}>
-                <h4 className="font-bold text-white mb-4">{col.title}</h4>
+                <h4 className="font-bold mb-4" style={{ color: theme.theme === 'light' ? '#1e293b' : '#ffffff' }}>{col.title}</h4>
                 <ul className="space-y-2">
                   {col.links.map((link) => (
                     <li key={link}>
@@ -2564,14 +2558,15 @@ export default function LandingPage() {
           </div>
 
           <div className="pt-8 border-t border-[#00d4ff]/20 flex flex-col md:flex-row items-center justify-between">
-            <p className="text-gray-500 text-sm mb-4 md:mb-0">© 2024 CareerSync. All rights reserved.</p>
+            <p className="text-sm mb-4 md:mb-0" style={{ color: theme.theme === 'light' ? '#64748b' : '#9ca3af' }}>© 2024 CareerSync. All rights reserved.</p>
             <div className="flex gap-6">
               {["Twitter", "LinkedIn", "GitHub"].map((social) => (
                 <m.a
                   key={social}
                   href="#"
                   whileHover={{ scale: 1.2, color: "#00d4ff" }}
-                  className="text-gray-400 hover:text-[#00d4ff] transition-all duration-300 text-sm font-medium"
+                  className="transition-all duration-300 text-sm font-medium"
+                  style={{ color: theme.theme === 'light' ? '#64748b' : '#9ca3af' }}
                 >
                   {social}
                 </m.a>
