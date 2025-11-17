@@ -17,6 +17,9 @@ import {
   Star,
   Menu,
   X,
+  Brain,
+  Link,
+  Globe,
 } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
 import { useTheme } from "@/contexts/ThemeContext"
@@ -193,7 +196,7 @@ export default function LandingPage() {
         initial={{ opacity: 0, y: -100 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
-        className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b`}
+        className={`mb-20 fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b`}
         style={{ ...theme.bgNavStyle, borderColor: theme.borderLight, boxShadow: '0 1px 4px rgba(15,23,42,0.05)' }}
       >
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -414,7 +417,7 @@ export default function LandingPage() {
           </AnimatePresence>
         </div>
       </m.nav>      {/* Hero Section */}
-      <section className="pt-20 md:pt-24 relative min-h-screen md:h-screen w-full flex items-center justify-center overflow-hidden py-12 md:py-0">
+      <section className="pt-32 md:pt-24 relative min-h-screen md:h-screen w-full flex items-center justify-center overflow-hidden py-24 md:py-0">
         {/* Innovative morphing background */}
         <div className="absolute inset-0 overflow-hidden">
           {/* Morphing geometric shapes */}
@@ -567,11 +570,9 @@ export default function LandingPage() {
                 backgroundColor: theme.textAccent
               }}
             />
-            <span className="text-sm sm:text-base md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-light px-4"
+            <span className="top-5 text-sm sm:text-base md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-light px-4"
               style={{ color: theme.textSecondary }}
-              animate={{
-                opacity: [0.6, 1, 0.6],
-              }}>Next-Generation Career Intelligence</span>
+              >Next-Generation Career Intelligence</span>
             <m.div
               className="w-1 h-1 sm:w-2 sm:h-2 rounded-full"
               animate={{
@@ -639,13 +640,13 @@ export default function LandingPage() {
               ease: "easeInOut",
             }}
           >
-            <m.span className="text-sm sm:text-base md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-light px-4"
+            <motion.span className="text-sm sm:text-base md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed font-light px-4"
               style={{ color: theme.textSecondary }}
               animate={{
                 opacity: [0.6, 1, 0.6],
               }}>
               Sync your career trajectory with
-              <m.span
+              <motion.span
                 className="font-semibold mx-2"
                 animate={{
                   color: theme.theme === 'light'
@@ -659,9 +660,9 @@ export default function LandingPage() {
                 }}
               >
                 intelligent networking
-              </m.span>
+              </motion.span>
               and quantum-powered insights.
-            </m.span>
+            </motion.span>
           </m.p>
 
           {/* Innovative CTA buttons with morphing effects */}
@@ -844,7 +845,7 @@ export default function LandingPage() {
                 ))}
               </div>
 
-              <div className="flex items-center gap-4 relative z-10">
+              <div className="flex items-center gap-4 relative z-10 pb-8">
                 <m.div
                   className="w-4 h-4 rounded-full shadow-lg"
                   animate={{
@@ -868,7 +869,7 @@ export default function LandingPage() {
                     ease: "easeInOut",
                   }}
                 />
-                <span className="font-bold text-lg" style={{ color: theme.textPrimary }}>15,000+ Professionals Connected</span>
+                <span className="font-bold text-lg bottom-5" style={{ color: theme.textPrimary }}>15,000+ Professionals Connected</span>
                 <m.div
                   className="w-3 h-3 rounded-full shadow-lg"
                   animate={{
@@ -1012,7 +1013,7 @@ export default function LandingPage() {
                 ease: "easeInOut",
               }}
               style={{
-                background: theme.theme === 'light'
+                backgroundImage: theme.theme === 'light'
                   ? "linear-gradient(135deg, #1e293b 0%, #4f46e5 30%, #f59e0b 60%, #10b981 90%, #1e293b 100%)"
                   : "linear-gradient(135deg, #ffffff 0%, #00d4ff 30%, #ff6b00 60%, #00ff88 90%, #ffffff 100%)",
                 backgroundSize: "300% 300%",
@@ -1218,9 +1219,12 @@ export default function LandingPage() {
                     }}
                   />
                   <feature.icon
-                    className={`relative z-10 text-white ${
+                    className={`relative z-10 ${
                       feature.size === 'large' ? 'w-10 h-10' : 'w-8 h-8'
                     }`}
+                    style={{
+                      color: theme.theme === 'light' ? '#1e293b' : '#ffffff',
+                    }}
                   />
                 </m.div>
 
@@ -1232,7 +1236,7 @@ export default function LandingPage() {
                     }`}
                     style={{
                       color: theme.textPrimary,
-                      background: `linear-gradient(135deg, #${feature.color.split('from-[')[1].split(']')[0]}, #${feature.color.split('to-[')[1].split(']')[0]})`,
+                      backgroundImage: `linear-gradient(135deg, #${feature.color.split('from-[')[1].split(']')[0]}, #${feature.color.split('to-[')[1].split(']')[0]})`,
                       backgroundClip: "text",
                       WebkitBackgroundClip: "text",
                     }}
@@ -1303,7 +1307,7 @@ export default function LandingPage() {
               ease: "linear",
             }}
             style={{
-              background: theme.theme === 'light'
+              backgroundImage: theme.theme === 'light'
                 ? 'linear-gradient(45deg, transparent 30%, rgba(99, 102, 241, 0.02) 50%, transparent 70%)'
                 : 'linear-gradient(45deg, transparent 30%, rgba(0, 212, 255, 0.03) 50%, transparent 70%)',
               backgroundSize: '200% 200%',
@@ -1317,10 +1321,10 @@ export default function LandingPage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center my-12"
           >
             <m.h2
-              className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 leading-none"
+              className="text-xl md:text-6xl lg:text-7xl font-black mb-6 leading-none"
               animate={{
                 textShadow: theme.theme === 'light' ? [
                   "0 1px 2px rgba(0,0,0,0.08)",
@@ -1341,13 +1345,14 @@ export default function LandingPage() {
               }}
               style={{
                 color: theme.theme === 'light' ? '#000000' : undefined,
-                background: theme.theme === 'light'
+                backgroundImage: theme.theme === 'light'
                   ? undefined
                   : "linear-gradient(135deg, #ffffff 0%, #00d4ff 40%, #ff6b00 70%, #00ff88 100%)",
                 backgroundSize: theme.theme === 'light' ? undefined : "300% 300%",
                 WebkitBackgroundClip: theme.theme === 'light' ? undefined : "text",
                 WebkitTextFillColor: theme.theme === 'light' ? undefined : "transparent",
                 backgroundClip: theme.theme === 'light' ? undefined : "text",
+                marginTop: '4rem',
               }}
             >
               Next-Generation Career Intelligence
@@ -1466,9 +1471,17 @@ export default function LandingPage() {
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-4">
                   <div className="w-3 h-3 bg-[#00d4ff] rounded-full animate-pulse"></div>
-                  <span className="text-[#00d4ff] font-bold text-base md:text-sm">SYSTEM ONLINE</span>
+                  <span
+                    className="font-bold text-base md:text-sm"
+                    style={{ color: theme.theme === 'light' ? '#1e293b' : '#00d4ff' }}
+                  >
+                    SYSTEM ONLINE
+                  </span>
                 </div>
-                <div className="text-gray-400 text-sm font-mono">
+                <div
+                  className="text-sm font-mono"
+                  style={{ color: theme.theme === 'light' ? '#64748b' : '#9ca3af' }}
+                >
                   <TimeDisplay />
                 </div>
               </div>
@@ -1482,6 +1495,8 @@ export default function LandingPage() {
                     className={`relative flex-1 px-3 py-2 sm:px-6 sm:py-3 text-sm font-bold transition-all duration-500 rounded-xl overflow-hidden ${
                       activeTab === tab
                         ? "text-[#00d4ff] bg-[#00d4ff]/15 border border-[#00d4ff]/60 shadow-lg shadow-[#00d4ff]/20"
+                        : theme.theme === 'light'
+                        ? "text-gray-600 hover:text-[#00d4ff] hover:bg-[#00d4ff]/8 border border-transparent hover:border-[#00d4ff]/30"
                         : "text-gray-400 hover:text-white hover:bg-[#00d4ff]/8 border border-transparent hover:border-[#00d4ff]/30"
                     }`}
                     whileHover={{
@@ -1579,7 +1594,15 @@ export default function LandingPage() {
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: idx * 0.1 }}
-                            className="text-center p-4 rounded-xl bg-[#1a3a52]/50 border border-[#00d4ff]/20"
+                            className="text-center p-4 rounded-xl border"
+                            style={{
+                              background: theme.theme === 'light'
+                                ? "rgba(255, 255, 255, 0.8)"
+                                : "rgba(26, 58, 82, 0.5)",
+                              borderColor: theme.theme === 'light'
+                                ? "rgba(99, 102, 241, 0.2)"
+                                : "rgba(0, 212, 255, 0.2)",
+                            }}
                           >
                             <div
                               className="text-2xl font-black mb-1"
@@ -1587,7 +1610,12 @@ export default function LandingPage() {
                             >
                               {stat.value}
                             </div>
-                            <div className="text-xs text-gray-400">{stat.label}</div>
+                            <div
+                              className="text-xs"
+                              style={{ color: theme.theme === 'light' ? '#64748b' : '#9ca3af' }}
+                            >
+                              {stat.label}
+                            </div>
                           </m.div>
                         ))}
                       </div>
@@ -1602,7 +1630,13 @@ export default function LandingPage() {
                           initial={{ opacity: 0, x: -30 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: idx * 0.15 }}
-                          className="group relative flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-6 rounded-2xl bg-[#1a3a52]/50 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300 overflow-hidden"
+                          className="group relative flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-6 rounded-2xl hover:border-[#00d4ff]/50 transition-all duration-300 overflow-hidden"
+                          style={{
+                            background: theme.theme === 'light'
+                              ? "rgba(255, 255, 255, 0.8)"
+                              : "rgba(26, 58, 82, 0.5)",
+                            border: `1px solid ${theme.theme === 'light' ? "rgba(99, 102, 241, 0.2)" : "rgba(0, 212, 255, 0.2)"}`,
+                          }}
                         >
                           {/* Priority indicator */}
                           <div
@@ -1618,12 +1652,18 @@ export default function LandingPage() {
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                             <div className="flex items-center gap-4">
                               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#ff6b00]/20 to-[#00d4ff]/20 flex items-center justify-center">
-                                <span className="text-white font-bold text-sm">
+                                <span
+                                  className="font-bold text-sm"
+                                  style={{ color: theme.theme === 'light' ? '#1e293b' : '#ffffff' }}
+                                >
                                   {app.company.charAt(0)}
                                 </span>
                               </div>
                               <div>
-                                <p className="font-bold text-white group-hover:text-[#00d4ff] transition-colors">
+                                <p
+                                  className="font-bold group-hover:text-[#00d4ff] transition-colors"
+                                  style={{ color: theme.theme === 'light' ? '#1e293b' : '#ffffff' }}
+                                >
                                   {app.company}
                                 </p>
                                 <p className="text-xs text-gray-400">{app.status}</p>
@@ -1639,7 +1679,10 @@ export default function LandingPage() {
                                   className="h-full bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] rounded-full"
                                 />
                               </div>
-                              <span className="text-sm text-gray-400 font-mono">
+                              <span
+                                className="text-sm font-mono"
+                                style={{ color: theme.theme === 'light' ? '#64748b' : '#9ca3af' }}
+                              >
                                 {app.progress}%
                               </span>
                             </div>
@@ -1654,7 +1697,11 @@ export default function LandingPage() {
                       {/* Interview calendar view */}
                       <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-6">
                         {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, idx) => (
-                          <div key={idx} className="text-center text-xs sm:text-xs text-gray-400 py-2">
+                          <div
+                            key={idx}
+                            className="text-center text-xs sm:text-xs py-2"
+                            style={{ color: theme.theme === 'light' ? '#64748b' : '#9ca3af' }}
+                          >
                             {day}
                           </div>
                         ))}
@@ -1682,16 +1729,30 @@ export default function LandingPage() {
                           initial={{ opacity: 0, x: -30 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: idx * 0.15 }}
-                          className="group relative p-4 sm:p-6 rounded-2xl bg-[#1a3a52]/50 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 transition-all duration-300"
+                          className="group relative p-4 sm:p-6 rounded-2xl hover:border-[#00d4ff]/50 transition-all duration-300"
+                          style={{
+                            background: theme.theme === 'light'
+                              ? "rgba(255, 255, 255, 0.8)"
+                              : "rgba(26, 58, 82, 0.5)",
+                            border: `1px solid ${theme.theme === 'light' ? "rgba(99, 102, 241, 0.2)" : "rgba(0, 212, 255, 0.2)"}`,
+                          }}
                         >
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                             <div className="flex items-center gap-3">
                               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#ff6b00]/20 to-[#00d4ff]/20 flex items-center justify-center">
-                                <span className="text-white font-bold text-xs">
+                                <span
+                                  className="text-white font-bold text-xs"
+                                  style={{ color: theme.theme === 'light' ? '#1e293b' : '#ffffff' }}
+                                >
                                   {interview.company.charAt(0)}
                                 </span>
                               </div>
-                              <p className="font-bold text-white">{interview.company}</p>
+                              <p
+                                className="font-bold"
+                                style={{ color: theme.theme === 'light' ? '#1e293b' : '#ffffff' }}
+                              >
+                                {interview.company}
+                              </p>
                             </div>
                             <span className={`px-3 py-1 rounded-full text-xs font-bold self-start sm:self-center ${
                               interview.status === 'confirmed'
@@ -1704,7 +1765,12 @@ export default function LandingPage() {
 
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                             <div>
-                              <p className="text-sm text-gray-400">{interview.date}</p>
+                              <p
+                                className="text-sm"
+                                style={{ color: theme.theme === 'light' ? '#64748b' : '#9ca3af' }}
+                              >
+                                {interview.date}
+                              </p>
                               <p className="text-xs text-[#00d4ff] font-medium">{interview.type}</p>
                             </div>
                             <m.button
@@ -1734,7 +1800,15 @@ export default function LandingPage() {
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: idx * 0.2 }}
-                            className="relative flex flex-col items-center p-6 rounded-2xl bg-[#1a3a52]/50 border border-[#00d4ff]/20"
+                            className="relative flex flex-col items-center p-6 rounded-2xl border"
+                            style={{
+                              background: theme.theme === 'light'
+                                ? "rgba(255, 255, 255, 0.8)"
+                                : "rgba(26, 58, 82, 0.5)",
+                              borderColor: theme.theme === 'light'
+                                ? "rgba(99, 102, 241, 0.2)"
+                                : "rgba(0, 212, 255, 0.2)",
+                            }}
                           >
                             {/* Circular progress */}
                             <div className="relative w-20 h-20 mb-4">
@@ -1762,7 +1836,12 @@ export default function LandingPage() {
                             </div>
 
                             <div className="text-center">
-                              <p className="text-sm text-gray-400 mb-1">{stat.label}</p>
+                              <p
+                                className="text-sm mb-1"
+                                style={{ color: theme.theme === 'light' ? '#64748b' : '#9ca3af' }}
+                              >
+                                {stat.label}
+                              </p>
                               <p
                                 className="text-2xl font-black"
                                 style={{ color: stat.color }}
@@ -1779,9 +1858,22 @@ export default function LandingPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.6 }}
-                        className="p-6 rounded-2xl bg-[#1a3a52]/50 border border-[#00d4ff]/20"
+                        className="p-6 rounded-2xl border"
+                        style={{
+                          background: theme.theme === 'light'
+                            ? "rgba(255, 255, 255, 0.8)"
+                            : "rgba(26, 58, 82, 0.5)",
+                          borderColor: theme.theme === 'light'
+                            ? "rgba(99, 102, 241, 0.2)"
+                            : "rgba(0, 212, 255, 0.2)",
+                        }}
                       >
-                        <h3 className="text-lg font-bold text-white mb-4">Performance Trend</h3>
+                        <h3
+                          className="text-lg font-bold mb-4"
+                          style={{ color: theme.theme === 'light' ? '#1e293b' : '#ffffff' }}
+                        >
+                          Performance Trend
+                        </h3>
                         <div className="flex items-end gap-1 sm:gap-2 h-20 sm:h-24">
                           {[65, 72, 68, 85, 78, 92, 88].map((value, idx) => (
                             <m.div
@@ -1801,7 +1893,10 @@ export default function LandingPage() {
                             </m.div>
                           ))}
                         </div>
-                        <div className="flex justify-between mt-2 text-xs text-gray-500">
+                        <div
+                          className="flex justify-between mt-2 text-xs"
+                          style={{ color: theme.theme === 'light' ? '#94a3b8' : '#6b7280' }}
+                        >
                           <span className="hidden sm:inline">Mon</span>
                           <span className="hidden sm:inline">Tue</span>
                           <span className="hidden sm:inline">Wed</span>
@@ -1917,10 +2012,10 @@ export default function LandingPage() {
             viewport={{ once: true }}
           >
             {[
-              { number: "25K+", label: "Active Users", icon: "👥", color: "#00d4ff" },
-              { number: "1.2M", label: "Connections Made", icon: "⚡", color: "#ff6b00" },
-              { number: "94%", label: "Success Rate", icon: "�", color: "#00ff88" },
-              { number: "24/7", label: "Neural Support", icon: "🧠", color: "#ff6b00" },
+              { number: "25K+", label: "Active Users", icon: Users, color: "#00d4ff" },
+              { number: "1.2M", label: "Connections Made", icon: Zap, color: "#ff6b00" },
+              { number: "94%", label: "Success Rate", icon: TrendingUp, color: "#00ff88" },
+              { number: "24/7", label: "Neural Support", icon: Brain, color: "#ff6b00" },
             ].map((stat, idx) => (
               <m.div
                 key={idx}
@@ -1935,8 +2030,11 @@ export default function LandingPage() {
                   stiffness: 300,
                   damping: 20,
                 }}
-                className="group relative p-8 rounded-3xl bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 text-center transition-all duration-500 backdrop-blur-xl overflow-hidden"
+                className="group relative p-8 rounded-3xl bg-gradient-to-br border border-[#00d4ff]/20 hover:border-[#00d4ff]/50 text-center transition-all duration-500 backdrop-blur-xl overflow-hidden"
                 style={{
+                  background: theme.theme === 'light'
+                    ? "linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(249, 250, 251, 0.9))"
+                    : "linear-gradient(135deg, rgba(26, 58, 82, 0.6), rgba(15, 37, 64, 0.6))",
                   transformStyle: "preserve-3d",
                 }}
               >
@@ -1987,14 +2085,17 @@ export default function LandingPage() {
                     delay: idx,
                   }}
                 >
-                  {stat.icon}
+                  <stat.icon
+                    className="w-12 h-12"
+                    style={{ color: stat.color }}
+                  />
                 </m.div>
 
                 {/* Animated counter */}
                 <m.div
                   className="text-5xl md:text-6xl font-black mb-2"
                   style={{
-                    background: `linear-gradient(135deg, ${stat.color}, ${stat.color}80)`,
+                    backgroundImage: `linear-gradient(135deg, ${stat.color}, ${stat.color}80)`,
                     backgroundClip: "text",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
@@ -2017,7 +2118,12 @@ export default function LandingPage() {
                   {stat.number}
                 </m.div>
 
-                <p className="text-gray-400 font-semibold text-lg group-hover:text-white transition-colors duration-300">
+                <p 
+                  className="font-semibold text-lg transition-colors duration-300"
+                  style={{ 
+                    color: theme.theme === 'light' ? '#64748b' : '#9ca3af',
+                  }}
+                >
                   {stat.label}
                 </p>
 
@@ -2118,6 +2224,35 @@ export default function LandingPage() {
             viewport={{ once: true }}
           >
             {[
+//               {
+//                 name: "Nexus Core",
+//                 price: "Free",
+//                 description: "Essential connections for career navigation",
+//                 features: ["Track up to 50 opportunities", "Basic neural insights", "Mobile synchronization"],
+//                 highlighted: false,
+//                 color: "#00d4ff",
+//                 icon: "🔗",
+//               },
+//               {
+//                 name: "Quantum Pro",
+//                 price: "$29",
+//                 period: "/month",
+//                 description: "Advanced intelligence for career mastery",
+//                 features: ["Unlimited opportunity tracking", "Quantum analytics", "Neural networking", "AI-powered insights"],
+//                 highlighted: true,
+//                 color: "#ff6b00",
+//                 icon: "⚡",
+//               },
+//               {
+//                 name: "Omni Enterprise",
+//                 price: "$79",
+//                 period: "/month",
+//                 description: "Complete career multiverse access",
+//                 features: ["Everything in Quantum Pro", "Priority neural processing", "Custom integrations", "Team collaboration matrix"],
+//                 highlighted: false,
+//                 color: "#00ff88",
+//                 icon: "🌌",
+//               },
               {
                 name: "Nexus Core",
                 price: "Free",
@@ -2125,7 +2260,7 @@ export default function LandingPage() {
                 features: ["Track up to 50 opportunities", "Basic neural insights", "Mobile synchronization"],
                 highlighted: false,
                 color: "#00d4ff",
-                icon: "🔗",
+                icon: Link,
               },
               {
                 name: "Quantum Pro",
@@ -2135,7 +2270,7 @@ export default function LandingPage() {
                 features: ["Unlimited opportunity tracking", "Quantum analytics", "Neural networking", "AI-powered insights"],
                 highlighted: true,
                 color: "#ff6b00",
-                icon: "⚡",
+                icon: Zap,
               },
               {
                 name: "Omni Enterprise",
@@ -2145,7 +2280,7 @@ export default function LandingPage() {
                 features: ["Everything in Quantum Pro", "Priority neural processing", "Custom integrations", "Team collaboration matrix"],
                 highlighted: false,
                 color: "#00ff88",
-                icon: "🌌",
+                icon: Globe,
               },
             ].map((plan, idx) => (
               <m.div
@@ -2165,6 +2300,8 @@ export default function LandingPage() {
                 className={`group relative p-8 rounded-3xl transition-all duration-500 backdrop-blur-xl overflow-hidden cursor-pointer ${
                   plan.highlighted
                     ? "bg-gradient-to-br from-[#ff6b00]/20 to-[#00d4ff]/20 border-2 border-[#ff6b00] shadow-2xl shadow-[#ff6b00]/30"
+                    : theme.theme === 'light'
+                    ? "bg-gradient-to-br from-white/90 to-gray-50/90 border border-gray-200/50"
                     : "bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 border border-[#00d4ff]/20"
                 }`}
                 style={{
@@ -2239,14 +2376,20 @@ export default function LandingPage() {
                     transform: "translateZ(20px)",
                   }}
                 >
-                  {plan.icon}
+                  <plan.icon
+                    className="w-12 h-12 mx-auto"
+                    style={{
+                      color: theme.theme === 'light' ? plan.color : plan.color,
+                    }}
+                  />
                 </m.div>
 
                 {/* Plan name */}
                 <m.h3
-                  className="text-3xl font-black text-white mb-2 text-center"
+                  className="text-3xl font-black mb-2 text-center"
                   style={{
                     transform: "translateZ(15px)",
+                    color: theme.theme === 'light' ? '#1e293b' : '#ffffff',
                   }}
                 >
                   {plan.name}
@@ -2254,9 +2397,10 @@ export default function LandingPage() {
 
                 {/* Description */}
                 <p
-                  className="text-gray-400 text-center mb-6"
+                  className="text-center mb-6"
                   style={{
                     transform: "translateZ(10px)",
+                    color: theme.theme === 'light' ? '#64748b' : '#9ca3af',
                   }}
                 >
                   {plan.description}
@@ -2303,11 +2447,14 @@ export default function LandingPage() {
                   {plan.features.map((feature, fIdx) => (
                     <m.li
                       key={fIdx}
-                      className="flex items-center gap-3 text-gray-300 text-sm"
+                      className="flex items-center gap-3 text-sm"
                       initial={{ opacity: 0, x: -20 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       transition={{ delay: fIdx * 0.1 }}
                       viewport={{ once: true }}
+                      style={{
+                        color: theme.theme === 'light' ? '#475569' : '#d1d5db',
+                      }}
                     >
                       <m.div
                         className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
@@ -2334,6 +2481,8 @@ export default function LandingPage() {
                   className={`w-full py-4 rounded-2xl font-black text-lg transition-all duration-300 relative overflow-hidden ${
                     plan.highlighted
                       ? "bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] text-white shadow-lg shadow-[#ff6b00]/50"
+                      : theme.theme === 'light'
+                      ? "bg-gray-100 border border-gray-300 text-gray-900 hover:bg-gray-200"
                       : "bg-[#1a3a52]/50 border border-[#00d4ff]/30 text-white hover:border-[#00d4ff]/50"
                   }`}
                   style={{
