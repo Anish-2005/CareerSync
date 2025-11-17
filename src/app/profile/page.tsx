@@ -34,6 +34,8 @@ import {
 } from "lucide-react"
 import { RouteGuard } from "@/components/RouteGuard"
 import { useAuth } from "@/contexts/AuthContext"
+import { useThemeClasses } from "@/hooks/useThemeClasses"
+import ThemeToggle from "@/components/ThemeToggle"
 
 const m = motion as any
 
@@ -112,6 +114,7 @@ interface Profile {
 
 export default function ProfilePage() {
   const { user, logout, getIdToken } = useAuth()
+  const theme = useThemeClasses()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -892,7 +895,7 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <RouteGuard>
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#0a1428] via-[#1a2d4d] to-[#0a1428]">
+        <div className={`min-h-screen flex items-center justify-center ${theme.bgPrimary}`}>
           <div className="text-center">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#00d4ff]/20 to-[#ff6b00]/20 flex items-center justify-center">
               <div className="w-8 h-8 border-4 border-[#00d4ff] border-t-transparent rounded-full animate-spin"></div>
@@ -908,7 +911,7 @@ export default function ProfilePage() {
   if (error && !profile) {
     return (
       <RouteGuard>
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#0a1428] via-[#1a2d4d] to-[#0a1428]">
+        <div className={`min-h-screen flex items-center justify-center ${theme.bgPrimary}`}>
           <div className="text-center">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#ff4444]/20 to-[#ff6b00]/20 flex items-center justify-center">
               <X className="w-8 h-8 text-[#ff4444]" />
@@ -934,7 +937,7 @@ export default function ProfilePage() {
   return (
     <RouteGuard>
       <div
-        className="min-h-screen overflow-hidden bg-gradient-to-b from-[#0a1428] via-[#1a2d4d] to-[#0a1428]"
+        className={`min-h-screen overflow-hidden ${theme.bgPrimary}`}
         style={{ fontFamily: '"Geist", sans-serif' }}
       >
       {/* Error Notification */}
@@ -965,7 +968,7 @@ export default function ProfilePage() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[#0a1428]/90 border-b border-[#00d4ff]/20"
+        className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md ${theme.bgNav} border-b ${theme.borderLight}`}
       >
         <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2 sm:py-4">
           <div className="flex items-center justify-between">
@@ -985,6 +988,7 @@ export default function ProfilePage() {
 
             {/* Desktop Buttons */}
             <div className="hidden sm:flex items-center gap-3">
+              <ThemeToggle />
               <m.a
                 href="/dashboard"
                 whileHover={{ scale: 1.05 }}
@@ -1005,6 +1009,7 @@ export default function ProfilePage() {
 
             {/* Mobile Menu Button */}
             <div className="sm:hidden flex items-center gap-2">
+              <ThemeToggle />
               <m.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

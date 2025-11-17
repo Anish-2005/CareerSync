@@ -14,6 +14,8 @@ import {
 } from "lucide-react"
 import { RouteGuard } from "@/components/RouteGuard"
 import { useAuth } from "@/contexts/AuthContext"
+import { useThemeClasses } from "@/hooks/useThemeClasses"
+import ThemeToggle from "@/components/ThemeToggle"
 
 const m = motion as any
 
@@ -42,6 +44,7 @@ const KONAMI_CODE = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft'
 
 export default function DashboardPage() {
   const { user, logout, getIdToken } = useAuth()
+  const theme = useThemeClasses()
   const [applications, setApplications] = useState<Application[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -480,7 +483,7 @@ export default function DashboardPage() {
   return (
     <RouteGuard>
       <div
-        className="min-h-screen overflow-hidden bg-gradient-to-b from-[#0a1428] via-[#1a2d4d] to-[#0a1428]"
+        className={`min-h-screen overflow-hidden ${theme.bgPrimary}`}
         style={{ fontFamily: '"Geist", sans-serif' }}
       >
       {/* Error Notification */}
@@ -564,7 +567,7 @@ export default function DashboardPage() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[#0a1428]/90 border-b border-[#00d4ff]/20"
+        className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md ${theme.bgNav} border-b ${theme.borderLight}`}
       >
         <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2 sm:py-4">
           <div className="flex items-center justify-between">
@@ -584,6 +587,7 @@ export default function DashboardPage() {
 
             {/* Desktop Buttons */}
             <div className="hidden sm:flex items-center gap-3">
+              <ThemeToggle />
               <m.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -624,6 +628,7 @@ export default function DashboardPage() {
 
             {/* Mobile Menu Button */}
             <div className="sm:hidden flex items-center gap-2">
+              <ThemeToggle />
               <m.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

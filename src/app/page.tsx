@@ -19,6 +19,8 @@ import {
   X,
 } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
+import { useThemeClasses } from "@/hooks/useThemeClasses"
+import ThemeToggle from "@/components/ThemeToggle"
 
 // Cast motion to any to avoid strict prop typing issues in this file
 const m = motion as any
@@ -130,6 +132,7 @@ export default function LandingPage() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrollY, setScrollY] = useState(0)
   const { user, logout } = useAuth()
+  const theme = useThemeClasses()
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -179,7 +182,7 @@ export default function LandingPage() {
 
   return (
     <div
-      className="overflow-hidden bg-gradient-to-b from-[#0a1428] via-[#1a2d4d] to-[#0a1428]"
+      className={`overflow-hidden ${theme.bgPrimary}`}
       style={{ fontFamily: '"Geist", sans-serif' }}
     >
       {/* Navigation */}
@@ -187,7 +190,7 @@ export default function LandingPage() {
         initial={{ opacity: 0, y: -100 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
-        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[#0a1428]/90 border-b border-[#00d4ff]/30 shadow-lg shadow-[#00d4ff]/10"
+        className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md ${theme.bgNav} border-b ${theme.borderLight} shadow-lg`}
       >
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <m.div
@@ -244,6 +247,7 @@ export default function LandingPage() {
           </div>
 
           <div className="flex items-center gap-3">
+            <ThemeToggle />
             {/* Mobile menu toggle */}
             <m.button
               onClick={() => setMobileOpen((s) => !s)}

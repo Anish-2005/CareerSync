@@ -14,10 +14,13 @@ import {
   AlertCircle,
 } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
+import { useThemeClasses } from "@/hooks/useThemeClasses"
+import ThemeToggle from "@/components/ThemeToggle"
 
 const m = motion as any
 
 export default function LoginPage() {
+  const theme = useThemeClasses()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -73,7 +76,7 @@ export default function LoginPage() {
 
   return (
     <div
-      className="min-h-screen overflow-hidden bg-gradient-to-b from-[#0a1428] via-[#1a2d4d] to-[#0a1428] flex items-center justify-center p-4 sm:p-6"
+      className={`min-h-screen overflow-hidden ${theme.bgPrimary} flex items-center justify-center p-4 sm:p-6`}
       style={{ fontFamily: '"Geist", sans-serif' }}
     >
       {/* Background Effects */}
@@ -151,8 +154,9 @@ export default function LoginPage() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
-          className="bg-gradient-to-br from-[#1a3a52]/60 to-[#0f2540]/60 backdrop-blur-xl rounded-3xl border border-[#00d4ff]/20 p-6 sm:p-8 shadow-2xl"
+          className={`${theme.bgModal} backdrop-blur-xl rounded-3xl border ${theme.borderMedium} p-6 sm:p-8 shadow-2xl`}
         >
+          <ThemeToggle />
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             {/* Email */}
             <div>
