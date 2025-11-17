@@ -9,6 +9,7 @@ export async function POST(request: NextRequest) {
     // Verify authentication
     const decodedToken = await verifyFirebaseToken(request)
     if (!decodedToken) {
+      console.log('No valid token found')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -20,8 +21,11 @@ export async function POST(request: NextRequest) {
     const file = formData.get('photo') as File
 
     if (!file) {
+      console.log('No photo file provided')
       return NextResponse.json({ error: 'No photo file provided' }, { status: 400 })
     }
+
+    console.log('File received:', file.name, 'Size:', file.size, 'Type:', file.type)
 
     // Validate file type
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
@@ -47,9 +51,14 @@ export async function POST(request: NextRequest) {
     const filename = `profile-photos/${userId}/${Date.now()}.${fileExtension}`
 
     console.log('Uploading to Firebase Storage:', filename)
+    console.log('Bucket name:', process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET)
 
     // Upload to Firebase Storage
-    const fileRef = adminStorage.bucket().file(filename)
+    const bucket = adminStorage.bucket(process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET)
+    console.log('Bucket object created')
+    const fileRef = bucket.file(filename)
+    console.log('File reference created')
+
     await fileRef.save(buffer, {
       metadata: {
         contentType: file.type,
@@ -58,12 +67,16 @@ export async function POST(request: NextRequest) {
           uploadedAt: new Date().toISOString(),
         },
       },
-      public: true, // Make the file publicly accessible
     })
 
+    // Make the file publicly accessible
+    await fileRef.makePublic()
+
+    console.log('File uploaded and made public successfully')
+
     // Get the public URL
-    const photoURL = `https://storage.googleapis.com/${adminStorage.bucket().name}/${filename}`
-    console.log('Photo uploaded successfully:', photoURL)
+    const photoURL = `https://storage.googleapis.com/${bucket.name}/${filename}`
+    console.log('Photo URL generated:', photoURL)
 
     // Update user profile in Firestore
     const userProfileRef = adminDb.collection('profiles').doc(userId)
@@ -118,7 +131,8 @@ export async function DELETE(request: NextRequest) {
       console.log('Deleting photo from storage:', filename)
 
       // Delete from Firebase Storage
-      const fileRef = adminStorage.bucket().file(filename)
+      const bucket = adminStorage.bucket(process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET)
+      const fileRef = bucket.file(filename)
       await fileRef.delete()
 
       // Remove photoURL from profile

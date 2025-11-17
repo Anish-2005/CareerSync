@@ -414,7 +414,11 @@ export default function LoginPage() {
                 fontWeight: 700,
               }}
             >
-              <Chrome style={{ width: 18, height: 18 }} />
+              <img
+                src="https://developers.google.com/identity/images/g-logo.png"
+                alt="Google"
+                style={{ width: 18, height: 18 }}
+              />
               Continue with Google
             </button>
 
