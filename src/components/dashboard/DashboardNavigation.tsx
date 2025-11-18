@@ -56,6 +56,37 @@ export default function DashboardNavigation({
           {/* Desktop Buttons */}
           <div className="hidden sm:flex items-center gap-3">
             <ThemeToggle />
+
+            <m.a
+              href="/jobs"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-4 py-2 text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+              style={{ color: theme.textPrimary }}
+            >
+              Jobs
+            </m.a>
+
+            <m.a
+              href="/applications"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-4 py-2 text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+              style={{ color: theme.textPrimary }}
+            >
+              Applications
+            </m.a>
+
+            <m.a
+              href="/resume-builder"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-4 py-2 text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+              style={{ color: theme.textPrimary }}
+            >
+              Resume Builder
+            </m.a>
+
             <m.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -141,6 +172,39 @@ export default function DashboardNavigation({
               className="sm:hidden mt-3 pb-2"
             >
               <div className="flex flex-col gap-2">
+                <m.a
+                  href="/jobs"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+                  style={{ color: theme.textPrimary }}
+                >
+                  <span>💼</span>
+                  Jobs
+                </m.a>
+
+                <m.a
+                  href="/applications"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+                  style={{ color: theme.textPrimary }}
+                >
+                  <span>📋</span>
+                  Applications
+                </m.a>
+
+                <m.a
+                  href="/resume-builder"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+                  style={{ color: theme.textPrimary }}
+                >
+                  <span>📄</span>
+                  Resume Builder
+                </m.a>
+
                 <m.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
