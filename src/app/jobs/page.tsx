@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search, MapPin, Building, Clock, Bookmark, BookmarkCheck, Filter, Briefcase, DollarSign, Users, Menu, X } from 'lucide-react'
+import { Search, MapPin, Building, Clock, Bookmark, BookmarkCheck, Filter, Briefcase, DollarSign, Users, Menu, X, BarChart3, ClipboardList, FileText, User, LogOut, LogIn } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useThemeClasses } from '@/hooks/useThemeClasses'
 import { RouteGuard } from '@/components/RouteGuard'
@@ -370,7 +370,7 @@ export default function JobsPage() {
                         className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
                         style={{ color: theme.textPrimary }}
                       >
-                        <span>📊</span>
+                        <BarChart3 className="w-4 h-4" />
                         Dashboard
                       </m.a>
 
@@ -382,7 +382,7 @@ export default function JobsPage() {
                         className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
                         style={{ color: theme.textPrimary }}
                       >
-                        <span>📋</span>
+                        <ClipboardList className="w-4 h-4" />
                         Applications
                       </m.a>
 
@@ -394,7 +394,7 @@ export default function JobsPage() {
                         className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
                         style={{ color: theme.textPrimary }}
                       >
-                        <span>📄</span>
+                        <FileText className="w-4 h-4" />
                         Resume Builder
                       </m.a>
 
@@ -406,7 +406,7 @@ export default function JobsPage() {
                         className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
                         style={{ color: theme.textPrimary }}
                       >
-                        <span>👤</span>
+                        <User className="w-4 h-4" />
                         Profile
                       </m.a>
 
@@ -428,7 +428,7 @@ export default function JobsPage() {
                             : "0 10px 30px rgba(255, 107, 0, 0.25)"
                         }}
                       >
-                        <span>🚪</span>
+                        <LogOut className="w-4 h-4" />
                         Sign Out
                       </m.button>
                     </>
@@ -450,7 +450,7 @@ export default function JobsPage() {
                           : "0 10px 30px rgba(0, 212, 255, 0.25)"
                       }}
                     >
-                      <span>🔐</span>
+                      <LogIn className="w-4 h-4" />
                       Sign In
                     </m.button>
                   )}
@@ -670,31 +670,31 @@ export default function JobsPage() {
           </m.div>
 
           {/* Job Results */}
-          <div className="space-y-4 sm:space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
             {loading ? (
               // Loading skeleton
-              Array.from({ length: 3 }).map((_, idx) => (
+              Array.from({ length: 6 }).map((_, idx) => (
                 <m.div
                   key={idx}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.1 }}
-                  className="p-6 rounded-3xl animate-pulse"
+                  className="p-4 sm:p-6 rounded-3xl animate-pulse"
                   style={{ background: theme.bgCard, border: `1px solid ${theme.borderMedium}` }}
                 >
-                  <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                  <div className="flex flex-col justify-between h-full">
                     <div className="flex-1">
                       <div className="h-6 bg-gray-300 rounded mb-2 w-3/4"></div>
                       <div className="h-4 bg-gray-300 rounded mb-4 w-1/2"></div>
                       <div className="h-4 bg-gray-300 rounded mb-2 w-full"></div>
                       <div className="h-4 bg-gray-300 rounded w-2/3"></div>
                     </div>
-                    <div className="h-10 bg-gray-300 rounded-xl w-24"></div>
+                    <div className="h-10 bg-gray-300 rounded-xl w-full mt-4"></div>
                   </div>
                 </m.div>
               ))
             ) : filteredJobs.length === 0 ? (
-              <div className="text-center py-12">
+              <div className="col-span-full text-center py-12">
                 <Briefcase className="w-16 h-16 mx-auto mb-4" style={{ color: theme.textTertiary }} />
                 <h3 className="text-xl font-bold mb-2" style={{ color: theme.textPrimary }}>No jobs found</h3>
                 <p style={{ color: theme.textSecondary }}>Try adjusting your search criteria or filters</p>
@@ -706,117 +706,103 @@ export default function JobsPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.1 }}
-                  className="p-4 sm:p-8 rounded-3xl hover:border-2 transition-all duration-300 group"
+                  className="p-4 sm:p-6 rounded-3xl hover:border-2 transition-all duration-300 group flex flex-col h-full"
                   style={{ background: theme.bgCard, border: `1px solid ${theme.borderMedium}` }}
                 >
-                  <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
-                    {/* Job Info */}
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between mb-4">
-                        <div>
-                          <h3 className="text-xl sm:text-2xl font-bold mb-2" style={{ color: theme.textPrimary }}>{job.title}</h3>
-                          <div className="flex items-center gap-4 mb-3" style={{ color: theme.textSecondary }}>
-                            <div className="flex items-center gap-1">
-                              <Building className="w-4 h-4" />
-                              <span className="font-semibold">{job.company}</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <MapPin className="w-4 h-4" />
-                              <span>{job.location}</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <Clock className="w-4 h-4" />
-                              <span>{getTimeAgo(job.postedDate)}</span>
-                            </div>
+                  <div className="flex flex-col h-full">
+                    {/* Job Header */}
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg sm:text-xl font-bold mb-2 line-clamp-2" style={{ color: theme.textPrimary }}>{job.title}</h3>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3" style={{ color: theme.textSecondary }}>
+                          <div className="flex items-center gap-1 min-w-0">
+                            <Building className="w-4 h-4 flex-shrink-0" />
+                            <span className="font-semibold truncate">{job.company}</span>
+                          </div>
+                          <div className="flex items-center gap-1 min-w-0">
+                            <MapPin className="w-4 h-4 flex-shrink-0" />
+                            <span className="truncate">{job.location}</span>
                           </div>
                         </div>
-
-                        {/* Save Button */}
-                        <m.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => toggleSaveJob(job.id)}
-                          className="p-2 rounded-xl"
-                          style={{
-                            background: savedJobs.has(job.id) ? "rgba(0,255,136,0.12)" : "rgba(156,163,175,0.12)",
-                            border: `1px solid ${savedJobs.has(job.id) ? "rgba(0,255,136,0.28)" : "rgba(156,163,175,0.28)"}`,
-                            color: savedJobs.has(job.id) ? "#00ff88" : "#6b7280"
-                          }}
-                        >
-                          {savedJobs.has(job.id) ? <BookmarkCheck className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
-                        </m.button>
                       </div>
 
-                      {/* Job Details */}
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                        <div className="flex items-center gap-2" style={{ color: theme.textSecondary }}>
-                          <Briefcase className="w-4 h-4" style={{ color: theme.textAccent }} />
-                          <span className="capitalize">{job.type.replace('-', ' ')}</span>
-                        </div>
-                        <div className="flex items-center gap-2" style={{ color: theme.textSecondary }}>
-                          <DollarSign className="w-4 h-4" style={{ color: theme.textAccent }} />
-                          <span>{formatSalary(job.salary)}</span>
-                        </div>
-                        <div className="flex items-center gap-2" style={{ color: theme.textSecondary }}>
-                          <Users className="w-4 h-4" style={{ color: theme.textAccent }} />
-                          <span>{job.experience}</span>
-                        </div>
+                      {/* Save Button */}
+                      <m.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => toggleSaveJob(job.id)}
+                        className="p-2 rounded-xl flex-shrink-0 ml-2"
+                        style={{
+                          background: savedJobs.has(job.id) ? "rgba(0,255,136,0.12)" : "rgba(156,163,175,0.12)",
+                          border: `1px solid ${savedJobs.has(job.id) ? "rgba(0,255,136,0.28)" : "rgba(156,163,175,0.28)"}`,
+                          color: savedJobs.has(job.id) ? "#00ff88" : "#6b7280"
+                        }}
+                      >
+                        {savedJobs.has(job.id) ? <BookmarkCheck className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
+                      </m.button>
+                    </div>
+
+                    {/* Job Details */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                      <div className="flex items-center gap-2" style={{ color: theme.textSecondary }}>
+                        <Briefcase className="w-4 h-4 flex-shrink-0" style={{ color: theme.textAccent }} />
+                        <span className="capitalize text-sm truncate">{job.type.replace('-', ' ')}</span>
                       </div>
-
-                      <p className="text-sm sm:text-base leading-relaxed mb-4" style={{ color: theme.textTertiary }}>
-                        {job.description.length > 200 ? `${job.description.substring(0, 200)}...` : job.description}
-                      </p>
-
-                      {/* Tags */}
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {job.tags.slice(0, 4).map((tag, tagIdx) => (
-                          <span
-                            key={tagIdx}
-                            className="px-3 py-1 rounded-full text-xs font-semibold"
-                            style={{
-                              background: theme.theme === 'light' ? 'linear-gradient(90deg, rgba(59,130,246,0.1), rgba(29,78,216,0.08))' : 'linear-gradient(90deg, rgba(0,212,255,0.08), rgba(255,107,0,0.06))',
-                              border: `1px solid ${theme.borderMedium}`,
-                              color: theme.textAccent
-                            }}
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                        {job.tags.length > 4 && (
-                          <span className="px-3 py-1 rounded-full text-xs font-semibold" style={{ color: theme.textTertiary }}>
-                            +{job.tags.length - 4} more
-                          </span>
-                        )}
+                      <div className="flex items-center gap-2" style={{ color: theme.textSecondary }}>
+                        <DollarSign className="w-4 h-4 flex-shrink-0" style={{ color: theme.textAccent }} />
+                        <span className="text-sm truncate">{formatSalary(job.salary)}</span>
                       </div>
-
-                      {/* Requirements */}
-                      <div className="mb-4">
-                        <h4 className="font-semibold mb-2" style={{ color: theme.textPrimary }}>Key Requirements:</h4>
-                        <ul className="text-sm" style={{ color: theme.textTertiary }}>
-                          {job.requirements.slice(0, 2).map((req, reqIdx) => (
-                            <li key={reqIdx} className="flex items-center gap-2">
-                              <span style={{ color: theme.textAccent }}>•</span>
-                              {req}
-                            </li>
-                          ))}
-                        </ul>
+                      <div className="flex items-center gap-2" style={{ color: theme.textSecondary }}>
+                        <Users className="w-4 h-4 flex-shrink-0" style={{ color: theme.textAccent }} />
+                        <span className="text-sm truncate">{job.experience}</span>
+                      </div>
+                      <div className="flex items-center gap-2" style={{ color: theme.textSecondary }}>
+                        <Clock className="w-4 h-4 flex-shrink-0" style={{ color: theme.textAccent }} />
+                        <span className="text-sm truncate">{getTimeAgo(job.postedDate)}</span>
                       </div>
                     </div>
 
+                    {/* Job Description */}
+                    <p className="text-sm leading-relaxed mb-4 flex-1" style={{ color: theme.textTertiary }}>
+                      {job.description.length > 120 ? `${job.description.substring(0, 120)}...` : job.description}
+                    </p>
+
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {job.tags.slice(0, 3).map((tag, tagIdx) => (
+                        <span
+                          key={tagIdx}
+                          className="px-2 py-1 rounded-full text-xs font-semibold truncate max-w-[100px]"
+                          style={{
+                            background: theme.theme === 'light' ? 'linear-gradient(90deg, rgba(59,130,246,0.1), rgba(29,78,216,0.08))' : 'linear-gradient(90deg, rgba(0,212,255,0.08), rgba(255,107,0,0.06))',
+                            border: `1px solid ${theme.borderMedium}`,
+                            color: theme.textAccent
+                          }}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                      {job.tags.length > 3 && (
+                        <span className="px-2 py-1 rounded-full text-xs font-semibold" style={{ color: theme.textTertiary }}>
+                          +{job.tags.length - 3}
+                        </span>
+                      )}
+                    </div>
+
                     {/* Apply Button */}
-                    <div className="flex flex-col gap-3 lg:min-w-[200px]">
+                    <div className="mt-auto">
                       <m.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => createApplication(job)}
-                        className="w-full px-6 py-4 rounded-2xl font-bold text-sm sm:text-base"
+                        className="w-full px-4 py-3 rounded-xl font-bold text-sm"
                         style={{ background: theme.theme === 'light' ? 'linear-gradient(90deg,#3b82f6,#1d4ed8)' : 'linear-gradient(90deg,#ff6b00,#00d4ff)', color: "#fff" }}
                       >
                         Apply Now
                       </m.button>
 
                       {job.applicationDeadline && (
-                        <div className="text-center">
+                        <div className="text-center mt-2">
                           <p className="text-xs" style={{ color: theme.textTertiary }}>
                             Deadline: {new Date(job.applicationDeadline).toLocaleDateString()}
                           </p>
