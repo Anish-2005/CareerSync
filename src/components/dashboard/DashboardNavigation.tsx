@@ -2,7 +2,7 @@
 
 import React from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Volume2, VolumeX, Trophy, User, LogOut, Menu, X } from "lucide-react"
+import { Volume2, VolumeX, Trophy, User, LogOut, Menu, X, Briefcase, ClipboardList, FileText } from "lucide-react"
 import ThemeToggle from "@/components/ThemeToggle"
 
 const m = motion as any
@@ -179,7 +179,7 @@ export default function DashboardNavigation({
                   className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
                   style={{ color: theme.textPrimary }}
                 >
-                  <span>💼</span>
+                  <Briefcase className="w-4 h-4" />
                   Jobs
                 </m.a>
 
@@ -190,7 +190,7 @@ export default function DashboardNavigation({
                   className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
                   style={{ color: theme.textPrimary }}
                 >
-                  <span>📋</span>
+                  <ClipboardList className="w-4 h-4" />
                   Applications
                 </m.a>
 
@@ -201,7 +201,7 @@ export default function DashboardNavigation({
                   className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
                   style={{ color: theme.textPrimary }}
                 >
-                  <span>📄</span>
+                  <FileText className="w-4 h-4" />
                   Resume Builder
                 </m.a>
 

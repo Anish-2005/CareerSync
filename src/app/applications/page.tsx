@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Calendar, Building, MapPin, Clock, CheckCircle, XCircle, AlertCircle, Eye, FileText, ExternalLink, Menu, X } from 'lucide-react'
+import { Calendar, Building, MapPin, Clock, CheckCircle, XCircle, AlertCircle, Eye, FileText, ExternalLink, Menu, X, BarChart3, Briefcase, User, LogOut, LogIn } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useThemeClasses } from '@/hooks/useThemeClasses'
 import { RouteGuard } from '@/components/RouteGuard'
@@ -332,7 +332,7 @@ export default function ApplicationsPage() {
                         className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
                         style={{ color: theme.textPrimary }}
                       >
-                        <span>📊</span>
+                        <BarChart3 className="w-4 h-4" />
                         Dashboard
                       </m.a>
 
@@ -344,7 +344,7 @@ export default function ApplicationsPage() {
                         className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
                         style={{ color: theme.textPrimary }}
                       >
-                        <span>💼</span>
+                        <Briefcase className="w-4 h-4" />
                         Jobs
                       </m.a>
 
@@ -356,7 +356,7 @@ export default function ApplicationsPage() {
                         className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
                         style={{ color: theme.textPrimary }}
                       >
-                        <span>📄</span>
+                        <FileText className="w-4 h-4" />
                         Resume Builder
                       </m.a>
 
@@ -368,7 +368,7 @@ export default function ApplicationsPage() {
                         className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
                         style={{ color: theme.textPrimary }}
                       >
-                        <span>👤</span>
+                        <User className="w-4 h-4" />
                         Profile
                       </m.a>
 
@@ -390,7 +390,7 @@ export default function ApplicationsPage() {
                             : "0 10px 30px rgba(255, 107, 0, 0.25)"
                         }}
                       >
-                        <span>🚪</span>
+                        <LogOut className="w-4 h-4" />
                         Sign Out
                       </m.button>
                     </>
@@ -412,7 +412,7 @@ export default function ApplicationsPage() {
                           : "0 10px 30px rgba(0, 212, 255, 0.25)"
                       }}
                     >
-                      <span>🔐</span>
+                      <LogIn className="w-4 h-4" />
                       Sign In
                     </m.button>
                   )}

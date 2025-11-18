@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { CheckCircle2 } from "lucide-react"
+import { CheckCircle2, TrendingUp, Zap, BarChart3 } from "lucide-react"
 import { useThemeClasses } from "@/hooks/useThemeClasses"
 
 // Client component for time display to avoid hydration issues
@@ -546,9 +546,9 @@ export default function DashboardPreview() {
                     {/* Animated stats rings */}
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                       {[
-                        { label: "Success Rate", value: 92, max: 100, color: theme.textAccent, icon: "�" },
-                        { label: "Connections Made", value: 203, max: 250, color: theme.statusInterview, icon: "⚡" },
-                        { label: "Interactions", value: 47, max: 60, color: theme.statusOffer, icon: "�" },
+                        { label: "Success Rate", value: 92, max: 100, color: theme.textAccent, icon: <TrendingUp className="w-6 h-6" /> },
+                        { label: "Connections Made", value: 203, max: 250, color: theme.statusInterview, icon: <Zap className="w-6 h-6" /> },
+                        { label: "Interactions", value: 47, max: 60, color: theme.statusOffer, icon: <BarChart3 className="w-6 h-6" /> },
                       ].map((stat, idx) => (
                         <m.div
                           key={idx}
@@ -586,7 +586,7 @@ export default function DashboardPreview() {
                               />
                             </svg>
                             <div className="absolute inset-0 flex items-center justify-center">
-                              <span className="text-2xl">{stat.icon}</span>
+                              {stat.icon}
                             </div>
                           </div>
 

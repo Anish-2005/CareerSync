@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FileText, Download, Eye, Edit, Plus, Trash2, Save, Palette, Menu, X, User, Briefcase, GraduationCap, Zap, Rocket, Palette as PaletteIcon } from 'lucide-react'
+import { FileText, Download, Eye, Edit, Plus, Trash2, Save, Palette, Menu, X, User, Briefcase, GraduationCap, Zap, Rocket, Palette as PaletteIcon, Mail, Phone, MapPin, Code, Link, Sparkles, Lightbulb, BarChart3, ClipboardList, LogOut, LogIn } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useThemeClasses } from '@/hooks/useThemeClasses'
 import { RouteGuard } from '@/components/RouteGuard'
@@ -67,14 +67,14 @@ const ModernTemplate = ({ resumeData }: { resumeData: ResumeData }) => (
       <div className="pt-4">
         <h1 className="text-4xl font-bold mb-2 text-gray-900">{resumeData.personalInfo.firstName} {resumeData.personalInfo.lastName}</h1>
         <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-2">
-          <span>📧 {resumeData.personalInfo.email}</span>
-          <span>📱 {resumeData.personalInfo.phone}</span>
-          <span>📍 {resumeData.personalInfo.location}</span>
+          <span className="flex items-center gap-1"><Mail className="w-4 h-4" /> {resumeData.personalInfo.email}</span>
+          <span className="flex items-center gap-1"><Phone className="w-4 h-4" /> {resumeData.personalInfo.phone}</span>
+          <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> {resumeData.personalInfo.location}</span>
         </div>
         {(resumeData.personalInfo.linkedin || resumeData.personalInfo.github) && (
           <div className="flex gap-4 text-sm text-blue-600">
-            {resumeData.personalInfo.linkedin && <span>💼 {resumeData.personalInfo.linkedin}</span>}
-            {resumeData.personalInfo.github && <span>💻 {resumeData.personalInfo.github}</span>}
+            {resumeData.personalInfo.linkedin && <span className="flex items-center gap-1"><Briefcase className="w-4 h-4" /> {resumeData.personalInfo.linkedin}</span>}
+            {resumeData.personalInfo.github && <span className="flex items-center gap-1"><Code className="w-4 h-4" /> {resumeData.personalInfo.github}</span>}
           </div>
         )}
       </div>
@@ -160,7 +160,7 @@ const ModernTemplate = ({ resumeData }: { resumeData: ResumeData }) => (
                 </span>
               ))}
             </div>
-            {project.url && <p className="text-blue-600 text-sm">🔗 {project.url}</p>}
+            {project.url && <p className="text-blue-600 text-sm flex items-center gap-1"><Link className="w-4 h-4" /> {project.url}</p>}
           </div>
         ))}
       </div>
@@ -280,22 +280,22 @@ const CreativeTemplate = ({ resumeData }: { resumeData: ResumeData }) => (
         </h1>
         <div className="flex flex-wrap gap-6 text-sm font-medium text-gray-700 mb-3">
           <span className="flex items-center gap-2">
-            <span className="text-purple-500">✉️</span> {resumeData.personalInfo.email}
+            <span className="text-purple-500"><Mail className="w-4 h-4" /></span> {resumeData.personalInfo.email}
           </span>
           <span className="flex items-center gap-2">
-            <span className="text-pink-500">📱</span> {resumeData.personalInfo.phone}
+            <span className="text-pink-500"><Phone className="w-4 h-4" /></span> {resumeData.personalInfo.phone}
           </span>
           <span className="flex items-center gap-2">
-            <span className="text-purple-500">📍</span> {resumeData.personalInfo.location}
+            <span className="text-purple-500"><MapPin className="w-4 h-4" /></span> {resumeData.personalInfo.location}
           </span>
         </div>
         {(resumeData.personalInfo.linkedin || resumeData.personalInfo.github) && (
           <div className="flex gap-6 text-sm font-medium text-purple-600">
             {resumeData.personalInfo.linkedin && <span className="flex items-center gap-2">
-              <span>💼</span> {resumeData.personalInfo.linkedin}
+              <span><Briefcase className="w-4 h-4" /></span> {resumeData.personalInfo.linkedin}
             </span>}
             {resumeData.personalInfo.github && <span className="flex items-center gap-2">
-              <span>💻</span> {resumeData.personalInfo.github}
+              <span><Code className="w-4 h-4" /></span> {resumeData.personalInfo.github}
             </span>}
           </div>
         )}
@@ -306,7 +306,7 @@ const CreativeTemplate = ({ resumeData }: { resumeData: ResumeData }) => (
     {resumeData.personalInfo.summary && (
       <div className="mb-8">
         <h2 className="text-2xl font-bold mb-4 text-gray-900 flex items-center gap-3">
-          <span className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-sm">✨</span>
+          <span className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-sm"><Sparkles className="w-4 h-4" /></span>
           About Me
         </h2>
         <div className="bg-white/70 backdrop-blur-sm p-4 rounded-xl border border-purple-100">
@@ -319,7 +319,7 @@ const CreativeTemplate = ({ resumeData }: { resumeData: ResumeData }) => (
     {resumeData.experience.length > 0 && (
       <div className="mb-8">
         <h2 className="text-2xl font-bold mb-4 text-gray-900 flex items-center gap-3">
-          <span className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-sm">🚀</span>
+          <span className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-sm"><Rocket className="w-4 h-4" /></span>
           Experience
         </h2>
         {resumeData.experience.map(exp => (
@@ -343,7 +343,7 @@ const CreativeTemplate = ({ resumeData }: { resumeData: ResumeData }) => (
     {resumeData.education.length > 0 && (
       <div className="mb-8">
         <h2 className="text-2xl font-bold mb-4 text-gray-900 flex items-center gap-3">
-          <span className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-sm">🎓</span>
+          <span className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-sm"><GraduationCap className="w-4 h-4" /></span>
           Education
         </h2>
         {resumeData.education.map(edu => (
@@ -367,7 +367,7 @@ const CreativeTemplate = ({ resumeData }: { resumeData: ResumeData }) => (
     {resumeData.skills.length > 0 && (
       <div className="mb-8">
         <h2 className="text-2xl font-bold mb-4 text-gray-900 flex items-center gap-3">
-          <span className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-sm">⚡</span>
+          <span className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-sm"><Zap className="w-4 h-4" /></span>
           Skills
         </h2>
         <div className="flex flex-wrap gap-3">
@@ -384,7 +384,7 @@ const CreativeTemplate = ({ resumeData }: { resumeData: ResumeData }) => (
     {resumeData.projects.length > 0 && (
       <div>
         <h2 className="text-2xl font-bold mb-4 text-gray-900 flex items-center gap-3">
-          <span className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-sm">💡</span>
+          <span className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-sm"><Lightbulb className="w-4 h-4" /></span>
           Projects
         </h2>
         {resumeData.projects.map(project => (
@@ -398,7 +398,7 @@ const CreativeTemplate = ({ resumeData }: { resumeData: ResumeData }) => (
                 </span>
               ))}
             </div>
-            {project.url && <p className="text-pink-600 text-sm font-medium">🔗 {project.url}</p>}
+            {project.url && <p className="text-pink-600 text-sm font-medium flex items-center gap-1"><Link className="w-4 h-4" /> {project.url}</p>}
           </div>
         ))}
       </div>
@@ -877,14 +877,14 @@ export default function ResumeBuilderPage() {
         <div style="width: 100%; height: 4px; background: linear-gradient(90deg, #2563eb, #06b6d4); margin-bottom: 20px;"></div>
         <h1 style="font-size: 36px; font-weight: bold; margin-bottom: 15px; color: #1f2937;">${resumeData.personalInfo.firstName} ${resumeData.personalInfo.lastName}</h1>
         <div style="display: flex; flex-wrap: wrap; gap: 20px; font-size: 14px; color: #6b7280; margin-bottom: 10px;">
-          <span>📧 ${resumeData.personalInfo.email}</span>
-          <span>📱 ${resumeData.personalInfo.phone}</span>
-          <span>📍 ${resumeData.personalInfo.location}</span>
+          <span>Email: ${resumeData.personalInfo.email}</span>
+          <span>Phone: ${resumeData.personalInfo.phone}</span>
+          <span>Location: ${resumeData.personalInfo.location}</span>
         </div>
         ${(resumeData.personalInfo.linkedin || resumeData.personalInfo.github) ? `
           <div style="display: flex; gap: 20px; font-size: 14px; color: #2563eb;">
-            ${resumeData.personalInfo.linkedin ? `<span>💼 ${resumeData.personalInfo.linkedin}</span>` : ''}
-            ${resumeData.personalInfo.github ? `<span>💻 ${resumeData.personalInfo.github}</span>` : ''}
+            ${resumeData.personalInfo.linkedin ? `<span>LinkedIn: ${resumeData.personalInfo.linkedin}</span>` : ''}
+            ${resumeData.personalInfo.github ? `<span>GitHub: ${resumeData.personalInfo.github}</span>` : ''}
           </div>
         ` : ''}
       </div>
@@ -963,7 +963,7 @@ export default function ResumeBuilderPage() {
                   </span>
                 </div>
               ` : ''}
-              ${project.url ? `<p style="font-size: 14px; color: #2563eb; font-weight: 500;">🔗 ${project.url}</p>` : ''}
+              ${project.url ? `<p style="font-size: 14px; color: #2563eb; font-weight: 500;">Link: ${project.url}</p>` : ''}
             </div>
           `).join('')}
         </div>
@@ -1072,19 +1072,19 @@ export default function ResumeBuilderPage() {
         </div>
         <div style="display: flex; flex-wrap: wrap; gap: 20px; font-size: 14px; font-weight: 500; color: #6b7280; margin-bottom: 12px;">
           <span style="display: flex; align-items: center; gap: 6px;">
-            <span style="color: #8b5cf6;">✉️</span> ${resumeData.personalInfo.email}
+            <span style="color: #8b5cf6;">Email:</span> ${resumeData.personalInfo.email}
           </span>
           <span style="display: flex; align-items: center; gap: 6px;">
-            <span style="color: #ec4899;">📱</span> ${resumeData.personalInfo.phone}
+            <span style="color: #ec4899;">Phone:</span> ${resumeData.personalInfo.phone}
           </span>
           <span style="display: flex; align-items: center; gap: 6px;">
-            <span style="color: #8b5cf6;">📍</span> ${resumeData.personalInfo.location}
+            <span style="color: #8b5cf6;">Location:</span> ${resumeData.personalInfo.location}
           </span>
         </div>
         ${(resumeData.personalInfo.linkedin || resumeData.personalInfo.github) ? `
           <div style="display: flex; gap: 20px; font-size: 14px; font-weight: 500; color: #7c3aed;">
-            ${resumeData.personalInfo.linkedin ? `<span style="display: flex; align-items: center; gap: 6px;"><span>💼</span> ${resumeData.personalInfo.linkedin}</span>` : ''}
-            ${resumeData.personalInfo.github ? `<span style="display: flex; align-items: center; gap: 6px;"><span>💻</span> ${resumeData.personalInfo.github}</span>` : ''}
+            ${resumeData.personalInfo.linkedin ? `<span style="display: flex; align-items: center; gap: 6px;"><span>LinkedIn:</span> ${resumeData.personalInfo.linkedin}</span>` : ''}
+            ${resumeData.personalInfo.github ? `<span style="display: flex; align-items: center; gap: 6px;"><span>GitHub:</span> ${resumeData.personalInfo.github}</span>` : ''}
           </div>
         ` : ''}
       </div>
@@ -1092,7 +1092,7 @@ export default function ResumeBuilderPage() {
       ${resumeData.personalInfo.summary ? `
         <div style="margin-bottom: 35px;">
           <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 15px; color: #1f2937; display: flex; align-items: center; gap: 10px;">
-            <span style="width: 32px; height: 32px; background: linear-gradient(135deg, #8b5cf6, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px;">✨</span>
+            <span style="width: 32px; height: 32px; background: linear-gradient(135deg, #8b5cf6, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px;">★</span>
             About Me
           </h2>
           <div style="background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); padding: 20px; border-radius: 12px; border: 1px solid rgba(139, 92, 246, 0.1);">
@@ -1104,7 +1104,7 @@ export default function ResumeBuilderPage() {
       ${resumeData.experience.length > 0 ? `
         <div style="margin-bottom: 35px;">
           <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 18px; color: #1f2937; display: flex; align-items: center; gap: 10px;">
-            <span style="width: 32px; height: 32px; background: linear-gradient(135deg, #8b5cf6, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px;">🚀</span>
+            <span style="width: 32px; height: 32px; background: linear-gradient(135deg, #8b5cf6, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px;">►</span>
             Experience
           </h2>
           ${resumeData.experience.map(exp => `
@@ -1127,7 +1127,7 @@ export default function ResumeBuilderPage() {
       ${resumeData.education.length > 0 ? `
         <div style="margin-bottom: 35px;">
           <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 18px; color: #1f2937; display: flex; align-items: center; gap: 10px;">
-            <span style="width: 32px; height: 32px; background: linear-gradient(135deg, #8b5cf6, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px;">🎓</span>
+            <span style="width: 32px; height: 32px; background: linear-gradient(135deg, #8b5cf6, #ec4899); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px;">∇</span>
             Education
           </h2>
           ${resumeData.education.map(edu => `
@@ -1181,7 +1181,7 @@ export default function ResumeBuilderPage() {
                   `).join('')}
                 </div>
               ` : ''}
-              ${project.url ? `<p style="font-size: 14px; color: #ec4899; font-weight: 600;">🔗 ${project.url}</p>` : ''}
+              ${project.url ? `<p style="font-size: 14px; color: #ec4899; font-weight: 600;">Link: ${project.url}</p>` : ''}
             </div>
           `).join('')}
         </div>
@@ -1702,7 +1702,7 @@ export default function ResumeBuilderPage() {
                         className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
                         style={{ color: theme.textPrimary }}
                       >
-                        <span>📊</span>
+                        <BarChart3 className="w-4 h-4" />
                         Dashboard
                       </m.a>
 
@@ -1714,7 +1714,7 @@ export default function ResumeBuilderPage() {
                         className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
                         style={{ color: theme.textPrimary }}
                       >
-                        <span>💼</span>
+                        <Briefcase className="w-4 h-4" />
                         Jobs
                       </m.a>
 
@@ -1726,7 +1726,7 @@ export default function ResumeBuilderPage() {
                         className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
                         style={{ color: theme.textPrimary }}
                       >
-                        <span>📋</span>
+                        <ClipboardList className="w-4 h-4" />
                         Applications
                       </m.a>
 
@@ -1738,7 +1738,7 @@ export default function ResumeBuilderPage() {
                         className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
                         style={{ color: theme.textPrimary }}
                       >
-                        <span>👤</span>
+                        <User className="w-4 h-4" />
                         Profile
                       </m.a>
 
@@ -1760,7 +1760,7 @@ export default function ResumeBuilderPage() {
                             : "0 10px 30px rgba(255, 107, 0, 0.25)"
                         }}
                       >
-                        <span>🚪</span>
+                        <LogOut className="w-4 h-4" />
                         Sign Out
                       </m.button>
                     </>
@@ -1782,7 +1782,7 @@ export default function ResumeBuilderPage() {
                           : "0 10px 30px rgba(0, 212, 255, 0.25)"
                       }}
                     >
-                      <span>🔐</span>
+                      <LogIn className="w-4 h-4" />
                       Sign In
                     </m.button>
                   )}
@@ -1929,9 +1929,15 @@ export default function ResumeBuilderPage() {
                       onClick={() => setActiveSection(section.id)}
                       className={`w-full p-4 rounded-xl text-left transition-all ${activeSection === section.id ? 'ring-2' : ''} ${activeSection === section.id ? (theme.theme === 'light' ? 'ring-blue-500' : 'ring-cyan-400') : ''}`}
                       style={{
-                        background: activeSection === section.id ? (theme.theme === 'light' ? 'linear-gradient(90deg,#3b82f6,#1d4ed8)' : 'linear-gradient(90deg,#ff6b00,#00d4ff)') : theme.bgCard,
+                        background: activeSection === section.id
+                          ? (theme.theme === 'light' ? 'linear-gradient(90deg,#3b82f6,#1d4ed8)' : 'linear-gradient(90deg,#ff6b00,#00d4ff)')
+                          : (theme.theme === 'light' ? 'rgba(255, 255, 255, 0.8)' : 'rgba(30, 41, 59, 0.6)'),
                         color: activeSection === section.id ? '#fff' : theme.textPrimary,
-                        border: `1px solid ${theme.borderMedium}`
+                        border: `1px solid ${activeSection === section.id ? (theme.theme === 'light' ? '#3b82f6' : '#ff6b00') : theme.borderMedium}`,
+                        backdropFilter: activeSection !== section.id ? 'blur(10px)' : 'none',
+                        boxShadow: activeSection === section.id
+                          ? (theme.theme === 'light' ? '0 4px 14px rgba(59, 130, 246, 0.25)' : '0 4px 14px rgba(255, 107, 0, 0.25)')
+                          : (theme.theme === 'light' ? '0 2px 8px rgba(0, 0, 0, 0.1)' : '0 2px 8px rgba(0, 0, 0, 0.3)')
                       }}
                     >
                       <div className="flex items-center gap-3">
@@ -1948,22 +1954,107 @@ export default function ResumeBuilderPage() {
             <div className={`${previewMode ? 'lg:col-span-4' : 'lg:col-span-3'}`}>
               {previewMode ? (
                 // Resume Preview
-                <div className="max-w-4xl mx-auto">
-                  {selectedTemplate === 'modern' && (
-                    <ModernTemplate resumeData={resumeData} />
-                  )}
-                  {selectedTemplate === 'professional' && (
-                    <ProfessionalTemplate resumeData={resumeData} />
-                  )}
-                  {selectedTemplate === 'creative' && (
-                    <CreativeTemplate resumeData={resumeData} />
-                  )}
-                  {selectedTemplate === 'minimalist' && (
-                    <MinimalistTemplate resumeData={resumeData} />
-                  )}
-                  {selectedTemplate === 'executive' && (
-                    <ExecutiveTemplate resumeData={resumeData} />
-                  )}
+                <div className="space-y-6">
+                  {/* Preview Header */}
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-2xl font-bold" style={{ color: theme.textPrimary }}>Resume Preview</h2>
+                      <p style={{ color: theme.textSecondary }}>Previewing: <span className="font-semibold capitalize">{selectedTemplate}</span> template</p>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      {/* Template Switcher in Preview */}
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium" style={{ color: theme.textSecondary }}>Template:</span>
+                        <select
+                          value={selectedTemplate}
+                          onChange={(e) => setSelectedTemplate(e.target.value)}
+                          className="px-3 py-2 rounded-lg focus:outline-none focus:ring-2 transition-all text-sm"
+                          style={{
+                            background: theme.bgInputStyle?.backgroundColor || theme.bgCard,
+                            border: `1px solid ${theme.borderMedium}`,
+                            color: theme.textPrimary,
+                            '--tw-ring-color': theme.theme === 'light' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 212, 255, 0.5)'
+                          } as any}
+                        >
+                          {templates.map(template => (
+                            <option key={template.id} value={template.id}>
+                              {template.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <m.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setPreviewMode(false)}
+                        className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold"
+                        style={{ background: theme.theme === 'light' ? 'linear-gradient(90deg,#6b7280,#4b5563)' : 'linear-gradient(90deg,#374151,#1f2937)', color: "#fff" }}
+                      >
+                        <Edit className="w-5 h-5" />
+                        Back to Edit
+                      </m.button>
+                    </div>
+                  </div>
+
+                  {/* Preview Info Banner */}
+                  <div className="p-4 rounded-xl" style={{ background: theme.theme === 'light' ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 197, 253, 0.05))' : 'linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 136, 0.05))', border: `1px solid ${theme.theme === 'light' ? 'rgba(59, 130, 246, 0.2)' : 'rgba(0, 212, 255, 0.2)'}` }}>
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0">
+                        <Eye className="w-5 h-5" style={{ color: theme.textAccent }} />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold mb-1" style={{ color: theme.textPrimary }}>Preview Your Template</h4>
+                        <p style={{ color: theme.textSecondary }}>
+                          This is how your resume will look with the selected template. Switch templates using the dropdown above, then export as PDF when you're satisfied with the design.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Resume Preview Container */}
+                  <div className="max-w-4xl mx-auto">
+                    <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+                      {selectedTemplate === 'modern' && (
+                        <ModernTemplate resumeData={resumeData} />
+                      )}
+                      {selectedTemplate === 'professional' && (
+                        <ProfessionalTemplate resumeData={resumeData} />
+                      )}
+                      {selectedTemplate === 'creative' && (
+                        <CreativeTemplate resumeData={resumeData} />
+                      )}
+                      {selectedTemplate === 'minimalist' && (
+                        <MinimalistTemplate resumeData={resumeData} />
+                      )}
+                      {selectedTemplate === 'executive' && (
+                        <ExecutiveTemplate resumeData={resumeData} />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Preview Actions */}
+                  <div className="flex justify-center gap-4">
+                    <m.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={exportResume}
+                      className="flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-lg"
+                      style={{ background: theme.theme === 'light' ? 'linear-gradient(90deg,#10b981,#059669)' : 'linear-gradient(90deg,#00ff88,#00d4aa)', color: "#fff" }}
+                    >
+                      <Download className="w-6 h-6" />
+                      Export PDF
+                    </m.button>
+                    <m.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={saveDraft}
+                      className="flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-lg"
+                      style={{ background: theme.bgCard, border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                    >
+                      <Save className="w-6 h-6" />
+                      Save Draft
+                    </m.button>
+                  </div>
                 </div>
               ) : (
                 // Edit Mode
@@ -2412,6 +2503,108 @@ export default function ResumeBuilderPage() {
                           </div>
                         ))}
                       </div>
+                    </m.div>
+                  )}
+
+                  {/* Projects Section */}
+                  {activeSection === 'projects' && (
+                    <m.div
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="space-y-6"
+                    >
+                      <div className="flex items-center justify-between">
+                        <h2 className="text-2xl font-bold" style={{ color: theme.textPrimary }}>Projects</h2>
+                        <m.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={addProject}
+                          className="flex items-center gap-2 px-4 py-2 rounded-xl font-bold"
+                          style={{ background: theme.theme === 'light' ? 'linear-gradient(90deg,#3b82f6,#1d4ed8)' : 'linear-gradient(90deg,#ff6b00,#00d4ff)', color: "#fff" }}
+                        >
+                          <Plus className="w-4 h-4" />
+                          Add Project
+                        </m.button>
+                      </div>
+
+                      {resumeData.projects.map((project, idx) => (
+                        <div
+                          key={project.id}
+                          className="p-6 rounded-3xl"
+                          style={{ background: theme.bgCard, border: `1px solid ${theme.borderMedium}` }}
+                        >
+                          <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-bold" style={{ color: theme.textPrimary }}>Project {idx + 1}</h3>
+                            <button
+                              onClick={() => removeProject(project.id)}
+                              className="p-2 rounded-lg"
+                              style={{ background: "rgba(255,68,68,0.12)", border: `1px solid rgba(255,68,68,0.28)`, color: "#ff4444" }}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input
+                              type="text"
+                              placeholder="Project name"
+                              value={project.name}
+                              onChange={(e) => updateProject(project.id, 'name', e.target.value)}
+                              className="px-4 py-3 rounded-xl focus:outline-none focus:ring-2 transition-all"
+                              style={{
+                                background: theme.bgInputStyle?.backgroundColor || theme.bgCard,
+                                border: `1px solid ${theme.borderMedium}`,
+                                color: theme.textPrimary,
+                                '--tw-ring-color': theme.theme === 'light' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 212, 255, 0.5)'
+                              } as any}
+                            />
+                            <input
+                              type="text"
+                              placeholder="Project URL (optional)"
+                              value={project.url}
+                              onChange={(e) => updateProject(project.id, 'url', e.target.value)}
+                              className="px-4 py-3 rounded-xl focus:outline-none focus:ring-2 transition-all"
+                              style={{
+                                background: theme.bgInputStyle?.backgroundColor || theme.bgCard,
+                                border: `1px solid ${theme.borderMedium}`,
+                                color: theme.textPrimary,
+                                '--tw-ring-color': theme.theme === 'light' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 212, 255, 0.5)'
+                              } as any}
+                            />
+                            <div className="md:col-span-2">
+                              <textarea
+                                rows={3}
+                                placeholder="Describe your project..."
+                                value={project.description}
+                                onChange={(e) => updateProject(project.id, 'description', e.target.value)}
+                                className="w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 transition-all resize-none"
+                                style={{
+                                  background: theme.bgInputStyle?.backgroundColor || theme.bgCard,
+                                  border: `1px solid ${theme.borderMedium}`,
+                                  color: theme.textPrimary,
+                                  '--tw-ring-color': theme.theme === 'light' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 212, 255, 0.5)'
+                                } as any}
+                              />
+                            </div>
+                            <div className="md:col-span-2">
+                              <label className="block text-sm font-bold mb-2" style={{ color: theme.textTertiary }}>Technologies Used</label>
+                              <input
+                                type="text"
+                                placeholder="e.g., React, Node.js, MongoDB"
+                                value={project.technologies.join(', ')}
+                                onChange={(e) => updateProject(project.id, 'technologies', e.target.value.split(',').map(tech => tech.trim()))}
+                                className="w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 transition-all"
+                                style={{
+                                  background: theme.bgInputStyle?.backgroundColor || theme.bgCard,
+                                  border: `1px solid ${theme.borderMedium}`,
+                                  color: theme.textPrimary,
+                                  '--tw-ring-color': theme.theme === 'light' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 212, 255, 0.5)'
+                                } as any}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                     </m.div>
                   )}
 
