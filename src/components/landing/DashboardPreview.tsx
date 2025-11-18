@@ -85,35 +85,33 @@ export default function DashboardPreview() {
           className="text-center my-12"
         >
           <m.h2
-            className="text-xl md:text-6xl lg:text-7xl font-black mb-6 leading-none"
+             className="text-3xl sm:text-4xl md:text-6xl lg:text-8xl font-black mb-4 md:mb-6 leading-none"
             animate={{
-              textShadow: theme.theme === 'light' ? [
-                "0 1px 2px rgba(0,0,0,0.08)",
-                "0 2px 4px rgba(0,0,0,0.10)",
-                "0 1px 2px rgba(0,0,0,0.08)",
-              ] : [
-                "0 0 20px rgba(0, 212, 255, 0.6)",
-                "0 0 40px rgba(255, 107, 0, 0.6)",
-                "0 0 20px rgba(0, 255, 136, 0.6)",
-                "0 0 20px rgba(0, 212, 255, 0.6)",
-              ],
               backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+              textShadow: theme.theme === 'light' ? [
+                "0 1px 2px rgba(0,0,0,0.06)",
+                "0 2px 6px rgba(0,0,0,0.08)",
+                "0 1px 2px rgba(0,0,0,0.06)",
+              ] : [
+                "0 0 30px rgba(0, 212, 255, 0.5)",
+                "0 0 50px rgba(255, 107, 0, 0.5)",
+                "0 0 30px rgba(0, 255, 136, 0.5)",
+                "0 0 30px rgba(0, 212, 255, 0.5)",
+              ],
             }}
             transition={{
-              duration: 6,
+              duration: 8,
               repeat: Number.POSITIVE_INFINITY,
               ease: "easeInOut",
             }}
             style={{
-              color: theme.theme === 'light' ? '#000000' : undefined,
                 backgroundImage: theme.theme === 'light'
-                  ? undefined
-                  : `linear-gradient(135deg, #ffffff 0%, ${theme.textAccent} 40%, ${theme.statusInterview} 70%, ${theme.statusOffer} 100%)`,
-              backgroundSize: theme.theme === 'light' ? undefined : "300% 300%",
-              WebkitBackgroundClip: theme.theme === 'light' ? undefined : "text",
-              WebkitTextFillColor: theme.theme === 'light' ? undefined : "transparent",
-              backgroundClip: theme.theme === 'light' ? undefined : "text",
-              marginTop: '4rem',
+                  ? "linear-gradient(135deg, #1e293b 0%, #4f46e5 30%, #f59e0b 60%, #10b981 90%, #1e293b 100%)"
+                  : `linear-gradient(135deg, #ffffff 0%, ${theme.textAccent} 30%, ${theme.statusInterview} 60%, ${theme.statusOffer} 90%, #ffffff 100%)`,
+              backgroundSize: "300% 300%",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
             }}
           >
             Next-Generation Career Intelligence

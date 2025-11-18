@@ -80,7 +80,7 @@ export default function Footer() {
               top: `${20 + i * 5}%`,
               width: `${6 + i * 1}px`,
               height: `${6 + i * 1}px`,
-              background: i % 4 === 0 ? "#00d4ff" : i % 4 === 1 ? "#ff6b00" : i % 4 === 2 ? "#00ff88" : "#ff8c00",
+              background: i % 4 === 0 ? theme.textAccent : i % 4 === 1 ? theme.statusInterview : i % 4 === 2 ? theme.statusOffer : theme.statusApplied,
             }}
           />
         ))}
@@ -106,10 +106,10 @@ export default function Footer() {
                       "0 2px 4px rgba(0,0,0,0.10)",
                       "0 1px 2px rgba(0,0,0,0.08)",
                     ] : [
-                      "0 0 20px rgba(0, 212, 255, 0.6)",
-                      "0 0 40px rgba(255, 107, 0, 0.6)",
-                      "0 0 20px rgba(0, 255, 136, 0.6)",
-                      "0 0 20px rgba(0, 212, 255, 0.6)",
+                      `0 0 20px ${theme.textAccent}99`,
+                      `0 0 40px ${theme.statusInterview}99`,
+                      `0 0 20px ${theme.statusOffer}99`,
+                      `0 0 20px ${theme.textAccent}99`,
                     ],
                   }}
                   transition={{
@@ -121,7 +121,7 @@ export default function Footer() {
                     color: theme.theme === 'light' ? '#000000' : undefined,
                     backgroundImage: theme.theme === 'light'
                       ? undefined
-                      : "linear-gradient(135deg, #ffffff 0%, #00d4ff 40%, #ff6b00 70%, #00ff88 100%)",
+                      : `linear-gradient(135deg, #ffffff 0%, ${theme.textAccent} 40%, ${theme.statusInterview} 70%, ${theme.statusOffer} 100%)`,
                     backgroundSize: theme.theme === 'light' ? undefined : "300% 300%",
                     WebkitBackgroundClip: theme.theme === 'light' ? undefined : "text",
                     WebkitTextFillColor: theme.theme === 'light' ? undefined : "transparent",
@@ -150,16 +150,23 @@ export default function Footer() {
                     <input
                       type="email"
                       placeholder="Enter your email"
-                      className="flex-1 px-4 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-[#00d4ff] transition-all"
+                      className="flex-1 px-4 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 transition-all"
                       style={{
                         background: theme.theme === 'light' ? '#ffffff' : '#1e293b',
                         borderColor: theme.borderMedium,
                         color: theme.theme === 'light' ? '#1e293b' : '#ffffff',
-                      }}
+                        '--tw-ring-color': theme.textAccent,
+                      } as React.CSSProperties}
                     />
                     <m.button
-                      className="px-6 py-2 bg-[#00d4ff] text-white rounded-lg font-medium text-sm hover:bg-[#00d4ff]/90 transition-colors"
-                      whileHover={{ scale: 1.05 }}
+                      className="px-6 py-2 text-white rounded-lg font-medium text-sm transition-colors"
+                      style={{
+                        background: theme.textAccent,
+                      }}
+                      whileHover={{
+                        scale: 1.05,
+                        background: `${theme.textAccent}E6`,
+                      }}
                       whileTap={{ scale: 0.95 }}
                     >
                       Subscribe
@@ -191,8 +198,12 @@ export default function Footer() {
                       <li key={linkIndex}>
                         <a
                           href={link.href}
-                          className="text-sm hover:text-[#00d4ff] transition-colors"
-                          style={{ color: theme.textSecondary }}
+                          className="text-sm transition-colors"
+                          style={{
+                            color: theme.textSecondary,
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.color = theme.textAccent}
+                          onMouseLeave={(e) => e.currentTarget.style.color = theme.textSecondary}
                         >
                           {link.name}
                         </a>
@@ -218,20 +229,25 @@ export default function Footer() {
                 <m.a
                   key={index}
                   href={social.href}
-                  className="w-12 h-12 rounded-full flex items-center justify-center border-2 hover:border-[#00d4ff] transition-all duration-300 group"
+                  className="w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all duration-300 group"
                   style={{
                     background: theme.theme === 'light' ? 'rgba(255, 255, 255, 0.8)' : 'rgba(26, 61, 83, 0.5)',
                     borderColor: theme.borderMedium,
                   }}
                   whileHover={{
                     scale: 1.1,
-                    boxShadow: "0 0 20px rgba(0, 212, 255, 0.3)",
+                    boxShadow: `0 0 20px ${theme.textAccent}4d`,
+                    borderColor: theme.textAccent,
                   }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <Icon
-                    className="w-5 h-5 group-hover:text-[#00d4ff] transition-colors"
-                    style={{ color: theme.textSecondary }}
+                    className="w-5 h-5 transition-colors"
+                    style={{
+                      color: theme.textSecondary,
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = theme.textAccent}
+                    onMouseLeave={(e) => e.currentTarget.style.color = theme.textSecondary}
                   />
                 </m.a>
               )
@@ -255,22 +271,28 @@ export default function Footer() {
               <div className="flex items-center gap-6 text-sm">
                 <a
                   href="#"
-                  className="hover:text-[#00d4ff] transition-colors"
+                  className="transition-colors"
                   style={{ color: theme.textSecondary }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = theme.textAccent}
+                  onMouseLeave={(e) => e.currentTarget.style.color = theme.textSecondary}
                 >
                   Privacy
                 </a>
                 <a
                   href="#"
-                  className="hover:text-[#00d4ff] transition-colors"
+                  className="transition-colors"
                   style={{ color: theme.textSecondary }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = theme.textAccent}
+                  onMouseLeave={(e) => e.currentTarget.style.color = theme.textSecondary}
                 >
                   Terms
                 </a>
                 <a
                   href="#"
-                  className="hover:text-[#00d4ff] transition-colors"
+                  className="transition-colors"
                   style={{ color: theme.textSecondary }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = theme.textAccent}
+                  onMouseLeave={(e) => e.currentTarget.style.color = theme.textSecondary}
                 >
                   Cookies
                 </a>

@@ -116,33 +116,33 @@ export default function PricingSection() {
           className="text-center mb-16"
         >
           <m.h2
-            className="text-4xl md:text-6xl font-black mb-6 leading-tight"
+            className="text-3xl sm:text-4xl md:text-6xl lg:text-8xl font-black mb-4 md:mb-6 leading-none"
             animate={{
+              backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
               textShadow: theme.theme === 'light' ? [
-                "0 1px 2px rgba(0,0,0,0.08)",
-                "0 2px 4px rgba(0,0,0,0.10)",
-                "0 1px 2px rgba(0,0,0,0.08)",
+                "0 1px 2px rgba(0,0,0,0.06)",
+                "0 2px 6px rgba(0,0,0,0.08)",
+                "0 1px 2px rgba(0,0,0,0.06)",
               ] : [
-                `0 0 20px ${theme.textAccent}99`,
-                `0 0 40px ${theme.statusInterview}99`,
-                `0 0 20px ${theme.statusOffer}99`,
-                `0 0 20px ${theme.textAccent}99`,
+                "0 0 30px rgba(0, 212, 255, 0.5)",
+                "0 0 50px rgba(255, 107, 0, 0.5)",
+                "0 0 30px rgba(0, 255, 136, 0.5)",
+                "0 0 30px rgba(0, 212, 255, 0.5)",
               ],
             }}
             transition={{
-              duration: 6,
+              duration: 8,
               repeat: Number.POSITIVE_INFINITY,
               ease: "easeInOut",
             }}
             style={{
-              color: theme.theme === 'light' ? '#000000' : undefined,
-              backgroundImage: theme.theme === 'light'
-                ? undefined
-                : `linear-gradient(135deg, #ffffff 0%, ${theme.textAccent} 40%, ${theme.statusInterview} 70%, ${theme.statusOffer} 100%)`,
-              backgroundSize: theme.theme === 'light' ? undefined : "300% 300%",
-              WebkitBackgroundClip: theme.theme === 'light' ? undefined : "text",
-              WebkitTextFillColor: theme.theme === 'light' ? undefined : "transparent",
-              backgroundClip: theme.theme === 'light' ? undefined : "text",
+                backgroundImage: theme.theme === 'light'
+                  ? "linear-gradient(135deg, #1e293b 0%, #4f46e5 30%, #f59e0b 60%, #10b981 90%, #1e293b 100%)"
+                  : `linear-gradient(135deg, #ffffff 0%, ${theme.textAccent} 30%, ${theme.statusInterview} 60%, ${theme.statusOffer} 90%, #ffffff 100%)`,
+              backgroundSize: "300% 300%",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
             }}
           >
             Choose Your Plan
@@ -185,16 +185,20 @@ export default function PricingSection() {
               Monthly
             </span>
             <m.button
-              className="relative w-16 h-8 bg-gray-300 dark:bg-gray-700 rounded-full p-1 cursor-pointer"
+              className="relative w-16 h-8 rounded-full p-1 cursor-pointer overflow-hidden"
+              style={{
+                background: theme.theme === 'light' ? theme.borderMedium : theme.borderStrong,
+              }}
               onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
               whileTap={{ scale: 0.95 }}
             >
               <m.div
-                className="w-6 h-6 bg-white rounded-full shadow-md"
+                className="w-6 h-6 rounded-full shadow-md"
                 layout
                 transition={{ type: "spring", stiffness: 700, damping: 30 }}
-                style={{
-                  background: billingCycle === 'yearly' ? theme.textAccent : '#ffffff',
+                animate={{
+                  x: billingCycle === 'yearly' ? 8 : 0,
+                  backgroundColor: billingCycle === 'yearly' ? theme.textAccent : (theme.theme === 'light' ? '#ffffff' : theme.bgCard),
                 }}
               />
             </m.button>
@@ -226,7 +230,7 @@ export default function PricingSection() {
                   stiffness: 100
                 }}
                 viewport={{ once: true }}
-                className={`relative group ${plan.popular ? 'md:scale-105' : ''}`}
+                className={`relative group h-full ${plan.popular ? 'md:scale-105' : ''}`}
               >
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
@@ -237,7 +241,7 @@ export default function PricingSection() {
                 )}
 
                 <m.div
-                  className={`relative p-8 rounded-3xl border-2 backdrop-blur-xl overflow-hidden transition-all duration-500 hover:scale-105 ${
+                  className={`relative p-8 rounded-3xl border-2 backdrop-blur-xl overflow-hidden transition-all duration-500 hover:scale-105 h-full flex flex-col ${
                     plan.popular ? 'shadow-2xl' : ''
                   }`}
                   style={{
@@ -310,7 +314,7 @@ export default function PricingSection() {
                     ))}
                   </div>
 
-                  <div className="relative z-10">
+                  <div className="relative z-10 flex-1 flex flex-col">
                     {/* Icon */}
                     <m.div
                       className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6"
@@ -367,14 +371,14 @@ export default function PricingSection() {
                         </span>
                       </div>
                       {billingCycle === 'yearly' && plan.price > 0 && (
-                        <p className="text-sm text-[#00ff88] font-medium mt-1">
+                        <p className="text-sm font-medium mt-1" style={{ color: theme.statusOffer }}>
                           Save ${(plan.price * 12 * 0.2).toFixed(0)} annually
                         </p>
                       )}
                     </div>
 
                     {/* Features */}
-                    <ul className="space-y-3 mb-8">
+                    <ul className="space-y-3 mb-8 flex-1">
                       {plan.features.map((feature, featureIndex) => (
                         <m.li
                           key={featureIndex}
@@ -406,7 +410,7 @@ export default function PricingSection() {
                           : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700'
                       }`}
                       style={plan.popular ? {
-                        background: `linear-gradient(135deg, ${theme.textAccent}, ${theme.statusInterview})`,
+                        backgroundImage: `linear-gradient(135deg, ${theme.textAccent}, ${theme.statusInterview})`,
                         backgroundSize: "200% 200%",
                       } : {}}
                       whileHover={{

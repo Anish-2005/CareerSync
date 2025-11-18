@@ -20,10 +20,10 @@ export default function StatisticsSection() {
   })
 
   const targetCounters = {
-    users: 50000,
-    applications: 250000,
+    users: 500,
+    applications: 25000,
     success: 94,
-    companies: 1200
+    companies: 120
   }
 
   useEffect(() => {
@@ -129,33 +129,33 @@ export default function StatisticsSection() {
           className="text-center mb-16"
         >
           <m.h2
-            className="text-4xl md:text-6xl font-black mb-6 leading-tight"
+             className="text-3xl sm:text-4xl md:text-6xl lg:text-8xl font-black mb-4 md:mb-6 leading-none"
             animate={{
+              backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
               textShadow: theme.theme === 'light' ? [
-                "0 1px 2px rgba(0,0,0,0.08)",
-                "0 2px 4px rgba(0,0,0,0.10)",
-                "0 1px 2px rgba(0,0,0,0.08)",
+                "0 1px 2px rgba(0,0,0,0.06)",
+                "0 2px 6px rgba(0,0,0,0.08)",
+                "0 1px 2px rgba(0,0,0,0.06)",
               ] : [
-                `0 0 20px ${theme.textAccent}99`,
-                `0 0 40px ${theme.statusInterview}99`,
-                `0 0 20px ${theme.statusOffer}99`,
-                `0 0 20px ${theme.textAccent}99`,
+                "0 0 30px rgba(0, 212, 255, 0.5)",
+                "0 0 50px rgba(255, 107, 0, 0.5)",
+                "0 0 30px rgba(0, 255, 136, 0.5)",
+                "0 0 30px rgba(0, 212, 255, 0.5)",
               ],
             }}
             transition={{
-              duration: 6,
+              duration: 8,
               repeat: Number.POSITIVE_INFINITY,
               ease: "easeInOut",
             }}
             style={{
-              color: theme.theme === 'light' ? '#000000' : undefined,
-              backgroundImage: theme.theme === 'light'
-                ? undefined
-                : `linear-gradient(135deg, #ffffff 0%, ${theme.textAccent} 40%, ${theme.statusInterview} 70%, ${theme.statusOffer} 100%)`,
-              backgroundSize: theme.theme === 'light' ? undefined : "300% 300%",
-              WebkitBackgroundClip: theme.theme === 'light' ? undefined : "text",
-              WebkitTextFillColor: theme.theme === 'light' ? undefined : "transparent",
-              backgroundClip: theme.theme === 'light' ? undefined : "text",
+                backgroundImage: theme.theme === 'light'
+                  ? "linear-gradient(135deg, #1e293b 0%, #4f46e5 30%, #f59e0b 60%, #10b981 90%, #1e293b 100%)"
+                  : `linear-gradient(135deg, #ffffff 0%, ${theme.textAccent} 30%, ${theme.statusInterview} 60%, ${theme.statusOffer} 90%, #ffffff 100%)`,
+              backgroundSize: "300% 300%",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
             }}
           >
             Powering Career Success
@@ -206,10 +206,10 @@ export default function StatisticsSection() {
                   stiffness: 100
                 }}
                 viewport={{ once: true }}
-                className="group relative"
+                className="group relative h-full"
               >
                 <m.div
-                  className="relative p-8 rounded-3xl border-2 backdrop-blur-xl overflow-hidden transition-all duration-500 hover:scale-105"
+                  className="relative p-8 rounded-3xl border-2 backdrop-blur-xl overflow-hidden transition-all duration-500 hover:scale-105 h-full flex flex-col"
                   style={{
                     background: theme.theme === 'light'
                       ? "linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(249, 250, 251, 0.95))"
@@ -272,7 +272,7 @@ export default function StatisticsSection() {
                     ))}
                   </div>
 
-                  <div className="relative z-10">
+                  <div className="relative z-10 flex-1 flex flex-col">
                     {/* Icon */}
                     <m.div
                       className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6"
@@ -327,7 +327,7 @@ export default function StatisticsSection() {
 
                     {/* Description */}
                     <p
-                      className="text-sm md:text-base font-light"
+                      className="text-sm md:text-base font-light flex-1"
                       style={{ color: theme.textSecondary }}
                     >
                       {stat.description}
@@ -364,7 +364,7 @@ export default function StatisticsSection() {
           <m.button
             className="px-8 py-4 text-white font-bold text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
             style={{
-              background: `linear-gradient(135deg, ${theme.textAccent}, ${theme.statusInterview})`,
+              backgroundImage: `linear-gradient(135deg, ${theme.textAccent}, ${theme.statusInterview})`,
               backgroundSize: "200% 200%",
             }}
             whileHover={{

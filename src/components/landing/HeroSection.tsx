@@ -223,13 +223,22 @@ export default function HeroSection() {
                  }}
    
                />
-               <span
+               <m.span
                  style={{
-                   color: theme.theme === "light" ? "#0a1a2f" : "#ffffff"
+                   ...theme.gradientText,
+                   backgroundSize: "200% 200%",
+                 }}
+                 animate={{
+                   backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                 }}
+                 transition={{
+                   duration: 8,
+                   repeat: Number.POSITIVE_INFINITY,
+                   ease: "easeInOut",
                  }}
                >
                  Next-gen Job Tracking System
-               </span>
+               </m.span>
                <m.div
                  className="w-2 h-2 sm:w-3 sm:h-3 rounded-full"
                  animate={{
@@ -399,7 +408,7 @@ export default function HeroSection() {
                      />
                    ))}
                  </div>
-                 <span className="relative z-10">Start Your Journey</span>
+                 <span className="relative z-10" style={{ color: '#ffffff' }}>Start Your Journey</span>
                </m.button>
                <m.a
                  href="#features"
