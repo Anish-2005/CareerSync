@@ -63,11 +63,11 @@ const JobApplicationSchema = new mongoose.Schema<IJobApplication>({
     type: String,
     default: '',
   },
-  salary: {
+  salary: new mongoose.Schema({
     offered: { type: Number },
     expected: { type: Number },
     currency: { type: String, default: 'USD' },
-  },
+  }, { _id: false }),
   lastUpdated: {
     type: Date,
     default: Date.now,
@@ -81,4 +81,9 @@ JobApplicationSchema.index({ userId: 1, status: 1 });
 JobApplicationSchema.index({ userId: 1, appliedDate: -1 });
 JobApplicationSchema.index({ userId: 1, lastUpdated: -1 });
 
-export default mongoose.models.JobApplication || mongoose.model<IJobApplication>('JobApplication', JobApplicationSchema);
+// Delete existing model to allow recompilation
+if (mongoose.models.JobApplication) {
+  delete mongoose.models.JobApplication;
+}
+
+export default mongoose.model<IJobApplication>('JobApplication', JobApplicationSchema);

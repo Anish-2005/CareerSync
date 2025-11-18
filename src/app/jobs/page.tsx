@@ -176,7 +176,7 @@ export default function JobsPage() {
         location: job.location,
         status: 'pending',
         notes: '',
-        salary: job.salary ? { expected: job.salary.min, currency: job.salary.currency } : undefined,
+        salary: job.salary && job.salary.min ? { expected: job.salary.min, currency: job.salary.currency } : undefined,
       }
 
       const response = await fetch('/api/applications', {

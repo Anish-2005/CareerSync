@@ -57,16 +57,43 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     await dbConnect();
+    console.log('Database connected successfully');
 
     // Verify Firebase token
     const decodedToken = await verifyFirebaseToken(request);
     if (!decodedToken) {
+      console.error('Firebase token verification failed');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    console.log('Firebase token verified for user:', decodedToken.uid);
+
     const body = await request.json();
 
+    // Validate required fields
+    if (!body.jobTitle || !body.company || !body.location) {
+      console.error('Missing required fields:', { jobTitle: body.jobTitle, company: body.company, location: body.location });
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
+    // Validate data types
+    if (typeof body.jobTitle !== 'string' || typeof body.company !== 'string' || typeof body.location !== 'string') {
+      console.error('Invalid data types:', {
+        jobTitle: typeof body.jobTitle,
+        company: typeof body.company,
+        location: typeof body.location
+      });
+      return NextResponse.json({ error: 'Invalid data types' }, { status: 400 });
+    }
+
     const application = new JobApplication({
+      ...body,
+      userId: decodedToken.uid,
+      appliedDate: new Date(),
+      lastUpdated: new Date(),
+    });
+
+    console.log('Creating application with data:', {
       ...body,
       userId: decodedToken.uid,
       appliedDate: new Date(),
@@ -78,6 +105,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(savedApplication, { status: 201 });
   } catch (error) {
     console.error('Error creating job application:', error);
+    console.error('Error details:', error instanceof Error ? error.message : error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
