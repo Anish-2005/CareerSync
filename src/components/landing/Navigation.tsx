@@ -86,7 +86,7 @@ export default function Navigation({ mobileOpen, setMobileOpen }: NavigationProp
           <ThemeToggle />
           {/* Mobile menu toggle */}
           <m.button
-            onClick={() => setMobileOpen((s) => !s)}
+            onClick={() => setMobileOpen(!mobileOpen)}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             className="md:hidden p-2 rounded-md transition-all duration-300 relative overflow-hidden"

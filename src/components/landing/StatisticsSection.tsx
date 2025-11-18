@@ -207,7 +207,7 @@ export default function StatisticsSection() {
                 viewport={{ once: true }}
                 className="group relative"
               >
-                <div
+                <m.div
                   className="relative p-8 rounded-3xl border-2 backdrop-blur-xl overflow-hidden transition-all duration-500 hover:scale-105"
                   style={{
                     background: theme.theme === 'light'
@@ -332,7 +332,7 @@ export default function StatisticsSection() {
                       {stat.description}
                     </p>
                   </div>
-                </div>
+                </m.div>
               </m.div>
             )
           })}

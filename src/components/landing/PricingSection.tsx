@@ -233,7 +233,7 @@ export default function PricingSection() {
                   </div>
                 )}
 
-                <div
+                <m.div
                   className={`relative p-8 rounded-3xl border-2 backdrop-blur-xl overflow-hidden transition-all duration-500 hover:scale-105 ${
                     plan.popular ? 'border-[#00d4ff] shadow-2xl shadow-[#00d4ff]/20' : ''
                   }`}
@@ -422,7 +422,7 @@ export default function PricingSection() {
                       {plan.price === 0 ? 'Get Started Free' : 'Start Free Trial'}
                     </m.button>
                   </div>
-                </div>
+                </m.div>
               </m.div>
             )
           })}
