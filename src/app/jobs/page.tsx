@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search, MapPin, Building, Clock, Bookmark, BookmarkCheck, Filter, Briefcase, DollarSign, Users } from 'lucide-react'
+import { Search, MapPin, Building, Clock, Bookmark, BookmarkCheck, Filter, Briefcase, DollarSign, Users, Menu, X } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useThemeClasses } from '@/hooks/useThemeClasses'
 import { RouteGuard } from '@/components/RouteGuard'
@@ -32,7 +32,7 @@ interface Job {
 }
 
 export default function JobsPage() {
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const theme = useThemeClasses()
   const [jobs, setJobs] = useState<Job[]>([])
   const [filteredJobs, setFilteredJobs] = useState<Job[]>([])
@@ -42,6 +42,7 @@ export default function JobsPage() {
   const [typeFilter, setTypeFilter] = useState('')
   const [experienceFilter, setExperienceFilter] = useState('')
   const [showFilters, setShowFilters] = useState(false)
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -252,60 +253,212 @@ export default function JobsPage() {
               {/* Desktop Navigation */}
               <div className="hidden sm:flex items-center gap-6">
                 <ThemeToggle />
-                <m.a
-                  href="/dashboard"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 text-sm font-medium rounded-full"
-                  style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
-                >
-                  Dashboard
-                </m.a>
-                <m.a
-                  href="/applications"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 text-sm font-medium rounded-full"
-                  style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
-                >
-                  Applications
-                </m.a>
-                <m.a
-                  href="/resume-builder"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 text-sm font-medium rounded-full"
-                  style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
-                >
-                  Resume Builder
-                </m.a>
-                <m.a
-                  href="/profile"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 text-sm font-medium rounded-full"
-                  style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
-                >
-                  Profile
-                </m.a>
-                <m.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => window.location.href = '/login'}
-                  className="px-4 py-2 text-sm font-bold rounded-full"
-                  style={{ color: "#fff", borderRadius: 9999, background: theme.theme === 'light' ? 'linear-gradient(90deg,#3b82f6,#1d4ed8)' : 'linear-gradient(90deg,#ff6b00,#00d4ff)' }}
-                >
-                  Sign In
-                </m.button>
+                {user ? (
+                  <>
+                    <m.a
+                      href="/dashboard"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 text-sm font-medium rounded-full"
+                      style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
+                    >
+                      Dashboard
+                    </m.a>
+                    <m.a
+                      href="/applications"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 text-sm font-medium rounded-full"
+                      style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
+                    >
+                      Applications
+                    </m.a>
+                    <m.a
+                      href="/resume-builder"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 text-sm font-medium rounded-full"
+                      style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
+                    >
+                      Resume Builder
+                    </m.a>
+                    <m.a
+                      href="/profile"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 text-sm font-medium rounded-full"
+                      style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
+                    >
+                      Profile
+                    </m.a>
+                    <m.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={async () => {
+                        await logout()
+                        window.location.href = '/'
+                      }}
+                      className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
+                      style={{
+                        background: theme.theme === 'light'
+                          ? "linear-gradient(to right, #f59e0b, #f97316)"
+                          : "linear-gradient(to right, #ff6b00, #ff8c00)",
+                        boxShadow: theme.theme === 'light'
+                          ? "0 4px 14px rgba(245, 158, 11, 0.25)"
+                          : "0 10px 30px rgba(255, 107, 0, 0.25)"
+                      }}
+                    >
+                      Sign Out
+                    </m.button>
+                  </>
+                ) : (
+                  <m.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => window.location.href = '/login'}
+                    className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r hover:shadow-lg hover:shadow-[#3b82f6]/50 transition-all duration-300"
+                    style={{
+                      background: theme.theme === 'light'
+                        ? "linear-gradient(to right, #3b82f6, #1d4ed8)"
+                        : "linear-gradient(to right, #00d4ff, #ff6b00)",
+                      boxShadow: theme.theme === 'light'
+                        ? "0 4px 14px rgba(59, 130, 246, 0.25)"
+                        : "0 10px 30px rgba(0, 212, 255, 0.25)"
+                    }}
+                  >
+                    Sign In
+                  </m.button>
+                )}
               </div>
 
               {/* Mobile Menu Button */}
               <div className="sm:hidden flex items-center gap-2">
                 <ThemeToggle />
+                <m.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowMobileMenu(!showMobileMenu)}
+                  className="p-1.5 rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+                  style={{ color: theme.textPrimary }}
+                >
+                  {showMobileMenu ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+                </m.button>
               </div>
             </div>
           </div>
         </m.nav>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {showMobileMenu && (
+            <m.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="sm:hidden fixed top-[73px] left-0 right-0 z-40 border-b border-[#00d4ff]/50"
+              style={{ background: theme.bgNavStyle?.backgroundColor || '#ffffff', backdropFilter: "blur(12px)" }}
+            >
+              <div className="max-w-7xl mx-auto px-3 py-2">
+                <div className="flex flex-col gap-2">
+                  {user ? (
+                    <>
+                      <m.a
+                        href="/dashboard"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setShowMobileMenu(false)}
+                        className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+                        style={{ color: theme.textPrimary }}
+                      >
+                        <span>📊</span>
+                        Dashboard
+                      </m.a>
+
+                      <m.a
+                        href="/applications"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setShowMobileMenu(false)}
+                        className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+                        style={{ color: theme.textPrimary }}
+                      >
+                        <span>📋</span>
+                        Applications
+                      </m.a>
+
+                      <m.a
+                        href="/resume-builder"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setShowMobileMenu(false)}
+                        className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+                        style={{ color: theme.textPrimary }}
+                      >
+                        <span>📄</span>
+                        Resume Builder
+                      </m.a>
+
+                      <m.a
+                        href="/profile"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setShowMobileMenu(false)}
+                        className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+                        style={{ color: theme.textPrimary }}
+                      >
+                        <span>👤</span>
+                        Profile
+                      </m.a>
+
+                      <m.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={async () => {
+                          await logout()
+                          setShowMobileMenu(false)
+                          window.location.href = '/'
+                        }}
+                        className="w-full px-4 py-3 text-left text-white text-sm font-bold rounded-xl hover:shadow-lg transition-all duration-300 flex items-center gap-2"
+                        style={{
+                          background: theme.theme === 'light'
+                            ? "linear-gradient(to right, #f59e0b, #f97316)"
+                            : "linear-gradient(to right, #ff6b00, #ff8c00)",
+                          boxShadow: theme.theme === 'light'
+                            ? "0 4px 14px rgba(245, 158, 11, 0.25)"
+                            : "0 10px 30px rgba(255, 107, 0, 0.25)"
+                        }}
+                      >
+                        <span>🚪</span>
+                        Sign Out
+                      </m.button>
+                    </>
+                  ) : (
+                    <m.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        setShowMobileMenu(false)
+                        window.location.href = '/login'
+                      }}
+                      className="w-full px-4 py-3 text-left text-white text-sm font-bold rounded-xl hover:shadow-lg transition-all duration-300 flex items-center gap-2"
+                      style={{
+                        background: theme.theme === 'light'
+                          ? "linear-gradient(to right, #3b82f6, #1d4ed8)"
+                          : "linear-gradient(to right, #00d4ff, #ff6b00)",
+                        boxShadow: theme.theme === 'light'
+                          ? "0 4px 14px rgba(59, 130, 246, 0.25)"
+                          : "0 10px 30px rgba(0, 212, 255, 0.25)"
+                      }}
+                    >
+                      <span>🔐</span>
+                      Sign In
+                    </m.button>
+                  )}
+                </div>
+              </div>
+            </m.div>
+          )}
+        </AnimatePresence>
 
         {/* Background Effects */}
         <div style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "hidden" }}>
@@ -403,8 +556,13 @@ export default function JobsPage() {
                   placeholder="Search jobs, companies, or skills..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 rounded-2xl focus:outline-none transition-all"
-                  style={{ background: theme.bgInput, border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                  className="w-full pl-12 pr-4 py-4 rounded-2xl focus:outline-none focus:ring-2 transition-all"
+                  style={{
+                    background: theme.bgInputStyle?.backgroundColor || '#ffffff',
+                    border: `1px solid ${theme.borderMedium}`,
+                    color: theme.textPrimary,
+                    '--tw-ring-color': theme.theme === 'light' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 212, 255, 0.5)'
+                  } as any}
                 />
               </div>
 
@@ -416,8 +574,13 @@ export default function JobsPage() {
                   placeholder="Location"
                   value={locationFilter}
                   onChange={(e) => setLocationFilter(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 rounded-2xl focus:outline-none transition-all min-w-[200px]"
-                  style={{ background: theme.bgInput, border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                  className="w-full pl-12 pr-4 py-4 rounded-2xl focus:outline-none focus:ring-2 transition-all min-w-[200px]"
+                  style={{
+                    background: theme.bgInputStyle?.backgroundColor || '#ffffff',
+                    border: `1px solid ${theme.borderMedium}`,
+                    color: theme.textPrimary,
+                    '--tw-ring-color': theme.theme === 'light' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 212, 255, 0.5)'
+                  } as any}
                 />
               </div>
 
@@ -450,8 +613,13 @@ export default function JobsPage() {
                       <select
                         value={typeFilter}
                         onChange={(e) => setTypeFilter(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                        style={{ background: theme.bgInput, border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                        className="w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 transition-all"
+                        style={{
+                          background: theme.bgInputStyle?.backgroundColor || '#ffffff',
+                          border: `1px solid ${theme.borderMedium}`,
+                          color: theme.textPrimary,
+                          '--tw-ring-color': theme.theme === 'light' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 212, 255, 0.5)'
+                        } as any}
                       >
                         <option value="">All Types</option>
                         <option value="full-time">Full Time</option>
@@ -466,8 +634,13 @@ export default function JobsPage() {
                       <select
                         value={experienceFilter}
                         onChange={(e) => setExperienceFilter(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                        style={{ background: theme.bgInput, border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                        className="w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 transition-all"
+                        style={{
+                          background: theme.bgInputStyle?.backgroundColor || '#ffffff',
+                          border: `1px solid ${theme.borderMedium}`,
+                          color: theme.textPrimary,
+                          '--tw-ring-color': theme.theme === 'light' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 212, 255, 0.5)'
+                        } as any}
                       >
                         <option value="">All Levels</option>
                         <option value="Entry-level">Entry Level</option>

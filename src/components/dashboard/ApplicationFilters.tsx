@@ -44,8 +44,20 @@ export default function ApplicationFilters({
           placeholder="Search companies, positions, or locations..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          style={{ width: "100%", paddingLeft: "3rem", paddingRight: "1rem", paddingTop: "1rem", paddingBottom: "1rem", borderRadius: "1rem", border: "1px solid transparent", outline: "none", transition: "all 0.3s", ...(theme.bgInputStyle || {}), color: theme.textPrimary }}
-          className="placeholder-gray-500 focus:border-[#00d4ff]/50"
+          style={{
+            width: "100%",
+            paddingLeft: "3rem",
+            paddingRight: "1rem",
+            paddingTop: "1rem",
+            paddingBottom: "1rem",
+            borderRadius: "1rem",
+            border: "1px solid transparent",
+            outline: "none",
+            transition: "all 0.3s",
+            ...(theme.bgInputStyle || {}),
+            color: theme.textPrimary
+          }}
+          className={`placeholder-gray-500 focus:border-[#00d4ff]/50 ${theme.theme === 'dark' ? 'placeholder-gray-400' : ''}`}
         />
       </div>
 

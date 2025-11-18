@@ -14,7 +14,11 @@ interface Application {
   applicationDate: string | Date
   lastUpdated: string | Date
   notes?: string
-  salary?: string
+  salary?: {
+    offered?: number
+    expected?: number
+    currency: string
+  }
   location?: string
   jobUrl?: string
   contactInfo?: string
@@ -45,6 +49,34 @@ export default function ApplicationCard({
 }: ApplicationCardProps) {
   const StatusIcon = getStatusIcon(app.status)
   const statusColor = getStatusColor(app.status)
+
+  // Format salary for display
+  const formatSalary = (salary: Application['salary']) => {
+    if (!salary) return null
+
+    const currencySymbols: Record<string, string> = {
+      'USD': '$',
+      'EUR': '€',
+      'GBP': '£',
+      'CAD': 'C$',
+      'AUD': 'A$',
+      'JPY': '¥',
+      'CNY': '¥',
+      'INR': '₹',
+    }
+
+    const symbol = currencySymbols[salary.currency] || salary.currency
+
+    if (salary.offered) {
+      return `${symbol}${salary.offered.toLocaleString()}`
+    } else if (salary.expected) {
+      return `${symbol}${salary.expected.toLocaleString()} (expected)`
+    }
+
+    return null
+  }
+
+  const formattedSalary = formatSalary(app.salary)
 
   return (
     <m.div
@@ -124,10 +156,10 @@ export default function ApplicationCard({
               <span className="truncate">{app.location}</span>
             </div>
           )}
-          {app.salary && (
+          {formattedSalary && (
             <div className="flex items-center gap-2" style={{ color: theme.textSecondary }}>
               <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-[#00ff88]" />
-              <span className="truncate">{app.salary}</span>
+              <span className="truncate">{formattedSalary}</span>
             </div>
           )}
         </div>

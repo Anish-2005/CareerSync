@@ -14,7 +14,11 @@ interface Application {
   applicationDate: string | Date
   lastUpdated: string | Date
   notes?: string
-  salary?: string
+  salary?: {
+    offered?: number
+    expected?: number
+    currency: string
+  }
   location?: string
   jobUrl?: string
   contactInfo?: string
@@ -45,6 +49,34 @@ export default function ApplicationDetailModal({
 
   const StatusIcon = getStatusIcon(application.status)
   const statusColor = getStatusColor(application.status)
+
+  // Format salary for display
+  const formatSalary = (salary: Application['salary']) => {
+    if (!salary) return null
+
+    const currencySymbols: Record<string, string> = {
+      'USD': '$',
+      'EUR': '€',
+      'GBP': '£',
+      'CAD': 'C$',
+      'AUD': 'A$',
+      'JPY': '¥',
+      'CNY': '¥',
+      'INR': '₹',
+    }
+
+    const symbol = currencySymbols[salary.currency] || salary.currency
+
+    if (salary.offered) {
+      return `${symbol}${salary.offered.toLocaleString()}`
+    } else if (salary.expected) {
+      return `${symbol}${salary.expected.toLocaleString()} (expected)`
+    }
+
+    return null
+  }
+
+  const formattedSalary = formatSalary(application.salary)
 
   return (
     <AnimatePresence>
@@ -152,13 +184,13 @@ export default function ApplicationDetailModal({
                   </div>
                 )}
 
-                {application.salary && (
+                {formattedSalary && (
                   <div style={{ padding: "1rem", borderRadius: "0.75rem", border: "1px solid rgba(0,0,0,0.1)", ...(theme.bgCardStyle || {}) }}>
                     <div className="flex items-center gap-2 text-sm mb-1" style={{ color: theme.textSecondary }}>
                       <DollarSign className="w-4 h-4 text-[#00ff88]" />
                       Salary Range
                     </div>
-                    <div style={{ color: theme.textPrimary }} className="font-semibold">{application.salary}</div>
+                    <div style={{ color: theme.textPrimary }} className="font-semibold">{formattedSalary}</div>
                   </div>
                 )}
 

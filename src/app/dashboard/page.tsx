@@ -33,7 +33,11 @@ interface Application {
   applicationDate: string | Date
   lastUpdated: string | Date
   notes?: string
-  salary?: string
+  salary?: {
+    offered?: number
+    expected?: number
+    currency: string
+  }
   location?: string
   jobUrl?: string
   contactInfo?: string
@@ -415,6 +419,71 @@ export default function DashboardPage() {
       }
     })
 
+  // Helper: parse salary string into object
+  const parseSalaryString = (salaryStr: string) => {
+    if (!salaryStr || typeof salaryStr !== 'string') return undefined
+
+    // Try to extract number and currency from string like "$100k", "€50,000", "100000 USD"
+    const cleanStr = salaryStr.trim()
+
+    // Common currency symbols and codes
+    const currencies = [
+      { symbol: '$', code: 'USD' },
+      { symbol: '€', code: 'EUR' },
+      { symbol: '£', code: 'GBP' },
+      { symbol: '¥', code: 'JPY' },
+      { symbol: '₹', code: 'INR' },
+      { symbol: 'C$', code: 'CAD' },
+      { symbol: 'A$', code: 'AUD' },
+    ]
+
+    let currency = 'USD' // default
+    let amount = 0
+
+    // Check for currency symbols at start
+    for (const curr of currencies) {
+      if (cleanStr.startsWith(curr.symbol)) {
+        currency = curr.code
+        const numStr = cleanStr.slice(curr.symbol.length).trim()
+        amount = parseSalaryNumber(numStr)
+        break
+      }
+    }
+
+    // Check for currency codes at end
+    if (amount === 0) {
+      for (const curr of currencies) {
+        if (cleanStr.toUpperCase().endsWith(' ' + curr.code)) {
+          currency = curr.code
+          const numStr = cleanStr.slice(0, -curr.code.length - 1).trim()
+          amount = parseSalaryNumber(numStr)
+          break
+        }
+      }
+    }
+
+    // If no currency found, try to parse as number
+    if (amount === 0) {
+      amount = parseSalaryNumber(cleanStr)
+    }
+
+    return amount > 0 ? { expected: amount, currency } : undefined
+  }
+
+  // Helper: parse salary number with k/m suffixes
+  const parseSalaryNumber = (str: string): number => {
+    const match = str.match(/([\d,]+(?:\.\d+)?)\s*(k|m)?/i)
+    if (!match) return 0
+
+    let num = parseFloat(match[1].replace(/,/g, ''))
+    const suffix = match[2]?.toLowerCase()
+
+    if (suffix === 'k') num *= 1000
+    else if (suffix === 'm') num *= 1000000
+
+    return Math.round(num)
+  }
+
   // Add new application
   const handleAddApplication = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -422,16 +491,30 @@ export default function DashboardPage() {
 
     try {
       const token = await getIdToken()
+
+      // Transform formData to match API expectations
+      const { salary: salaryStr, ...restFormData } = formData
+      const transformedData: any = {
+        ...restFormData,
+        jobTitle: formData.position, // API expects jobTitle
+        appliedDate: new Date().toISOString(),
+      }
+
+      // Parse salary string into object if provided
+      if (salaryStr) {
+        const parsedSalary = parseSalaryString(salaryStr)
+        if (parsedSalary) {
+          transformedData.salary = parsedSalary
+        }
+      }
+
       const response = await fetch('/api/applications', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...formData,
-          applicationDate: new Date().toISOString(),
-        }),
+        body: JSON.stringify(transformedData),
       })
 
       if (!response.ok) {
@@ -729,7 +812,10 @@ export default function DashboardPage() {
           theme={theme}
           isOpen={showAddModal}
           onClose={() => setShowAddModal(false)}
-          onSubmit={async (formData) => {
+          onSubmit={async (modalFormData) => {
+            // Update the main formData state with modal data
+            setFormData(modalFormData)
+            // Then call handleAddApplication
             await handleAddApplication({ preventDefault: () => {} } as any)
           }}
         />

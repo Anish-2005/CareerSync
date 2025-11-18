@@ -29,18 +29,7 @@ export default function AddApplicationModal({ theme, isOpen, onClose, onSubmit }
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     onSubmit(formData)
-    setFormData({
-      company: '',
-      position: '',
-      location: '',
-      salary: '',
-      status: 'applied',
-      priority: 'medium',
-      notes: '',
-      jobUrl: '',
-      contactInfo: '',
-    })
-    onClose()
+    // Don't reset formData here - let parent handle it
   }
 
   return (
@@ -86,8 +75,18 @@ export default function AddApplicationModal({ theme, isOpen, onClose, onSubmit }
                     onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                     placeholder="Google, Microsoft..."
                     required
-                    style={{ width: "100%", padding: "0.75rem", borderRadius: "0.75rem", color: theme.textPrimary, backgroundColor: "transparent", border: "1px solid transparent", outline: "none", transition: "all 0.3s", fontSize: "0.875rem", ...(theme.bgInputStyle || {}) }}
-                    className="placeholder-gray-500 focus:border-[#00d4ff]/50 sm:text-base"
+                    style={{
+                      width: "100%",
+                      padding: "0.75rem",
+                      borderRadius: "0.75rem",
+                      color: theme.textPrimary,
+                      backgroundColor: theme.bgInputStyle?.backgroundColor || '#ffffff',
+                      border: `1px solid ${theme.borderMedium}`,
+                      outline: "none",
+                      transition: "all 0.3s",
+                      fontSize: "0.875rem"
+                    }}
+                    className={`placeholder-gray-500 focus:ring-2 sm:text-base ${theme.theme === 'dark' ? 'placeholder-gray-400' : ''}`}
                   />
                 </div>
                 <div>
@@ -98,8 +97,18 @@ export default function AddApplicationModal({ theme, isOpen, onClose, onSubmit }
                     onChange={(e) => setFormData({ ...formData, position: e.target.value })}
                     placeholder="Software Engineer..."
                     required
-                    style={{ width: "100%", padding: "0.75rem", borderRadius: "0.75rem", color: theme.textPrimary, backgroundColor: "transparent", border: "1px solid transparent", outline: "none", transition: "all 0.3s", fontSize: "0.875rem", ...(theme.bgInputStyle || {}) }}
-                    className="placeholder-gray-500 focus:border-[#00d4ff]/50 sm:text-base"
+                    style={{
+                      width: "100%",
+                      padding: "0.75rem",
+                      borderRadius: "0.75rem",
+                      color: theme.textPrimary,
+                      backgroundColor: theme.bgInputStyle?.backgroundColor || '#ffffff',
+                      border: `1px solid ${theme.borderMedium}`,
+                      outline: "none",
+                      transition: "all 0.3s",
+                      fontSize: "0.875rem"
+                    }}
+                    className={`placeholder-gray-500 focus:ring-2 sm:text-base ${theme.theme === 'dark' ? 'placeholder-gray-400' : ''}`}
                   />
                 </div>
               </div>
@@ -112,8 +121,18 @@ export default function AddApplicationModal({ theme, isOpen, onClose, onSubmit }
                     value={formData.location}
                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                     placeholder="San Francisco, CA / Remote"
-                    style={{ width: "100%", padding: "0.75rem", borderRadius: "0.75rem", color: theme.textPrimary, backgroundColor: "transparent", border: "1px solid transparent", outline: "none", transition: "all 0.3s", fontSize: "0.875rem", ...(theme.bgInputStyle || {}) }}
-                    className="placeholder-gray-500 focus:border-[#00d4ff]/50 sm:text-base"
+                    style={{
+                      width: "100%",
+                      padding: "0.75rem",
+                      borderRadius: "0.75rem",
+                      color: theme.textPrimary,
+                      backgroundColor: theme.bgInputStyle?.backgroundColor || '#ffffff',
+                      border: `1px solid ${theme.borderMedium}`,
+                      outline: "none",
+                      transition: "all 0.3s",
+                      fontSize: "0.875rem"
+                    }}
+                    className={`placeholder-gray-500 focus:ring-2 sm:text-base ${theme.theme === 'dark' ? 'placeholder-gray-400' : ''}`}
                   />
                 </div>
                 <div>
@@ -123,8 +142,18 @@ export default function AddApplicationModal({ theme, isOpen, onClose, onSubmit }
                     value={formData.salary}
                     onChange={(e) => setFormData({ ...formData, salary: e.target.value })}
                     placeholder="$100k - $150k"
-                    style={{ width: "100%", padding: "0.75rem", borderRadius: "0.75rem", color: theme.textPrimary, backgroundColor: "transparent", border: "1px solid transparent", outline: "none", transition: "all 0.3s", fontSize: "0.875rem", ...(theme.bgInputStyle || {}) }}
-                    className="placeholder-gray-500 focus:border-[#00d4ff]/50 sm:text-base"
+                    style={{
+                      width: "100%",
+                      padding: "0.75rem",
+                      borderRadius: "0.75rem",
+                      color: theme.textPrimary,
+                      backgroundColor: theme.bgInputStyle?.backgroundColor || '#ffffff',
+                      border: `1px solid ${theme.borderMedium}`,
+                      outline: "none",
+                      transition: "all 0.3s",
+                      fontSize: "0.875rem"
+                    }}
+                    className={`placeholder-gray-500 focus:ring-2 sm:text-base ${theme.theme === 'dark' ? 'placeholder-gray-400' : ''}`}
                   />
                 </div>
               </div>
@@ -137,7 +166,7 @@ export default function AddApplicationModal({ theme, isOpen, onClose, onSubmit }
                   onChange={(e) => setFormData({ ...formData, jobUrl: e.target.value })}
                   placeholder="https://example.com/job"
                   style={{ width: "100%", padding: "0.75rem", borderRadius: "0.75rem", color: theme.textPrimary, backgroundColor: "transparent", border: "1px solid transparent", outline: "none", transition: "all 0.3s", fontSize: "0.875rem", ...(theme.bgInputStyle || {}) }}
-                  className="placeholder-gray-500 focus:border-[#00d4ff]/50 sm:text-base"
+                  className={`placeholder-gray-500 focus:border-[#00d4ff]/50 sm:text-base ${theme.theme === 'dark' ? 'placeholder-gray-400' : ''}`}
                 />
               </div>
 
@@ -180,7 +209,7 @@ export default function AddApplicationModal({ theme, isOpen, onClose, onSubmit }
                   onChange={(e) => setFormData({ ...formData, contactInfo: e.target.value })}
                   placeholder="recruiter@company.com or John Doe"
                   style={{ width: "100%", padding: "0.75rem", borderRadius: "0.75rem", color: theme.textPrimary, backgroundColor: "transparent", border: "1px solid transparent", outline: "none", transition: "all 0.3s", fontSize: "0.875rem", ...(theme.bgInputStyle || {}) }}
-                  className="placeholder-gray-500 focus:border-[#00d4ff]/50 sm:text-base"
+                  className={`placeholder-gray-500 focus:border-[#00d4ff]/50 sm:text-base ${theme.theme === 'dark' ? 'placeholder-gray-400' : ''}`}
                 />
               </div>
 
@@ -192,7 +221,7 @@ export default function AddApplicationModal({ theme, isOpen, onClose, onSubmit }
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                   placeholder="Add any additional notes about the application..."
                   style={{ width: "100%", padding: "0.75rem", borderRadius: "0.75rem", color: theme.textPrimary, backgroundColor: "transparent", border: "1px solid transparent", outline: "none", transition: "all 0.3s", resize: "none", fontSize: "0.875rem", ...(theme.bgInputStyle || {}) }}
-                  className="placeholder-gray-500 focus:border-[#00d4ff]/50 sm:text-base"
+                  className={`placeholder-gray-500 focus:border-[#00d4ff]/50 sm:text-base ${theme.theme === 'dark' ? 'placeholder-gray-400' : ''}`}
                 />
               </div>
 

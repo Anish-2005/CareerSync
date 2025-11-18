@@ -15,7 +15,11 @@ interface Application {
   applicationDate: string | Date
   lastUpdated: string | Date
   notes?: string
-  salary?: string
+  salary?: {
+    offered?: number
+    expected?: number
+    currency: string
+  }
   location?: string
   jobUrl?: string
   contactInfo?: string
