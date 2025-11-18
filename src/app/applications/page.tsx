@@ -35,81 +35,102 @@ export default function ApplicationsPage() {
   const [filteredApplications, setFilteredApplications] = useState<Application[]>([])
   const [statusFilter, setStatusFilter] = useState('')
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  // Mock data for demonstration
-  useEffect(() => {
-    const mockApplications: Application[] = [
-      {
-        id: '1',
-        jobId: '1',
-        jobTitle: 'Senior Software Engineer',
-        company: 'TechCorp Inc.',
-        location: 'San Francisco, CA',
-        appliedDate: new Date('2024-01-10'),
-        status: 'interview',
-        notes: 'Technical interview scheduled for next week',
-        followUpDate: new Date('2024-01-20'),
-        salary: { expected: 150000, currency: 'USD' }
-      },
-      {
-        id: '2',
-        jobId: '2',
-        jobTitle: 'Frontend Developer',
-        company: 'StartupXYZ',
-        location: 'New York, NY',
-        appliedDate: new Date('2024-01-08'),
-        status: 'reviewing',
-        notes: 'Application submitted successfully',
-        followUpDate: new Date('2024-01-18')
-      },
-      {
-        id: '3',
-        jobId: '3',
-        jobTitle: 'DevOps Engineer',
-        company: 'CloudTech Solutions',
-        location: 'Austin, TX',
-        appliedDate: new Date('2024-01-05'),
-        status: 'offer',
-        notes: 'Received offer - $140k base + benefits',
-        salary: { offered: 140000, expected: 130000, currency: 'USD' }
-      },
-      {
-        id: '4',
-        jobId: '4',
-        jobTitle: 'UX/UI Designer',
-        company: 'DesignStudio',
-        location: 'Los Angeles, CA',
-        appliedDate: new Date('2024-01-03'),
-        status: 'rejected',
-        notes: 'Position filled by another candidate'
-      },
-      {
-        id: '5',
-        jobId: '5',
-        jobTitle: 'Data Scientist Intern',
-        company: 'DataCorp',
-        location: 'Seattle, WA',
-        appliedDate: new Date('2024-01-01'),
-        status: 'pending',
-        notes: 'Application under review'
+  // Fetch applications from API
+  const fetchApplications = async () => {
+    if (!user) return
+
+    try {
+      setLoading(true)
+      setError(null)
+
+      const token = await user.getIdToken()
+      const params = new URLSearchParams()
+      if (statusFilter && statusFilter !== 'all') {
+        params.append('status', statusFilter)
       }
-    ]
 
-    setTimeout(() => {
-      setApplications(mockApplications)
-      setFilteredApplications(mockApplications)
+      const response = await fetch(`/api/applications?${params.toString()}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch applications')
+      }
+
+      const data = await response.json()
+      setApplications(data.applications)
+      setFilteredApplications(data.applications)
+    } catch (err) {
+      console.error('Error fetching applications:', err)
+      setError('Failed to load applications')
+    } finally {
       setLoading(false)
-    }, 1000)
-  }, [])
+    }
+  }
+
+  // Initial data fetch
+  useEffect(() => {
+    if (user) {
+      fetchApplications()
+    }
+  }, [user])
 
   // Filter applications based on status
   useEffect(() => {
-    if (!statusFilter) {
+    if (!statusFilter || statusFilter === 'all') {
       setFilteredApplications(applications)
     } else {
       setFilteredApplications(applications.filter(app => app.status === statusFilter))
     }
   }, [applications, statusFilter])
+
+  // Refetch when status filter changes
+  useEffect(() => {
+    if (user) {
+      fetchApplications()
+    }
+  }, [statusFilter])
+
+  const createApplication = async (job: any) => {
+    if (!user) return
+
+    try {
+      const token = await user.getIdToken()
+      const applicationData = {
+        jobId: job._id || job.id,
+        jobTitle: job.title,
+        company: job.company,
+        location: job.location,
+        status: 'pending',
+        notes: '',
+        salary: job.salary ? { expected: job.salary.min, currency: job.salary.currency } : undefined,
+      }
+
+      const response = await fetch('/api/applications', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(applicationData),
+      })
+
+      if (response.ok) {
+        // Refresh applications list
+        fetchApplications()
+        alert('Application submitted successfully!')
+      } else {
+        alert('Failed to submit application')
+      }
+    } catch (err) {
+      console.error('Error creating application:', err)
+      alert('Failed to submit application')
+    }
+  }
 
   const getStatusColor = (status: Application['status']) => {
     switch (status) {
@@ -139,9 +160,11 @@ export default function ApplicationsPage() {
     return status.charAt(0).toUpperCase() + status.slice(1)
   }
 
-  const getTimeAgo = (date: Date) => {
+  const getTimeAgo = (date: Date | undefined | null) => {
+    if (!date) return 'Unknown'
+
     const now = new Date()
-    const diffTime = Math.abs(now.getTime() - date.getTime())
+    const diffTime = Math.abs(now.getTime() - new Date(date).getTime())
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
     if (diffDays === 1) return '1 day ago'
@@ -208,6 +231,15 @@ export default function ApplicationsPage() {
                   style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
                 >
                   Jobs
+                </m.a>
+                <m.a
+                  href="/resume-builder"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-4 py-2 text-sm font-medium rounded-full"
+                  style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
+                >
+                  Resume Builder
                 </m.a>
                 <m.a
                   href="/profile"
@@ -460,7 +492,7 @@ export default function ApplicationsPage() {
                             </span>
                             {application.followUpDate && (
                               <span className="text-sm" style={{ color: theme.textTertiary }}>
-                                Follow up: {application.followUpDate.toLocaleDateString()}
+                                Follow up: {new Date(application.followUpDate).toLocaleDateString()}
                               </span>
                             )}
                           </div>

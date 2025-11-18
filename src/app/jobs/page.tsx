@@ -43,89 +43,66 @@ export default function JobsPage() {
   const [experienceFilter, setExperienceFilter] = useState('')
   const [showFilters, setShowFilters] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  // Mock data for demonstration
-  useEffect(() => {
-    const mockJobs: Job[] = [
-      {
-        id: '1',
-        title: 'Senior Software Engineer',
-        company: 'TechCorp Inc.',
-        location: 'San Francisco, CA',
-        type: 'full-time',
-        salary: { min: 120000, max: 180000, currency: 'USD' },
-        description: 'We are looking for a Senior Software Engineer to join our dynamic team. You will be responsible for designing, developing, and maintaining high-quality software solutions.',
-        requirements: ['5+ years of experience', 'React, Node.js, TypeScript', 'AWS experience', 'Agile methodologies'],
-        postedDate: new Date('2024-01-15'),
-        applicationDeadline: new Date('2024-02-15'),
-        tags: ['React', 'Node.js', 'AWS', 'TypeScript'],
-        remote: true,
-        experience: 'Senior'
-      },
-      {
-        id: '2',
-        title: 'Frontend Developer',
-        company: 'StartupXYZ',
-        location: 'New York, NY',
-        type: 'full-time',
-        salary: { min: 80000, max: 120000, currency: 'USD' },
-        description: 'Join our fast-growing startup as a Frontend Developer. You will work on exciting projects using cutting-edge technologies.',
-        requirements: ['3+ years of experience', 'React, Vue.js', 'CSS/SCSS', 'JavaScript'],
-        postedDate: new Date('2024-01-10'),
-        tags: ['React', 'Vue.js', 'CSS', 'JavaScript'],
-        remote: false,
-        experience: 'Mid-level'
-      },
-      {
-        id: '3',
-        title: 'DevOps Engineer',
-        company: 'CloudTech Solutions',
-        location: 'Austin, TX',
-        type: 'contract',
-        salary: { min: 100, max: 150, currency: 'USD/hour' },
-        description: 'Looking for an experienced DevOps Engineer to help scale our cloud infrastructure and improve our CI/CD pipelines.',
-        requirements: ['4+ years DevOps experience', 'Kubernetes, Docker', 'AWS/Azure', 'Terraform'],
-        postedDate: new Date('2024-01-12'),
-        applicationDeadline: new Date('2024-02-01'),
-        tags: ['Kubernetes', 'Docker', 'AWS', 'Terraform'],
-        remote: true,
-        experience: 'Senior'
-      },
-      {
-        id: '4',
-        title: 'UX/UI Designer',
-        company: 'DesignStudio',
-        location: 'Los Angeles, CA',
-        type: 'part-time',
-        salary: { min: 50, max: 80, currency: 'USD/hour' },
-        description: 'Creative UX/UI Designer needed for various client projects. Must have strong portfolio and experience with design tools.',
-        requirements: ['3+ years design experience', 'Figma, Sketch, Adobe XD', 'User research', 'Prototyping'],
-        postedDate: new Date('2024-01-08'),
-        tags: ['Figma', 'UX/UI', 'Design', 'Prototyping'],
-        remote: true,
-        experience: 'Mid-level'
-      },
-      {
-        id: '5',
-        title: 'Data Scientist Intern',
-        company: 'DataCorp',
-        location: 'Seattle, WA',
-        type: 'internship',
-        description: 'Summer internship opportunity for data science students. Work on real-world data projects and learn from experienced mentors.',
-        requirements: ['Currently enrolled in CS/Statistics/Math', 'Python, R', 'Machine Learning basics', 'SQL'],
-        postedDate: new Date('2024-01-05'),
-        tags: ['Python', 'Machine Learning', 'Data Science', 'SQL'],
-        remote: false,
-        experience: 'Entry-level'
+  // Fetch jobs from API
+  const fetchJobs = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+
+      const params = new URLSearchParams()
+      if (searchQuery) params.append('search', searchQuery)
+      if (locationFilter) params.append('location', locationFilter)
+      if (typeFilter) params.append('type', typeFilter)
+      if (experienceFilter) params.append('experience', experienceFilter)
+
+      const response = await fetch(`/api/jobs?${params.toString()}`)
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch jobs')
       }
-    ]
 
-    setTimeout(() => {
-      setJobs(mockJobs)
-      setFilteredJobs(mockJobs)
+      const data = await response.json()
+      setJobs(data.jobs)
+      setFilteredJobs(data.jobs)
+    } catch (err) {
+      console.error('Error fetching jobs:', err)
+      setError('Failed to load jobs')
+    } finally {
       setLoading(false)
-    }, 1000)
-  }, [])
+    }
+  }
+
+  // Fetch saved jobs
+  const fetchSavedJobs = async () => {
+    if (!user) return
+
+    try {
+      const token = await user.getIdToken()
+      const response = await fetch('/api/saved-jobs', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        const savedJobIds: Set<string> = new Set(data.savedJobs.map((saved: any) => (saved.jobId?.id || saved.jobId) as string))
+        setSavedJobs(savedJobIds)
+      }
+    } catch (err) {
+      console.error('Error fetching saved jobs:', err)
+    }
+  }
+
+  // Initial data fetch
+  useEffect(() => {
+    fetchJobs()
+    if (user) {
+      fetchSavedJobs()
+    }
+  }, [user])
 
   // Filter jobs based on search and filters
   useEffect(() => {
@@ -144,29 +121,99 @@ export default function JobsPage() {
     setFilteredJobs(filtered)
   }, [jobs, searchQuery, locationFilter, typeFilter, experienceFilter])
 
-  const toggleSaveJob = (jobId: string) => {
-    setSavedJobs(prev => {
-      const newSet = new Set(prev)
-      if (newSet.has(jobId)) {
-        newSet.delete(jobId)
+  const toggleSaveJob = async (jobId: string) => {
+    if (!user) return
+
+    try {
+      const token = await user.getIdToken()
+      const isCurrentlySaved = savedJobs.has(jobId)
+
+      if (isCurrentlySaved) {
+        // Unsave job
+        const response = await fetch(`/api/saved-jobs?jobId=${jobId}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        })
+
+        if (response.ok) {
+          setSavedJobs(prev => {
+            const newSet = new Set(prev)
+            newSet.delete(jobId)
+            return newSet
+          })
+        }
       } else {
-        newSet.add(jobId)
+        // Save job
+        const response = await fetch('/api/saved-jobs', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ jobId }),
+        })
+
+        if (response.ok) {
+          setSavedJobs(prev => new Set([...prev, jobId]))
+        }
       }
-      return newSet
-    })
+    } catch (err) {
+      console.error('Error toggling save job:', err)
+    }
+  }
+
+  const createApplication = async (job: Job) => {
+    if (!user) return
+
+    try {
+      const token = await user.getIdToken()
+      const applicationData = {
+        jobId: job.id,
+        jobTitle: job.title,
+        company: job.company,
+        location: job.location,
+        status: 'pending',
+        notes: '',
+        salary: job.salary ? { expected: job.salary.min, currency: job.salary.currency } : undefined,
+      }
+
+      const response = await fetch('/api/applications', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(applicationData),
+      })
+
+      if (response.ok) {
+        alert('Application submitted successfully!')
+        // Optionally navigate to applications page
+        // window.location.href = '/applications'
+      } else {
+        alert('Failed to submit application')
+      }
+    } catch (err) {
+      console.error('Error creating application:', err)
+      alert('Failed to submit application')
+    }
   }
 
   const formatSalary = (salary?: Job['salary']) => {
-    if (!salary) return 'Salary not disclosed'
+    if (!salary || !salary.min || !salary.max) return 'Salary not disclosed'
     if (salary.currency === 'USD/hour') {
       return `$${salary.min}-${salary.max}/hour`
     }
     return `$${salary.min.toLocaleString()}-${salary.max.toLocaleString()}`
   }
 
-  const getTimeAgo = (date: Date) => {
+  const getTimeAgo = (date: Date | undefined | null) => {
+    if (!date) return 'Unknown'
+
     const now = new Date()
-    const diffTime = Math.abs(now.getTime() - date.getTime())
+    const diffTime = Math.abs(now.getTime() - new Date(date).getTime())
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
     if (diffDays === 1) return '1 day ago'
@@ -213,6 +260,24 @@ export default function JobsPage() {
                   style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
                 >
                   Dashboard
+                </m.a>
+                <m.a
+                  href="/applications"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-4 py-2 text-sm font-medium rounded-full"
+                  style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
+                >
+                  Applications
+                </m.a>
+                <m.a
+                  href="/resume-builder"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-4 py-2 text-sm font-medium rounded-full"
+                  style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
+                >
+                  Resume Builder
                 </m.a>
                 <m.a
                   href="/profile"
@@ -570,6 +635,7 @@ export default function JobsPage() {
                       <m.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
+                        onClick={() => createApplication(job)}
                         className="w-full px-6 py-4 rounded-2xl font-bold text-sm sm:text-base"
                         style={{ background: theme.theme === 'light' ? 'linear-gradient(90deg,#3b82f6,#1d4ed8)' : 'linear-gradient(90deg,#ff6b00,#00d4ff)', color: "#fff" }}
                       >
@@ -579,7 +645,7 @@ export default function JobsPage() {
                       {job.applicationDeadline && (
                         <div className="text-center">
                           <p className="text-xs" style={{ color: theme.textTertiary }}>
-                            Deadline: {job.applicationDeadline.toLocaleDateString()}
+                            Deadline: {new Date(job.applicationDeadline).toLocaleDateString()}
                           </p>
                         </div>
                       )}

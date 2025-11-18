@@ -26,15 +26,21 @@ export async function GET(request: NextRequest) {
     }
 
     const applications = await JobApplication.find(query)
-      .sort({ applicationDate: -1 })
+      .sort({ appliedDate: -1 })
       .skip(skip)
       .limit(limit)
       .lean();
 
+    // Transform applications to include id field
+    const transformedApplications = applications.map((app: any) => ({
+      ...app,
+      id: app._id.toString(),
+    }));
+
     const total = await JobApplication.countDocuments(query);
 
     return NextResponse.json({
-      applications,
+      applications: transformedApplications,
       pagination: {
         total,
         page,
@@ -63,7 +69,7 @@ export async function POST(request: NextRequest) {
     const application = new JobApplication({
       ...body,
       userId: decodedToken.uid,
-      applicationDate: new Date(),
+      appliedDate: new Date(),
       lastUpdated: new Date(),
     });
 

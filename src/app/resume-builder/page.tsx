@@ -329,6 +329,15 @@ export default function ResumeBuilderPage() {
                   Jobs
                 </m.a>
                 <m.a
+                  href="/applications"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-4 py-2 text-sm font-medium rounded-full"
+                  style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
+                >
+                  Applications
+                </m.a>
+                <m.a
                   href="/profile"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
