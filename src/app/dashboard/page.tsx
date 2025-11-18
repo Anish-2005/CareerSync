@@ -3,14 +3,8 @@
 import React, { useEffect, useState, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
-  Target, TrendingUp, Calendar, Briefcase, Clock, CheckCircle2, XCircle, AlertCircle,
-  Plus, Search, Filter, BarChart3, FileText, Link as LinkIcon, MapPin, DollarSign,
-  Users, Building2, Send, Eye, Edit, Trash2, ChevronRight, Activity, Zap,
-  ArrowUpRight, ArrowDownRight, Star, Trophy, Flame, Coffee, Sparkles, Rocket,
-  Timer, Download, Upload, Share2, Bell, Settings, Award, TrendingDown,
-  ChevronLeft, ExternalLink, MessageSquare, Phone, Mail, Linkedin, Github,
-  PartyPopper, Moon, Sun, Volume2, VolumeX, Palette, Glasses,
-  X, Menu, User, LogOut, Send as SendIcon
+  Target, TrendingUp,Briefcase, CheckCircle2, XCircle, AlertCircle,Users, Zap,
+   Star, Trophy, Flame, Rocket, Award, PartyPopper, Send as SendIcon
 } from "lucide-react"
 import { RouteGuard } from "@/components/RouteGuard"
 import { useAuth } from "@/contexts/AuthContext"
