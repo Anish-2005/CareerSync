@@ -132,9 +132,9 @@ export default function FeaturesSection() {
               ease: "easeInOut",
             }}
             style={{
-              backgroundImage: theme.theme === 'light'
-                ? "linear-gradient(135deg, #1e293b 0%, #4f46e5 30%, #f59e0b 60%, #10b981 90%, #1e293b 100%)"
-                : "linear-gradient(135deg, #ffffff 0%, #00d4ff 30%, #ff6b00 60%, #00ff88 90%, #ffffff 100%)",
+                backgroundImage: theme.theme === 'light'
+                  ? "linear-gradient(135deg, #1e293b 0%, #4f46e5 30%, #f59e0b 60%, #10b981 90%, #1e293b 100%)"
+                  : `linear-gradient(135deg, #ffffff 0%, ${theme.textAccent} 30%, ${theme.statusInterview} 60%, ${theme.statusOffer} 90%, #ffffff 100%)`,
               backgroundSize: "300% 300%",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
@@ -159,9 +159,9 @@ export default function FeaturesSection() {
             <m.span
               className="font-semibold mx-2"
               animate={{
-                color: theme.theme === 'light'
-                  ? ["#4f46e5", "#f59e0b", "#10b981", "#4f46e5"]
-                  : ["#00d4ff", "#ff6b00", "#00ff88", "#00d4ff"],
+                  color: theme.theme === 'light'
+                    ? ["#4f46e5", "#f59e0b", "#10b981", "#4f46e5"]
+                    : [theme.textAccent, theme.statusInterview, theme.statusOffer, theme.textAccent],
               }}
               transition={{
                 duration: 4,

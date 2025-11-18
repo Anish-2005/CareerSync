@@ -9,14 +9,10 @@ import ThemeToggle from "@/components/ThemeToggle"
 
 const m = motion as any
 
-interface NavigationProps {
-  mobileOpen: boolean
-  setMobileOpen: (open: boolean) => void
-}
-
-export default function Navigation({ mobileOpen, setMobileOpen }: NavigationProps) {
+export default function Navigation() {
   const { user, logout } = useAuth()
   const theme = useThemeClasses()
+  const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
     <m.nav

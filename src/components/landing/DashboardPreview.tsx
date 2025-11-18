@@ -106,9 +106,9 @@ export default function DashboardPreview() {
             }}
             style={{
               color: theme.theme === 'light' ? '#000000' : undefined,
-              backgroundImage: theme.theme === 'light'
-                ? undefined
-                : "linear-gradient(135deg, #ffffff 0%, #00d4ff 40%, #ff6b00 70%, #00ff88 100%)",
+                backgroundImage: theme.theme === 'light'
+                  ? undefined
+                  : `linear-gradient(135deg, #ffffff 0%, ${theme.textAccent} 40%, ${theme.statusInterview} 70%, ${theme.statusOffer} 100%)`,
               backgroundSize: theme.theme === 'light' ? undefined : "300% 300%",
               WebkitBackgroundClip: theme.theme === 'light' ? undefined : "text",
               WebkitTextFillColor: theme.theme === 'light' ? undefined : "transparent",
@@ -134,7 +134,7 @@ export default function DashboardPreview() {
             <m.span
               className="text-[#00d4ff] font-semibold mx-2"
               animate={{
-                color: ["#00d4ff", "#ff6b00", "#00ff88", "#00d4ff"],
+                color: [theme.textAccent, theme.statusInterview, theme.statusOffer, theme.textAccent],
               }}
               transition={{
                 duration: 5,
@@ -221,7 +221,7 @@ export default function DashboardPreview() {
                 style={{
                   left: `${10 + i * 3.6}%`,
                   top: `${20 + i * 3}%`,
-                  background: i % 4 === 0 ? "#00d4ff" : i % 4 === 1 ? "#ff6b00" : i % 4 === 2 ? "#00ff88" : "#ff8c00",
+                  background: i % 4 === 0 ? theme.textAccent : i % 4 === 1 ? theme.statusInterview : i % 4 === 2 ? theme.statusOffer : theme.statusApplied,
                 }}
               />
             ))}
@@ -345,9 +345,9 @@ export default function DashboardPreview() {
                     {/* Progress overview */}
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                       {[
-                        { label: "Active", value: "47", color: "#00d4ff" },
-                        { label: "Processing", value: "23", color: "#ff6b00" },
-                        { label: "Connected", value: "156", color: "#00ff88" },
+                        { label: "Active", value: "47", color: theme.textAccent },
+                        { label: "Processing", value: "23", color: theme.statusInterview },
+                        { label: "Connected", value: "156", color: theme.statusOffer },
                       ].map((stat, idx) => (
                         <m.div
                           key={idx}
@@ -548,9 +548,9 @@ export default function DashboardPreview() {
                     {/* Animated stats rings */}
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                       {[
-                        { label: "Success Rate", value: 92, max: 100, color: "#00d4ff", icon: "�" },
-                        { label: "Connections Made", value: 203, max: 250, color: "#ff6b00", icon: "⚡" },
-                        { label: "Interactions", value: 47, max: 60, color: "#00ff88", icon: "�" },
+                        { label: "Success Rate", value: 92, max: 100, color: theme.textAccent, icon: "�" },
+                        { label: "Connections Made", value: 203, max: 250, color: theme.statusInterview, icon: "⚡" },
+                        { label: "Interactions", value: 47, max: 60, color: theme.statusOffer, icon: "�" },
                       ].map((stat, idx) => (
                         <m.div
                           key={idx}

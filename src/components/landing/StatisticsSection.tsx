@@ -45,7 +45,7 @@ export default function StatisticsSection() {
       value: counters.users.toLocaleString(),
       label: "Active Users",
       suffix: "+",
-      color: "#00d4ff",
+      color: theme.textAccent,
       description: "Professionals managing their careers"
     },
     {
@@ -53,7 +53,7 @@ export default function StatisticsSection() {
       value: counters.applications.toLocaleString(),
       label: "Applications Tracked",
       suffix: "+",
-      color: "#ff6b00",
+      color: theme.statusInterview,
       description: "Job applications synchronized"
     },
     {
@@ -61,7 +61,7 @@ export default function StatisticsSection() {
       value: counters.success,
       label: "Success Rate",
       suffix: "%",
-      color: "#00ff88",
+      color: theme.statusOffer,
       description: "Interview conversion rate"
     },
     {
@@ -69,7 +69,7 @@ export default function StatisticsSection() {
       value: counters.companies.toLocaleString(),
       label: "Companies",
       suffix: "+",
-      color: "#ff8c00",
+      color: theme.statusApplied,
       description: "Top companies in our network"
     }
   ]
@@ -99,7 +99,7 @@ export default function StatisticsSection() {
               top: `${20 + i * 6}%`,
               width: `${20 + i * 5}px`,
               height: `${20 + i * 5}px`,
-              background: i % 4 === 0 ? "#00d4ff" : i % 4 === 1 ? "#ff6b00" : i % 4 === 2 ? "#00ff88" : "#ff8c00",
+              background: i % 4 === 0 ? theme.textAccent : i % 4 === 1 ? theme.statusInterview : i % 4 === 2 ? theme.statusOffer : theme.statusApplied,
             }}
           />
         ))}
@@ -136,10 +136,10 @@ export default function StatisticsSection() {
                 "0 2px 4px rgba(0,0,0,0.10)",
                 "0 1px 2px rgba(0,0,0,0.08)",
               ] : [
-                "0 0 20px rgba(0, 212, 255, 0.6)",
-                "0 0 40px rgba(255, 107, 0, 0.6)",
-                "0 0 20px rgba(0, 255, 136, 0.6)",
-                "0 0 20px rgba(0, 212, 255, 0.6)",
+                `0 0 20px ${theme.textAccent}99`,
+                `0 0 40px ${theme.statusInterview}99`,
+                `0 0 20px ${theme.statusOffer}99`,
+                `0 0 20px ${theme.textAccent}99`,
               ],
             }}
             transition={{
@@ -151,7 +151,7 @@ export default function StatisticsSection() {
               color: theme.theme === 'light' ? '#000000' : undefined,
               backgroundImage: theme.theme === 'light'
                 ? undefined
-                : "linear-gradient(135deg, #ffffff 0%, #00d4ff 40%, #ff6b00 70%, #00ff88 100%)",
+                : `linear-gradient(135deg, #ffffff 0%, ${theme.textAccent} 40%, ${theme.statusInterview} 70%, ${theme.statusOffer} 100%)`,
               backgroundSize: theme.theme === 'light' ? undefined : "300% 300%",
               WebkitBackgroundClip: theme.theme === 'light' ? undefined : "text",
               WebkitTextFillColor: theme.theme === 'light' ? undefined : "transparent",
@@ -174,9 +174,10 @@ export default function StatisticsSection() {
           >
             Join thousands of professionals who have transformed their career trajectories with our
             <m.span
-              className="text-[#00d4ff] font-semibold mx-2"
+              className="font-semibold mx-2"
+              style={{ color: theme.textAccent }}
               animate={{
-                color: ["#00d4ff", "#ff6b00", "#00ff88", "#00d4ff"],
+                color: [theme.textAccent, theme.statusInterview, theme.statusOffer, theme.textAccent],
               }}
               transition={{
                 duration: 5,
@@ -229,10 +230,10 @@ export default function StatisticsSection() {
                     className="absolute inset-0 rounded-3xl border border-transparent"
                     animate={{
                       borderImage: [
-                        `linear-gradient(45deg, ${stat.color}40, rgba(255, 107, 0, 0.4), rgba(0, 255, 136, 0.4), ${stat.color}40) 1`,
-                        `linear-gradient(135deg, rgba(255, 107, 0, 0.4), rgba(0, 255, 136, 0.4), ${stat.color}40, rgba(255, 107, 0, 0.4)) 1`,
-                        `linear-gradient(225deg, rgba(0, 255, 136, 0.4), ${stat.color}40, rgba(255, 107, 0, 0.4), rgba(0, 255, 136, 0.4)) 1`,
-                        `linear-gradient(315deg, ${stat.color}40, rgba(255, 107, 0, 0.4), rgba(0, 255, 136, 0.4), ${stat.color}40) 1`,
+                        `linear-gradient(45deg, ${stat.color}40, ${theme.statusInterview}66, ${theme.statusOffer}66, ${stat.color}40) 1`,
+                        `linear-gradient(135deg, ${theme.statusInterview}66, ${theme.statusOffer}66, ${stat.color}40, ${theme.statusInterview}66) 1`,
+                        `linear-gradient(225deg, ${theme.statusOffer}66, ${stat.color}40, ${theme.statusInterview}66, ${theme.statusOffer}66) 1`,
+                        `linear-gradient(315deg, ${stat.color}40, ${theme.statusInterview}66, ${theme.statusOffer}66, ${stat.color}40) 1`,
                       ],
                     }}
                     transition={{
@@ -361,10 +362,14 @@ export default function StatisticsSection() {
             Ready to join the ranks of successful professionals?
           </m.p>
           <m.button
-            className="px-8 py-4 bg-gradient-to-r from-[#00d4ff] to-[#ff6b00] text-white font-bold text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+            className="px-8 py-4 text-white font-bold text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+            style={{
+              background: `linear-gradient(135deg, ${theme.textAccent}, ${theme.statusInterview})`,
+              backgroundSize: "200% 200%",
+            }}
             whileHover={{
               scale: 1.05,
-              boxShadow: "0 0 40px rgba(0, 212, 255, 0.4)",
+              boxShadow: `0 0 40px ${theme.textAccent}66`,
             }}
             whileTap={{ scale: 0.95 }}
             animate={{
@@ -374,9 +379,6 @@ export default function StatisticsSection() {
               duration: 3,
               repeat: Number.POSITIVE_INFINITY,
               ease: "easeInOut",
-            }}
-            style={{
-              backgroundSize: "200% 200%",
             }}
           >
             Start Your Journey Today

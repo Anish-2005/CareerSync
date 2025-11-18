@@ -26,7 +26,7 @@ export default function PricingSection() {
         "Mobile app access"
       ],
       popular: false,
-      color: "#64748b"
+      color: theme.textSecondary
     },
     {
       name: "Professional",
@@ -43,7 +43,7 @@ export default function PricingSection() {
         "Company insights"
       ],
       popular: true,
-      color: "#00d4ff"
+      color: theme.textAccent
     },
     {
       name: "Enterprise",
@@ -60,7 +60,7 @@ export default function PricingSection() {
         "White-label options"
       ],
       popular: false,
-      color: "#ff8c00"
+      color: theme.statusApplied
     }
   ]
 
@@ -71,14 +71,14 @@ export default function PricingSection() {
       <div className="absolute inset-0">
         {/* Geometric patterns */}
         <div className="absolute top-20 left-10 w-32 h-32 opacity-10">
-          <div className="w-full h-full border-2 border-[#00d4ff] rounded-full"></div>
-          <div className="absolute top-4 left-4 w-24 h-24 border-2 border-[#ff6b00] rounded-full"></div>
-          <div className="absolute top-8 left-8 w-16 h-16 border-2 border-[#00ff88] rounded-full"></div>
+          <div className="w-full h-full border-2 rounded-full" style={{ borderColor: theme.textAccent }}></div>
+          <div className="absolute top-4 left-4 w-24 h-24 border-2 rounded-full" style={{ borderColor: theme.statusInterview }}></div>
+          <div className="absolute top-8 left-8 w-16 h-16 border-2 rounded-full" style={{ borderColor: theme.statusOffer }}></div>
         </div>
 
         <div className="absolute bottom-20 right-10 w-40 h-40 opacity-10">
-          <div className="w-full h-full border-2 border-[#ff8c00] transform rotate-45"></div>
-          <div className="absolute top-6 left-6 w-28 h-28 border-2 border-[#00d4ff] transform rotate-45"></div>
+          <div className="w-full h-full border-2 transform rotate-45" style={{ borderColor: theme.statusApplied }}></div>
+          <div className="absolute top-6 left-6 w-28 h-28 border-2 transform rotate-45" style={{ borderColor: theme.textAccent }}></div>
         </div>
 
         {/* Floating particles */}
@@ -101,7 +101,7 @@ export default function PricingSection() {
               top: `${30 + i * 4}%`,
               width: `${8 + i * 2}px`,
               height: `${8 + i * 2}px`,
-              background: i % 4 === 0 ? "#00d4ff" : i % 4 === 1 ? "#ff6b00" : i % 4 === 2 ? "#00ff88" : "#ff8c00",
+              background: i % 4 === 0 ? theme.textAccent : i % 4 === 1 ? theme.statusInterview : i % 4 === 2 ? theme.statusOffer : theme.statusApplied,
             }}
           />
         ))}
@@ -123,10 +123,10 @@ export default function PricingSection() {
                 "0 2px 4px rgba(0,0,0,0.10)",
                 "0 1px 2px rgba(0,0,0,0.08)",
               ] : [
-                "0 0 20px rgba(0, 212, 255, 0.6)",
-                "0 0 40px rgba(255, 107, 0, 0.6)",
-                "0 0 20px rgba(0, 255, 136, 0.6)",
-                "0 0 20px rgba(0, 212, 255, 0.6)",
+                `0 0 20px ${theme.textAccent}99`,
+                `0 0 40px ${theme.statusInterview}99`,
+                `0 0 20px ${theme.statusOffer}99`,
+                `0 0 20px ${theme.textAccent}99`,
               ],
             }}
             transition={{
@@ -138,7 +138,7 @@ export default function PricingSection() {
               color: theme.theme === 'light' ? '#000000' : undefined,
               backgroundImage: theme.theme === 'light'
                 ? undefined
-                : "linear-gradient(135deg, #ffffff 0%, #00d4ff 40%, #ff6b00 70%, #00ff88 100%)",
+                : `linear-gradient(135deg, #ffffff 0%, ${theme.textAccent} 40%, ${theme.statusInterview} 70%, ${theme.statusOffer} 100%)`,
               backgroundSize: theme.theme === 'light' ? undefined : "300% 300%",
               WebkitBackgroundClip: theme.theme === 'light' ? undefined : "text",
               WebkitTextFillColor: theme.theme === 'light' ? undefined : "transparent",
@@ -161,9 +161,10 @@ export default function PricingSection() {
           >
             Select the perfect plan to accelerate your career journey with our
             <m.span
-              className="text-[#00d4ff] font-semibold mx-2"
+              className="font-semibold mx-2"
+              style={{ color: theme.textAccent }}
               animate={{
-                color: ["#00d4ff", "#ff6b00", "#00ff88", "#00d4ff"],
+                color: [theme.textAccent, theme.statusInterview, theme.statusOffer, theme.textAccent],
               }}
               transition={{
                 duration: 5,
@@ -178,7 +179,8 @@ export default function PricingSection() {
           {/* Billing toggle */}
           <div className="flex items-center justify-center gap-4 mb-12">
             <span
-              className={`text-lg font-medium ${billingCycle === 'monthly' ? 'text-[#00d4ff]' : theme.textSecondary}`}
+              className={`text-lg font-medium`}
+              style={{ color: billingCycle === 'monthly' ? theme.textAccent : theme.textSecondary }}
             >
               Monthly
             </span>
@@ -192,17 +194,18 @@ export default function PricingSection() {
                 layout
                 transition={{ type: "spring", stiffness: 700, damping: 30 }}
                 style={{
-                  background: billingCycle === 'yearly' ? '#00d4ff' : '#ffffff',
+                  background: billingCycle === 'yearly' ? theme.textAccent : '#ffffff',
                 }}
               />
             </m.button>
             <div className="flex flex-col items-start">
               <span
-                className={`text-lg font-medium ${billingCycle === 'yearly' ? 'text-[#00d4ff]' : theme.textSecondary}`}
+                className={`text-lg font-medium`}
+                style={{ color: billingCycle === 'yearly' ? theme.textAccent : theme.textSecondary }}
               >
                 Yearly
               </span>
-              <span className="text-sm text-[#00ff88] font-bold">Save 20%</span>
+              <span className="text-sm font-bold" style={{ color: theme.statusOffer }}>Save 20%</span>
             </div>
           </div>
         </m.div>
@@ -227,7 +230,7 @@ export default function PricingSection() {
               >
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
-                    <div className="bg-gradient-to-r from-[#00d4ff] to-[#ff6b00] text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+                    <div className="bg-gradient-to-r text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg" style={{ background: `linear-gradient(to right, ${theme.textAccent}, ${theme.statusInterview})` }}>
                       Most Popular
                     </div>
                   </div>
@@ -235,27 +238,27 @@ export default function PricingSection() {
 
                 <m.div
                   className={`relative p-8 rounded-3xl border-2 backdrop-blur-xl overflow-hidden transition-all duration-500 hover:scale-105 ${
-                    plan.popular ? 'border-[#00d4ff] shadow-2xl shadow-[#00d4ff]/20' : ''
+                    plan.popular ? 'shadow-2xl' : ''
                   }`}
                   style={{
                     background: theme.theme === 'light'
                       ? "linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(249, 250, 251, 0.95))"
                       : "linear-gradient(135deg, rgba(10, 20, 40, 0.95), rgba(26, 61, 83, 0.95))",
-                    borderColor: plan.popular ? '#00d4ff' : theme.borderMedium,
+                    borderColor: plan.popular ? theme.textAccent : theme.borderMedium,
                     boxShadow: plan.popular
                       ? (theme.theme === 'light'
-                          ? "0 0 40px rgba(0, 212, 255, 0.3)"
-                          : "0 0 40px rgba(0, 212, 255, 0.4)")
+                          ? `0 0 40px ${theme.textAccent}4d`
+                          : `0 0 40px ${theme.textAccent}66`)
                       : (theme.theme === 'light'
                           ? "0 0 20px rgba(99, 102, 241, 0.1)"
-                          : "0 0 20px rgba(0, 212, 255, 0.15)"),
+                          : `0 0 20px ${theme.textAccent}26`),
                   }}
                   whileHover={{
                     boxShadow: plan.popular
-                      ? "0 0 60px rgba(0, 212, 255, 0.4)"
+                      ? `0 0 60px ${theme.textAccent}66`
                       : (theme.theme === 'light'
                           ? "0 0 40px rgba(99, 102, 241, 0.2)"
-                          : "0 0 40px rgba(0, 212, 255, 0.25)"),
+                          : `0 0 40px ${theme.textAccent}3d`),
                   }}
                 >
                   {/* Animated border for popular plan */}
@@ -264,10 +267,10 @@ export default function PricingSection() {
                       className="absolute inset-0 rounded-3xl border border-transparent"
                       animate={{
                         borderImage: [
-                          "linear-gradient(45deg, rgba(0, 212, 255, 0.6), rgba(255, 107, 0, 0.6), rgba(0, 255, 136, 0.6), rgba(0, 212, 255, 0.6)) 1",
-                          "linear-gradient(135deg, rgba(255, 107, 0, 0.6), rgba(0, 255, 136, 0.6), rgba(0, 212, 255, 0.6), rgba(255, 107, 0, 0.6)) 1",
-                          "linear-gradient(225deg, rgba(0, 255, 136, 0.6), rgba(0, 212, 255, 0.6), rgba(255, 107, 0, 0.6), rgba(0, 255, 136, 0.6)) 1",
-                          "linear-gradient(315deg, rgba(0, 212, 255, 0.6), rgba(255, 107, 0, 0.6), rgba(0, 255, 136, 0.6), rgba(0, 212, 255, 0.6)) 1",
+                          `linear-gradient(45deg, ${theme.textAccent}99, ${theme.statusInterview}99, ${theme.statusOffer}99, ${theme.textAccent}99) 1`,
+                          `linear-gradient(135deg, ${theme.statusInterview}99, ${theme.statusOffer}99, ${theme.textAccent}99, ${theme.statusInterview}99) 1`,
+                          `linear-gradient(225deg, ${theme.statusOffer}99, ${theme.textAccent}99, ${theme.statusInterview}99, ${theme.statusOffer}99) 1`,
+                          `linear-gradient(315deg, ${theme.textAccent}99, ${theme.statusInterview}99, ${theme.statusOffer}99, ${theme.textAccent}99) 1`,
                         ],
                       }}
                       transition={{
@@ -399,12 +402,16 @@ export default function PricingSection() {
                     <m.button
                       className={`w-full py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 ${
                         plan.popular
-                          ? 'bg-gradient-to-r from-[#00d4ff] to-[#ff6b00] text-white shadow-lg hover:shadow-xl'
+                          ? 'text-white shadow-lg hover:shadow-xl'
                           : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700'
                       }`}
+                      style={plan.popular ? {
+                        background: `linear-gradient(135deg, ${theme.textAccent}, ${theme.statusInterview})`,
+                        backgroundSize: "200% 200%",
+                      } : {}}
                       whileHover={{
                         scale: 1.02,
-                        boxShadow: plan.popular ? "0 0 30px rgba(0, 212, 255, 0.4)" : undefined,
+                        boxShadow: plan.popular ? `0 0 30px ${theme.textAccent}66` : undefined,
                       }}
                       whileTap={{ scale: 0.98 }}
                       animate={plan.popular ? {
@@ -414,9 +421,6 @@ export default function PricingSection() {
                         duration: plan.popular ? 3 : 0.2,
                         repeat: plan.popular ? Number.POSITIVE_INFINITY : 0,
                         ease: "easeInOut",
-                      }}
-                      style={{
-                        backgroundSize: plan.popular ? "200% 200%" : undefined,
                       }}
                     >
                       {plan.price === 0 ? 'Get Started Free' : 'Start Free Trial'}
@@ -444,15 +448,15 @@ export default function PricingSection() {
           </p>
           <div className="flex flex-wrap justify-center gap-8 text-sm">
             <div className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-[#00ff88]" />
+              <Check className="w-4 h-4" style={{ color: theme.statusOffer }} />
               <span style={{ color: theme.textSecondary }}>Cancel anytime</span>
             </div>
             <div className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-[#00ff88]" />
+              <Check className="w-4 h-4" style={{ color: theme.statusOffer }} />
               <span style={{ color: theme.textSecondary }}>Secure payment</span>
             </div>
             <div className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-[#00ff88]" />
+              <Check className="w-4 h-4" style={{ color: theme.statusOffer }} />
               <span style={{ color: theme.textSecondary }}>24/7 support</span>
             </div>
           </div>
