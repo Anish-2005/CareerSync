@@ -41,10 +41,12 @@ export default function Footer() {
   }
 
   return (
-    <footer className="relative overflow-hidden"
+    <footer className="relative overflow-hidden" aria-labelledby="footer-heading"
       style={{ background: theme.theme === 'light' ? 'linear-gradient(to bottom, #f8fafc, #e2e8f0)' : 'linear-gradient(to bottom, #0a1428, #0f172a)' }}>
-      {/* Background effects */}
-      <div className="absolute inset-0">
+      <h2 id="footer-heading" className="sr-only">Footer</h2>
+
+      {/* Background effects - hidden on small screens for performance */}
+      <div className="absolute inset-0 pointer-events-none sm:block">
         {/* Subtle grid */}
         <div
           className="absolute inset-0 opacity-5"
@@ -53,75 +55,59 @@ export default function Footer() {
               linear-gradient(rgba(99, 102, 241, 0.08) 1px, transparent 1px),
               linear-gradient(90deg, rgba(99, 102, 241, 0.08) 1px, transparent 1px)
             ` : `
-              linear-gradient(rgba(0, 212, 255, 0.1) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(0, 212, 255, 0.1) 1px, transparent 1px)
+              linear-gradient(rgba(0, 212, 255, 0.06) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(0, 212, 255, 0.06) 1px, transparent 1px)
             `,
             backgroundSize: '40px 40px',
           }}
         />
 
-        {/* Floating particles */}
-        {[...Array(isLight ? 8 : 12)].map((_, i) => (
-          <m.div
-            key={i}
-            className="absolute rounded-full opacity-20"
-            animate={{
-              y: [0, -30, 0],
-              x: [0, Math.sin(i * 0.6) * 20, 0],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 7 + i * 0.4,
-              repeat: Number.POSITIVE_INFINITY,
-              delay: i * 0.2,
-            }}
-            style={{
-              left: `${10 + i * 7}%`,
-              top: `${20 + i * 5}%`,
-              width: `${6 + i * 1}px`,
-              height: `${6 + i * 1}px`,
-              background: i % 4 === 0 ? theme.textAccent : i % 4 === 1 ? theme.statusInterview : i % 4 === 2 ? theme.statusOffer : theme.statusApplied,
-            }}
-          />
-        ))}
+        {/* Floating particles - reduced and only visible on md+ */}
+        <div className="hidden md:block">
+          {[...Array(isLight ? 6 : 8)].map((_, i) => (
+            <m.div
+              key={i}
+              className="absolute rounded-full opacity-20"
+              animate={{
+                y: [0, -20 - (i % 4) * 4, 0],
+                x: [0, Math.sin(i * 0.6) * 12, 0],
+                scale: [1, 1.12, 1],
+              }}
+              transition={{
+                duration: 6 + i * 0.3,
+                repeat: Number.POSITIVE_INFINITY,
+                delay: i * 0.15,
+              }}
+              style={{
+                left: `${8 + i * 9}%`,
+                top: `${18 + (i % 4) * 6}%`,
+                width: `${6 + (i % 4) * 2}px`,
+                height: `${6 + (i % 4) * 2}px`,
+                background: i % 4 === 0 ? theme.textAccent : i % 4 === 1 ? theme.statusInterview : i % 4 === 2 ? theme.statusOffer : theme.statusApplied,
+              }}
+            />
+          ))}
+        </div>
       </div>
 
       <div className="relative z-10">
         {/* Main footer content */}
-        <div className="max-w-6xl mx-auto px-6 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
-            {/* Brand section */}
+        <div className="max-w-6xl mx-auto px-6 py-12 sm:py-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
+            {/* Brand / newsletter section */}
             <div className="lg:col-span-2">
               <m.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
               >
                 <m.h3
-                  className="text-3xl font-black mb-4"
-                  animate={{
-                    textShadow: theme.theme === 'light' ? [
-                      "0 1px 2px rgba(0,0,0,0.08)",
-                      "0 2px 4px rgba(0,0,0,0.10)",
-                      "0 1px 2px rgba(0,0,0,0.08)",
-                    ] : [
-                      `0 0 20px ${theme.textAccent}99`,
-                      `0 0 40px ${theme.statusInterview}99`,
-                      `0 0 20px ${theme.statusOffer}99`,
-                      `0 0 20px ${theme.textAccent}99`,
-                    ],
-                  }}
-                  transition={{
-                    duration: 6,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "easeInOut",
-                  }}
+                  className="text-2xl sm:text-3xl font-black mb-3"
+                  animate={{}}
                   style={{
                     color: theme.theme === 'light' ? '#000000' : undefined,
-                    backgroundImage: theme.theme === 'light'
-                      ? undefined
-                      : `linear-gradient(135deg, #ffffff 0%, ${theme.textAccent} 40%, ${theme.statusInterview} 70%, ${theme.statusOffer} 100%)`,
+                    backgroundImage: theme.theme === 'light' ? undefined : `linear-gradient(135deg, #ffffff 0%, ${theme.textAccent} 40%, ${theme.statusInterview} 70%, ${theme.statusOffer} 100%)`,
                     backgroundSize: theme.theme === 'light' ? undefined : "300% 300%",
                     WebkitBackgroundClip: theme.theme === 'light' ? undefined : "text",
                     WebkitTextFillColor: theme.theme === 'light' ? undefined : "transparent",
@@ -131,14 +117,14 @@ export default function Footer() {
                   CareerSync
                 </m.h3>
                 <p
-                  className="text-base mb-6 max-w-md"
+                  className="text-sm sm:text-base mb-5 max-w-md"
                   style={{ color: theme.textSecondary }}
                 >
                   Transform your career journey with intelligent synchronization,
                   real-time insights, and comprehensive tracking tools designed for modern professionals.
                 </p>
 
-                {/* Newsletter signup */}
+                {/* Newsletter signup - stacks on small screens */}
                 <div className="mb-6">
                   <p
                     className="text-sm font-medium mb-3"
@@ -146,49 +132,50 @@ export default function Footer() {
                   >
                     Stay updated with career tips and platform updates
                   </p>
-                  <div className="flex gap-2">
+
+                  <form className="flex flex-col sm:flex-row gap-3 sm:gap-2">
                     <input
                       type="email"
+                      aria-label="Email address"
                       placeholder="Enter your email"
                       className="flex-1 px-4 py-2 rounded-lg border text-sm focus:outline-none focus:ring-2 transition-all"
                       style={{
-                        background: theme.theme === 'light' ? '#ffffff' : '#1e293b',
+                        background: theme.theme === 'light' ? '#ffffff' : '#0f1724',
                         borderColor: theme.borderMedium,
                         color: theme.theme === 'light' ? '#1e293b' : '#ffffff',
                         '--tw-ring-color': theme.textAccent,
                       } as React.CSSProperties}
                     />
+
                     <m.button
-                      className="px-6 py-2 text-white rounded-lg font-medium text-sm transition-colors"
+                      type="submit"
+                      className="px-6 py-2 text-white rounded-lg font-medium text-sm w-full sm:w-auto"
                       style={{
                         background: theme.textAccent,
                       }}
-                      whileHover={{
-                        scale: 1.05,
-                        background: `${theme.textAccent}E6`,
-                      }}
-                      whileTap={{ scale: 0.95 }}
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
                     >
                       Subscribe
                     </m.button>
-                  </div>
+                  </form>
                 </div>
               </m.div>
             </div>
 
-            {/* Links sections */}
+            {/* Links sections - will wrap nicely on small screens */}
             {Object.entries(footerLinks).map(([category, links], categoryIndex) => (
               category !== 'social' && (
                 <m.div
                   key={category}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 12 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
+                  transition={{ duration: 0.5, delay: categoryIndex * 0.06 }}
                   viewport={{ once: true }}
                   className="space-y-4"
                 >
                   <h4
-                    className="text-lg font-bold capitalize"
+                    className="text-md sm:text-lg font-semibold capitalize"
                     style={{ color: theme.theme === 'light' ? '#1e293b' : '#ffffff' }}
                   >
                     {category}
@@ -198,12 +185,12 @@ export default function Footer() {
                       <li key={linkIndex}>
                         <a
                           href={link.href}
-                          className="text-sm transition-colors"
+                          className="text-sm block transition-colors"
                           style={{
                             color: theme.textSecondary,
                           }}
-                          onMouseEnter={(e) => e.currentTarget.style.color = theme.textAccent}
-                          onMouseLeave={(e) => e.currentTarget.style.color = theme.textSecondary}
+                          onMouseEnter={(e) => (e.currentTarget.style.color = theme.textAccent)}
+                          onMouseLeave={(e) => (e.currentTarget.style.color = theme.textSecondary)}
                         >
                           {link.name}
                         </a>
@@ -215,13 +202,13 @@ export default function Footer() {
             ))}
           </div>
 
-          {/* Social links */}
+          {/* Social links - responsive placement */}
           <m.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            transition={{ duration: 0.5, delay: 0.35 }}
             viewport={{ once: true }}
-            className="flex justify-center gap-6 mt-12"
+            className="flex justify-center sm:justify-start gap-4 mt-8 sm:mt-12 flex-wrap"
           >
             {footerLinks.social.map((social, index) => {
               const Icon = social.icon
@@ -229,25 +216,22 @@ export default function Footer() {
                 <m.a
                   key={index}
                   href={social.href}
-                  className="w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all duration-300 group"
+                  aria-label={social.name}
+                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center border-2 transition-all duration-300 group"
                   style={{
-                    background: theme.theme === 'light' ? 'rgba(255, 255, 255, 0.8)' : 'rgba(26, 61, 83, 0.5)',
+                    background: theme.theme === 'light' ? 'rgba(255, 255, 255, 0.92)' : 'rgba(26, 61, 83, 0.5)',
                     borderColor: theme.borderMedium,
                   }}
-                  whileHover={{
-                    scale: 1.1,
-                    boxShadow: `0 0 20px ${theme.textAccent}4d`,
-                    borderColor: theme.textAccent,
-                  }}
+                  whileHover={{ scale: 1.05, boxShadow: `0 0 20px ${theme.textAccent}4d` }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <Icon
-                    className="w-5 h-5 transition-colors"
+                    className="w-4 h-4 sm:w-5 sm:h-5 transition-colors"
                     style={{
                       color: theme.textSecondary,
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.color = theme.textAccent}
-                    onMouseLeave={(e) => e.currentTarget.style.color = theme.textSecondary}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = theme.textAccent)}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = theme.textSecondary)}
                   />
                 </m.a>
               )
@@ -262,19 +246,19 @@ export default function Footer() {
         >
           <div className="max-w-6xl mx-auto px-6 py-6">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <div className="flex items-center gap-2 text-sm" style={{ color: theme.textSecondary }}>
+              <div className="flex items-center gap-2 text-sm text-center md:text-left" style={{ color: theme.textSecondary }}>
                 <span>© {currentYear} CareerSync. Made with</span>
                 <Heart className="w-4 h-4 text-red-500 fill-current" />
                 <span>for career success.</span>
               </div>
 
-              <div className="flex items-center gap-6 text-sm">
+              <div className="flex items-center gap-6 text-sm flex-wrap justify-center md:justify-end">
                 <a
                   href="#"
                   className="transition-colors"
                   style={{ color: theme.textSecondary }}
-                  onMouseEnter={(e) => e.currentTarget.style.color = theme.textAccent}
-                  onMouseLeave={(e) => e.currentTarget.style.color = theme.textSecondary}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = theme.textAccent)}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = theme.textSecondary)}
                 >
                   Privacy
                 </a>
@@ -282,8 +266,8 @@ export default function Footer() {
                   href="#"
                   className="transition-colors"
                   style={{ color: theme.textSecondary }}
-                  onMouseEnter={(e) => e.currentTarget.style.color = theme.textAccent}
-                  onMouseLeave={(e) => e.currentTarget.style.color = theme.textSecondary}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = theme.textAccent)}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = theme.textSecondary)}
                 >
                   Terms
                 </a>
@@ -291,8 +275,8 @@ export default function Footer() {
                   href="#"
                   className="transition-colors"
                   style={{ color: theme.textSecondary }}
-                  onMouseEnter={(e) => e.currentTarget.style.color = theme.textAccent}
-                  onMouseLeave={(e) => e.currentTarget.style.color = theme.textSecondary}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = theme.textAccent)}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = theme.textSecondary)}
                 >
                   Cookies
                 </a>

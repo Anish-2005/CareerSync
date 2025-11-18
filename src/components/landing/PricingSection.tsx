@@ -65,7 +65,7 @@ export default function PricingSection() {
   ]
 
   return (
-    <section className="relative py-20 px-6 overflow-hidden"
+    <section id="pricing" className="relative py-20 px-6 overflow-hidden"
       style={{ background: theme.theme === 'light' ? 'linear-gradient(to bottom, #ffffff, #f1f5f9)' : 'linear-gradient(to bottom, #0a1428, #0f172a)' }}>
       {/* Background effects */}
       <div className="absolute inset-0">
