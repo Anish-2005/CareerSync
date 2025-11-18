@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { Calendar, Building, MapPin, Clock, CheckCircle, XCircle, AlertCircle, Eye, FileText, ExternalLink } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Calendar, Building, MapPin, Clock, CheckCircle, XCircle, AlertCircle, Eye, FileText, ExternalLink, Menu, X } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useThemeClasses } from '@/hooks/useThemeClasses'
 import { RouteGuard } from '@/components/RouteGuard'
@@ -29,11 +29,12 @@ interface Application {
 }
 
 export default function ApplicationsPage() {
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const theme = useThemeClasses()
   const [applications, setApplications] = useState<Application[]>([])
   const [filteredApplications, setFilteredApplications] = useState<Application[]>([])
   const [statusFilter, setStatusFilter] = useState('')
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -214,60 +215,212 @@ export default function ApplicationsPage() {
               {/* Desktop Navigation */}
               <div className="hidden sm:flex items-center gap-6">
                 <ThemeToggle />
-                <m.a
-                  href="/dashboard"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 text-sm font-medium rounded-full"
-                  style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
-                >
-                  Dashboard
-                </m.a>
-                <m.a
-                  href="/jobs"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 text-sm font-medium rounded-full"
-                  style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
-                >
-                  Jobs
-                </m.a>
-                <m.a
-                  href="/resume-builder"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 text-sm font-medium rounded-full"
-                  style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
-                >
-                  Resume Builder
-                </m.a>
-                <m.a
-                  href="/profile"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 text-sm font-medium rounded-full"
-                  style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
-                >
-                  Profile
-                </m.a>
-                <m.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => window.location.href = '/login'}
-                  className="px-4 py-2 text-sm font-bold rounded-full"
-                  style={{ color: "#fff", borderRadius: 9999, background: theme.theme === 'light' ? 'linear-gradient(90deg,#3b82f6,#1d4ed8)' : 'linear-gradient(90deg,#ff6b00,#00d4ff)' }}
-                >
-                  Sign In
-                </m.button>
+                {user ? (
+                  <>
+                    <m.a
+                      href="/dashboard"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 text-sm font-medium rounded-full"
+                      style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
+                    >
+                      Dashboard
+                    </m.a>
+                    <m.a
+                      href="/jobs"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 text-sm font-medium rounded-full"
+                      style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
+                    >
+                      Jobs
+                    </m.a>
+                    <m.a
+                      href="/resume-builder"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 text-sm font-medium rounded-full"
+                      style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
+                    >
+                      Resume Builder
+                    </m.a>
+                    <m.a
+                      href="/profile"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 text-sm font-medium rounded-full"
+                      style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
+                    >
+                      Profile
+                    </m.a>
+                    <m.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={async () => {
+                        await logout()
+                        window.location.href = '/'
+                      }}
+                      className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
+                      style={{
+                        background: theme.theme === 'light'
+                          ? "linear-gradient(to right, #f59e0b, #f97316)"
+                          : "linear-gradient(to right, #ff6b00, #ff8c00)",
+                        boxShadow: theme.theme === 'light'
+                          ? "0 4px 14px rgba(245, 158, 11, 0.25)"
+                          : "0 10px 30px rgba(255, 107, 0, 0.25)"
+                      }}
+                    >
+                      Sign Out
+                    </m.button>
+                  </>
+                ) : (
+                  <m.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => window.location.href = '/login'}
+                    className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r hover:shadow-lg hover:shadow-[#3b82f6]/50 transition-all duration-300"
+                    style={{
+                      background: theme.theme === 'light'
+                        ? "linear-gradient(to right, #3b82f6, #1d4ed8)"
+                        : "linear-gradient(to right, #00d4ff, #ff6b00)",
+                      boxShadow: theme.theme === 'light'
+                        ? "0 4px 14px rgba(59, 130, 246, 0.25)"
+                        : "0 10px 30px rgba(0, 212, 255, 0.25)"
+                    }}
+                  >
+                    Sign In
+                  </m.button>
+                )}
               </div>
 
               {/* Mobile Menu Button */}
               <div className="sm:hidden flex items-center gap-2">
                 <ThemeToggle />
+                <m.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowMobileMenu(!showMobileMenu)}
+                  className="p-1.5 rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+                  style={{ color: theme.textPrimary }}
+                >
+                  {showMobileMenu ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+                </m.button>
               </div>
             </div>
           </div>
         </m.nav>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {showMobileMenu && (
+            <m.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="sm:hidden fixed top-[73px] left-0 right-0 z-40 border-b border-[#00d4ff]/50"
+              style={{ background: theme.bgNavStyle?.backgroundColor || '#ffffff', backdropFilter: "blur(12px)" }}
+            >
+              <div className="max-w-7xl mx-auto px-3 py-2">
+                <div className="flex flex-col gap-2">
+                  {user ? (
+                    <>
+                      <m.a
+                        href="/dashboard"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setShowMobileMenu(false)}
+                        className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+                        style={{ color: theme.textPrimary }}
+                      >
+                        <span>📊</span>
+                        Dashboard
+                      </m.a>
+
+                      <m.a
+                        href="/jobs"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setShowMobileMenu(false)}
+                        className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+                        style={{ color: theme.textPrimary }}
+                      >
+                        <span>💼</span>
+                        Jobs
+                      </m.a>
+
+                      <m.a
+                        href="/resume-builder"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setShowMobileMenu(false)}
+                        className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+                        style={{ color: theme.textPrimary }}
+                      >
+                        <span>📄</span>
+                        Resume Builder
+                      </m.a>
+
+                      <m.a
+                        href="/profile"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setShowMobileMenu(false)}
+                        className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+                        style={{ color: theme.textPrimary }}
+                      >
+                        <span>👤</span>
+                        Profile
+                      </m.a>
+
+                      <m.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={async () => {
+                          await logout()
+                          setShowMobileMenu(false)
+                          window.location.href = '/'
+                        }}
+                        className="w-full px-4 py-3 text-left text-white text-sm font-bold rounded-xl hover:shadow-lg transition-all duration-300 flex items-center gap-2"
+                        style={{
+                          background: theme.theme === 'light'
+                            ? "linear-gradient(to right, #f59e0b, #f97316)"
+                            : "linear-gradient(to right, #ff6b00, #ff8c00)",
+                          boxShadow: theme.theme === 'light'
+                            ? "0 4px 14px rgba(245, 158, 11, 0.25)"
+                            : "0 10px 30px rgba(255, 107, 0, 0.25)"
+                        }}
+                      >
+                        <span>🚪</span>
+                        Sign Out
+                      </m.button>
+                    </>
+                  ) : (
+                    <m.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        setShowMobileMenu(false)
+                        window.location.href = '/login'
+                      }}
+                      className="w-full px-4 py-3 text-left text-white text-sm font-bold rounded-xl hover:shadow-lg transition-all duration-300 flex items-center gap-2"
+                      style={{
+                        background: theme.theme === 'light'
+                          ? "linear-gradient(to right, #3b82f6, #1d4ed8)"
+                          : "linear-gradient(to right, #00d4ff, #ff6b00)",
+                        boxShadow: theme.theme === 'light'
+                          ? "0 4px 14px rgba(59, 130, 246, 0.25)"
+                          : "0 10px 30px rgba(0, 212, 255, 0.25)"
+                      }}
+                    >
+                      <span>🔐</span>
+                      Sign In
+                    </m.button>
+                  )}
+                </div>
+              </div>
+            </m.div>
+          )}
+        </AnimatePresence>
 
         {/* Background Effects */}
         <div style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "hidden" }}>
@@ -333,7 +486,7 @@ export default function ApplicationsPage() {
             className="mb-8 sm:mb-12"
           >
             <h1
-              className="text-4xl sm:text-6xl md:text-7xl font-black mb-4 leading-none"
+              className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black mb-3 sm:mb-4 leading-tight"
               style={{
                 backgroundImage: theme.theme === 'light'
                   ? 'linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%)'
@@ -346,7 +499,7 @@ export default function ApplicationsPage() {
             >
               My Applications
             </h1>
-            <p style={{ color: theme.textSecondary }} className="text-base sm:text-xl">Track your job applications and stay organized</p>
+            <p style={{ color: theme.textSecondary }} className="text-sm sm:text-base md:text-xl">Track your job applications and stay organized</p>
           </m.div>
 
           {/* Stats Cards */}
@@ -354,23 +507,23 @@ export default function ApplicationsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
+            className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8"
           >
-            <div className="p-4 rounded-2xl text-center" style={{ background: theme.bgCard, border: `1px solid ${theme.borderMedium}` }}>
-              <div className="text-2xl font-bold mb-1" style={{ color: theme.textPrimary }}>{stats.total}</div>
-              <div className="text-sm" style={{ color: theme.textSecondary }}>Total</div>
+            <div className="p-3 sm:p-4 rounded-2xl text-center" style={{ background: theme.bgCard, border: `1px solid ${theme.borderMedium}` }}>
+              <div className="text-xl sm:text-2xl font-bold mb-1" style={{ color: theme.textPrimary }}>{stats.total}</div>
+              <div className="text-xs sm:text-sm" style={{ color: theme.textSecondary }}>Total</div>
             </div>
-            <div className="p-4 rounded-2xl text-center" style={{ background: theme.bgCard, border: `1px solid ${theme.borderMedium}` }}>
-              <div className="text-2xl font-bold mb-1" style={{ color: '#d97706' }}>{stats.interviewing}</div>
-              <div className="text-sm" style={{ color: theme.textSecondary }}>Interviewing</div>
+            <div className="p-3 sm:p-4 rounded-2xl text-center" style={{ background: theme.bgCard, border: `1px solid ${theme.borderMedium}` }}>
+              <div className="text-xl sm:text-2xl font-bold mb-1" style={{ color: '#d97706' }}>{stats.interviewing}</div>
+              <div className="text-xs sm:text-sm" style={{ color: theme.textSecondary }}>Interviewing</div>
             </div>
-            <div className="p-4 rounded-2xl text-center" style={{ background: theme.bgCard, border: `1px solid ${theme.borderMedium}` }}>
-              <div className="text-2xl font-bold mb-1" style={{ color: '#00ff88' }}>{stats.offers}</div>
-              <div className="text-sm" style={{ color: theme.textSecondary }}>Offers</div>
+            <div className="p-3 sm:p-4 rounded-2xl text-center" style={{ background: theme.bgCard, border: `1px solid ${theme.borderMedium}` }}>
+              <div className="text-xl sm:text-2xl font-bold mb-1" style={{ color: '#00ff88' }}>{stats.offers}</div>
+              <div className="text-xs sm:text-sm" style={{ color: theme.textSecondary }}>Offers</div>
             </div>
-            <div className="p-4 rounded-2xl text-center" style={{ background: theme.bgCard, border: `1px solid ${theme.borderMedium}` }}>
-              <div className="text-2xl font-bold mb-1" style={{ color: '#3b82f6' }}>{stats.pending}</div>
-              <div className="text-sm" style={{ color: theme.textSecondary }}>Pending</div>
+            <div className="p-3 sm:p-4 rounded-2xl text-center" style={{ background: theme.bgCard, border: `1px solid ${theme.borderMedium}` }}>
+              <div className="text-xl sm:text-2xl font-bold mb-1" style={{ color: '#3b82f6' }}>{stats.pending}</div>
+              <div className="text-xs sm:text-sm" style={{ color: theme.textSecondary }}>Pending</div>
             </div>
           </m.div>
 
@@ -379,12 +532,12 @@ export default function ApplicationsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="mb-6"
+            className="mb-4 sm:mb-6"
           >
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 sm:gap-2">
               <button
                 onClick={() => setStatusFilter('')}
-                className="px-4 py-2 rounded-full font-semibold text-sm transition-all"
+                className="px-3 sm:px-4 py-2 sm:py-2 rounded-full font-semibold text-xs sm:text-sm transition-all min-w-0 flex-shrink-0"
                 style={{
                   background: !statusFilter ? (theme.theme === 'light' ? 'linear-gradient(90deg,#3b82f6,#1d4ed8)' : 'linear-gradient(90deg,#ff6b00,#00d4ff)') : theme.bgCard,
                   color: !statusFilter ? '#fff' : theme.textPrimary,
@@ -401,7 +554,7 @@ export default function ApplicationsPage() {
                   <button
                     key={status}
                     onClick={() => setStatusFilter(status)}
-                    className="px-4 py-2 rounded-full font-semibold text-sm transition-all"
+                    className="px-3 sm:px-4 py-2 sm:py-2 rounded-full font-semibold text-xs sm:text-sm transition-all min-w-0 flex-shrink-0"
                     style={{
                       background: statusFilter === status ? statusColor.bg : theme.bgCard,
                       color: statusFilter === status ? statusColor.text : theme.textPrimary,
@@ -426,16 +579,16 @@ export default function ApplicationsPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.1 }}
-                  className="p-6 rounded-3xl animate-pulse"
+                  className="p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl animate-pulse"
                   style={{ background: theme.bgCard, border: `1px solid ${theme.borderMedium}` }}
                 >
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4 sm:gap-6">
                     <div className="flex-1">
-                      <div className="h-6 bg-gray-300 rounded mb-2 w-3/4"></div>
-                      <div className="h-4 bg-gray-300 rounded mb-4 w-1/2"></div>
-                      <div className="h-4 bg-gray-300 rounded w-1/3"></div>
+                      <div className="h-5 sm:h-6 bg-gray-300 rounded mb-2 w-3/4"></div>
+                      <div className="h-3 sm:h-4 bg-gray-300 rounded mb-3 sm:mb-4 w-1/2"></div>
+                      <div className="h-3 sm:h-4 bg-gray-300 rounded w-1/3"></div>
                     </div>
-                    <div className="h-8 bg-gray-300 rounded-full w-20"></div>
+                    <div className="h-8 sm:h-10 bg-gray-300 rounded-lg sm:rounded-xl w-20 sm:w-24"></div>
                   </div>
                 </m.div>
               ))
@@ -454,51 +607,51 @@ export default function ApplicationsPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.1 }}
-                    className="p-4 sm:p-8 rounded-3xl hover:border-2 transition-all duration-300"
+                    className="p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl hover:border-2 transition-all duration-300"
                     style={{ background: theme.bgCard, border: `1px solid ${theme.borderMedium}` }}
                   >
-                    <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
+                    <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4 sm:gap-6">
                       {/* Application Info */}
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between mb-4">
-                          <div>
-                            <h3 className="text-xl sm:text-2xl font-bold mb-2" style={{ color: theme.textPrimary }}>{application.jobTitle}</h3>
-                            <div className="flex items-center gap-4 mb-3" style={{ color: theme.textSecondary }}>
-                              <div className="flex items-center gap-1">
-                                <Building className="w-4 h-4" />
-                                <span className="font-semibold">{application.company}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between mb-3 sm:mb-4">
+                          <div className="min-w-0 flex-1">
+                            <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 truncate" style={{ color: theme.textPrimary }}>{application.jobTitle}</h3>
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3" style={{ color: theme.textSecondary }}>
+                              <div className="flex items-center gap-1 min-w-0">
+                                <Building className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                                <span className="font-semibold truncate">{application.company}</span>
                               </div>
-                              <div className="flex items-center gap-1">
-                                <MapPin className="w-4 h-4" />
-                                <span>{application.location}</span>
+                              <div className="flex items-center gap-1 min-w-0">
+                                <MapPin className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                                <span className="truncate">{application.location}</span>
                               </div>
-                              <div className="flex items-center gap-1">
-                                <Calendar className="w-4 h-4" />
-                                <span>Applied {getTimeAgo(application.appliedDate)}</span>
+                              <div className="flex items-center gap-1 min-w-0">
+                                <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                                <span className="truncate">Applied {getTimeAgo(application.appliedDate)}</span>
                               </div>
                             </div>
                           </div>
                         </div>
 
                         {/* Status and Notes */}
-                        <div className="mb-4">
-                          <div className="flex items-center gap-2 mb-3">
+                        <div className="mb-3 sm:mb-4">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2 mb-3">
                             <span
-                              className="flex items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold"
+                              className="flex items-center gap-2 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold self-start"
                               style={{ background: statusColor.bg, border: `1px solid ${statusColor.border}`, color: statusColor.text }}
                             >
                               {getStatusIcon(application.status)}
                               {formatStatus(application.status)}
                             </span>
                             {application.followUpDate && (
-                              <span className="text-sm" style={{ color: theme.textTertiary }}>
+                              <span className="text-xs sm:text-sm" style={{ color: theme.textTertiary }}>
                                 Follow up: {new Date(application.followUpDate).toLocaleDateString()}
                               </span>
                             )}
                           </div>
 
                           {application.notes && (
-                            <p className="text-sm leading-relaxed" style={{ color: theme.textTertiary }}>
+                            <p className="text-xs sm:text-sm leading-relaxed" style={{ color: theme.textTertiary }}>
                               {application.notes}
                             </p>
                           )}
@@ -506,7 +659,7 @@ export default function ApplicationsPage() {
 
                         {/* Salary Info */}
                         {application.salary && (
-                          <div className="flex gap-4 text-sm">
+                          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-xs sm:text-sm">
                             {application.salary.expected && (
                               <div style={{ color: theme.textSecondary }}>
                                 Expected: ${application.salary.expected.toLocaleString()}
@@ -522,7 +675,7 @@ export default function ApplicationsPage() {
                       </div>
 
                       {/* Actions */}
-                      <div className="flex flex-col gap-3 lg:min-w-[150px]">
+                      <div className="flex flex-row sm:flex-col gap-2 sm:gap-3 lg:min-w-[140px] sm:min-w-[120px]">
                         {application.applicationUrl && (
                           <m.a
                             href={application.applicationUrl}
@@ -530,18 +683,19 @@ export default function ApplicationsPage() {
                             rel="noopener noreferrer"
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold text-sm"
+                            className="flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm flex-1 sm:flex-none"
                             style={{ background: "rgba(0,212,255,0.12)", border: `1px solid ${theme.borderMedium}`, color: theme.textAccent }}
                           >
-                            <ExternalLink className="w-4 h-4" />
-                            View Application
+                            <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <span className="hidden sm:inline">View Application</span>
+                            <span className="sm:hidden">View</span>
                           </m.a>
                         )}
 
                         <m.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
-                          className="px-4 py-3 rounded-xl font-bold text-sm"
+                          className="px-3 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm flex-1 sm:flex-none"
                           style={{ background: theme.theme === 'light' ? 'linear-gradient(90deg,#3b82f6,#1d4ed8)' : 'linear-gradient(90deg,#ff6b00,#00d4ff)', color: "#fff" }}
                         >
                           Update Status

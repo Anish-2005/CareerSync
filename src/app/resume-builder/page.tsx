@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { FileText, Download, Eye, Edit, Plus, Trash2, Save, Palette } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { FileText, Download, Eye, Edit, Plus, Trash2, Save, Palette, Menu, X, User, Briefcase, GraduationCap, Zap, Rocket, Palette as PaletteIcon } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useThemeClasses } from '@/hooks/useThemeClasses'
 import { RouteGuard } from '@/components/RouteGuard'
@@ -57,7 +57,7 @@ interface ResumeData {
 }
 
 export default function ResumeBuilderPage() {
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const theme = useThemeClasses()
   const morphBg = theme.theme === 'light' ? 'linear-gradient(135deg, rgba(59,130,246,0.6), rgba(29,78,216,0.6))' : 'linear-gradient(135deg, rgba(255,107,0,0.6), rgba(0,212,255,0.6))'
   const [resumeData, setResumeData] = useState<ResumeData>({
@@ -77,6 +77,7 @@ export default function ResumeBuilderPage() {
   const [activeSection, setActiveSection] = useState('personal')
   const [selectedTemplate, setSelectedTemplate] = useState('modern')
   const [previewMode, setPreviewMode] = useState(false)
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
 
   // Load user data on mount
   useEffect(() => {
@@ -310,60 +311,212 @@ export default function ResumeBuilderPage() {
               {/* Desktop Navigation */}
               <div className="hidden sm:flex items-center gap-6">
                 <ThemeToggle />
-                <m.a
-                  href="/dashboard"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 text-sm font-medium rounded-full"
-                  style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
-                >
-                  Dashboard
-                </m.a>
-                <m.a
-                  href="/jobs"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 text-sm font-medium rounded-full"
-                  style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
-                >
-                  Jobs
-                </m.a>
-                <m.a
-                  href="/applications"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 text-sm font-medium rounded-full"
-                  style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
-                >
-                  Applications
-                </m.a>
-                <m.a
-                  href="/profile"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 text-sm font-medium rounded-full"
-                  style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
-                >
-                  Profile
-                </m.a>
-                <m.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => window.location.href = '/login'}
-                  className="px-4 py-2 text-sm font-bold rounded-full"
-                  style={{ color: "#fff", borderRadius: 9999, background: theme.theme === 'light' ? 'linear-gradient(90deg,#3b82f6,#1d4ed8)' : 'linear-gradient(90deg,#ff6b00,#00d4ff)' }}
-                >
-                  Sign In
-                </m.button>
+                {user ? (
+                  <>
+                    <m.a
+                      href="/dashboard"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 text-sm font-medium rounded-full"
+                      style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
+                    >
+                      Dashboard
+                    </m.a>
+                    <m.a
+                      href="/jobs"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 text-sm font-medium rounded-full"
+                      style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
+                    >
+                      Jobs
+                    </m.a>
+                    <m.a
+                      href="/applications"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 text-sm font-medium rounded-full"
+                      style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
+                    >
+                      Applications
+                    </m.a>
+                    <m.a
+                      href="/profile"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 text-sm font-medium rounded-full"
+                      style={{ color: theme.textPrimary, borderRadius: 9999, border: `1px solid ${theme.borderMedium}` }}
+                    >
+                      Profile
+                    </m.a>
+                    <m.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={async () => {
+                        await logout()
+                        window.location.href = '/'
+                      }}
+                      className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
+                      style={{
+                        background: theme.theme === 'light'
+                          ? "linear-gradient(to right, #f59e0b, #f97316)"
+                          : "linear-gradient(to right, #ff6b00, #ff8c00)",
+                        boxShadow: theme.theme === 'light'
+                          ? "0 4px 14px rgba(245, 158, 11, 0.25)"
+                          : "0 10px 30px rgba(255, 107, 0, 0.25)"
+                      }}
+                    >
+                      Sign Out
+                    </m.button>
+                  </>
+                ) : (
+                  <m.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => window.location.href = '/login'}
+                    className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r hover:shadow-lg hover:shadow-[#3b82f6]/50 transition-all duration-300"
+                    style={{
+                      background: theme.theme === 'light'
+                        ? "linear-gradient(to right, #3b82f6, #1d4ed8)"
+                        : "linear-gradient(to right, #00d4ff, #ff6b00)",
+                      boxShadow: theme.theme === 'light'
+                        ? "0 4px 14px rgba(59, 130, 246, 0.25)"
+                        : "0 10px 30px rgba(0, 212, 255, 0.25)"
+                    }}
+                  >
+                    Sign In
+                  </m.button>
+                )}
               </div>
 
               {/* Mobile Menu Button */}
               <div className="sm:hidden flex items-center gap-2">
                 <ThemeToggle />
+                <m.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowMobileMenu(!showMobileMenu)}
+                  className="p-1.5 rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+                  style={{ color: theme.textPrimary }}
+                >
+                  {showMobileMenu ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+                </m.button>
               </div>
             </div>
           </div>
         </m.nav>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {showMobileMenu && (
+            <m.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="sm:hidden fixed top-[73px] left-0 right-0 z-40 border-b border-[#00d4ff]/50"
+              style={{ background: theme.bgNavStyle?.backgroundColor || '#ffffff', backdropFilter: "blur(12px)" }}
+            >
+              <div className="max-w-7xl mx-auto px-3 py-2">
+                <div className="flex flex-col gap-2">
+                  {user ? (
+                    <>
+                      <m.a
+                        href="/dashboard"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setShowMobileMenu(false)}
+                        className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+                        style={{ color: theme.textPrimary }}
+                      >
+                        <span>📊</span>
+                        Dashboard
+                      </m.a>
+
+                      <m.a
+                        href="/jobs"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setShowMobileMenu(false)}
+                        className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+                        style={{ color: theme.textPrimary }}
+                      >
+                        <span>💼</span>
+                        Jobs
+                      </m.a>
+
+                      <m.a
+                        href="/applications"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setShowMobileMenu(false)}
+                        className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+                        style={{ color: theme.textPrimary }}
+                      >
+                        <span>📋</span>
+                        Applications
+                      </m.a>
+
+                      <m.a
+                        href="/profile"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setShowMobileMenu(false)}
+                        className="w-full px-4 py-3 text-left text-sm font-medium rounded-xl border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300 flex items-center gap-2"
+                        style={{ color: theme.textPrimary }}
+                      >
+                        <span>👤</span>
+                        Profile
+                      </m.a>
+
+                      <m.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={async () => {
+                          await logout()
+                          setShowMobileMenu(false)
+                          window.location.href = '/'
+                        }}
+                        className="w-full px-4 py-3 text-left text-white text-sm font-bold rounded-xl hover:shadow-lg transition-all duration-300 flex items-center gap-2"
+                        style={{
+                          background: theme.theme === 'light'
+                            ? "linear-gradient(to right, #f59e0b, #f97316)"
+                            : "linear-gradient(to right, #ff6b00, #ff8c00)",
+                          boxShadow: theme.theme === 'light'
+                            ? "0 4px 14px rgba(245, 158, 11, 0.25)"
+                            : "0 10px 30px rgba(255, 107, 0, 0.25)"
+                        }}
+                      >
+                        <span>🚪</span>
+                        Sign Out
+                      </m.button>
+                    </>
+                  ) : (
+                    <m.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        setShowMobileMenu(false)
+                        window.location.href = '/login'
+                      }}
+                      className="w-full px-4 py-3 text-left text-white text-sm font-bold rounded-xl hover:shadow-lg transition-all duration-300 flex items-center gap-2"
+                      style={{
+                        background: theme.theme === 'light'
+                          ? "linear-gradient(to right, #3b82f6, #1d4ed8)"
+                          : "linear-gradient(to right, #00d4ff, #ff6b00)",
+                        boxShadow: theme.theme === 'light'
+                          ? "0 4px 14px rgba(59, 130, 246, 0.25)"
+                          : "0 10px 30px rgba(0, 212, 255, 0.25)"
+                      }}
+                    >
+                      <span>🔐</span>
+                      Sign In
+                    </m.button>
+                  )}
+                </div>
+              </div>
+            </m.div>
+          )}
+        </AnimatePresence>
 
         {/* Background Effects */}
         <div style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "hidden" }}>
@@ -487,12 +640,12 @@ export default function ResumeBuilderPage() {
               <div className="lg:col-span-1">
                 <div className="sticky top-24 space-y-4">
                   {[
-                    { id: 'personal', label: 'Personal Info', icon: '👤' },
-                    { id: 'experience', label: 'Experience', icon: '💼' },
-                    { id: 'education', label: 'Education', icon: '🎓' },
-                    { id: 'skills', label: 'Skills', icon: '⚡' },
-                    { id: 'projects', label: 'Projects', icon: '🚀' },
-                    { id: 'templates', label: 'Templates', icon: '🎨' }
+                    { id: 'personal', label: 'Personal Info', icon: User },
+                    { id: 'experience', label: 'Experience', icon: Briefcase },
+                    { id: 'education', label: 'Education', icon: GraduationCap },
+                    { id: 'skills', label: 'Skills', icon: Zap },
+                    { id: 'projects', label: 'Projects', icon: Rocket },
+                    { id: 'templates', label: 'Templates', icon: PaletteIcon }
                   ].map(section => (
                     <m.button
                       key={section.id}
@@ -507,7 +660,7 @@ export default function ResumeBuilderPage() {
                       }}
                     >
                       <div className="flex items-center gap-3">
-                        <span className="text-lg">{section.icon}</span>
+                        <section.icon className="w-5 h-5" />
                         <span className="font-semibold">{section.label}</span>
                       </div>
                     </m.button>
@@ -641,8 +794,13 @@ export default function ResumeBuilderPage() {
                             type="text"
                             value={resumeData.personalInfo.firstName}
                             onChange={(e) => updatePersonalInfo('firstName', e.target.value)}
-                            className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                            style={{ background: theme.bgInput, border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                            className="w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 transition-all"
+                            style={{
+                              background: theme.bgInputStyle?.backgroundColor || theme.bgCard,
+                              border: `1px solid ${theme.borderMedium}`,
+                              color: theme.textPrimary,
+                              '--tw-ring-color': theme.theme === 'light' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 212, 255, 0.5)'
+                            } as any}
                           />
                         </div>
                         <div>
@@ -651,8 +809,13 @@ export default function ResumeBuilderPage() {
                             type="text"
                             value={resumeData.personalInfo.lastName}
                             onChange={(e) => updatePersonalInfo('lastName', e.target.value)}
-                            className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                            style={{ background: theme.bgInput, border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                            className="w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 transition-all"
+                            style={{
+                              background: theme.bgInputStyle?.backgroundColor || theme.bgCard,
+                              border: `1px solid ${theme.borderMedium}`,
+                              color: theme.textPrimary,
+                              '--tw-ring-color': theme.theme === 'light' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 212, 255, 0.5)'
+                            } as any}
                           />
                         </div>
                         <div>
@@ -661,8 +824,13 @@ export default function ResumeBuilderPage() {
                             type="email"
                             value={resumeData.personalInfo.email}
                             onChange={(e) => updatePersonalInfo('email', e.target.value)}
-                            className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                            style={{ background: theme.bgInput, border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                            className="w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 transition-all"
+                            style={{
+                              background: theme.bgInputStyle?.backgroundColor || theme.bgCard,
+                              border: `1px solid ${theme.borderMedium}`,
+                              color: theme.textPrimary,
+                              '--tw-ring-color': theme.theme === 'light' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 212, 255, 0.5)'
+                            } as any}
                           />
                         </div>
                         <div>
@@ -671,8 +839,13 @@ export default function ResumeBuilderPage() {
                             type="tel"
                             value={resumeData.personalInfo.phone}
                             onChange={(e) => updatePersonalInfo('phone', e.target.value)}
-                            className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                            style={{ background: theme.bgInput, border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                            className="w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 transition-all"
+                            style={{
+                              background: theme.bgInputStyle?.backgroundColor || theme.bgCard,
+                              border: `1px solid ${theme.borderMedium}`,
+                              color: theme.textPrimary,
+                              '--tw-ring-color': theme.theme === 'light' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 212, 255, 0.5)'
+                            } as any}
                           />
                         </div>
                         <div className="md:col-span-2">
@@ -681,8 +854,13 @@ export default function ResumeBuilderPage() {
                             type="text"
                             value={resumeData.personalInfo.location}
                             onChange={(e) => updatePersonalInfo('location', e.target.value)}
-                            className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all"
-                            style={{ background: theme.bgInput, border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                            className="w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 transition-all"
+                            style={{
+                              background: theme.bgInputStyle?.backgroundColor || theme.bgCard,
+                              border: `1px solid ${theme.borderMedium}`,
+                              color: theme.textPrimary,
+                              '--tw-ring-color': theme.theme === 'light' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 212, 255, 0.5)'
+                            } as any}
                           />
                         </div>
                         <div className="md:col-span-2">
@@ -691,8 +869,13 @@ export default function ResumeBuilderPage() {
                             rows={4}
                             value={resumeData.personalInfo.summary}
                             onChange={(e) => updatePersonalInfo('summary', e.target.value)}
-                            className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all resize-none"
-                            style={{ background: theme.bgInput, border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                            className="w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 transition-all resize-none"
+                            style={{
+                              background: theme.bgInputStyle?.backgroundColor || theme.bgCard,
+                              border: `1px solid ${theme.borderMedium}`,
+                              color: theme.textPrimary,
+                              '--tw-ring-color': theme.theme === 'light' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 212, 255, 0.5)'
+                            } as any}
                           />
                         </div>
                       </div>
@@ -743,24 +926,39 @@ export default function ResumeBuilderPage() {
                               placeholder="Company"
                               value={exp.company}
                               onChange={(e) => updateExperience(exp.id, 'company', e.target.value)}
-                              className="px-4 py-3 rounded-xl focus:outline-none transition-all"
-                              style={{ background: theme.bgInput, border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                              className="px-4 py-3 rounded-xl focus:outline-none focus:ring-2 transition-all"
+                              style={{
+                                background: theme.bgInputStyle?.backgroundColor || theme.bgCard,
+                                border: `1px solid ${theme.borderMedium}`,
+                                color: theme.textPrimary,
+                                '--tw-ring-color': theme.theme === 'light' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 212, 255, 0.5)'
+                              } as any}
                             />
                             <input
                               type="text"
                               placeholder="Position"
                               value={exp.position}
                               onChange={(e) => updateExperience(exp.id, 'position', e.target.value)}
-                              className="px-4 py-3 rounded-xl focus:outline-none transition-all"
-                              style={{ background: theme.bgInput, border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                              className="px-4 py-3 rounded-xl focus:outline-none focus:ring-2 transition-all"
+                              style={{
+                                background: theme.bgInputStyle?.backgroundColor || theme.bgCard,
+                                border: `1px solid ${theme.borderMedium}`,
+                                color: theme.textPrimary,
+                                '--tw-ring-color': theme.theme === 'light' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 212, 255, 0.5)'
+                              } as any}
                             />
                             <input
                               type="text"
                               placeholder="Location"
                               value={exp.location}
                               onChange={(e) => updateExperience(exp.id, 'location', e.target.value)}
-                              className="px-4 py-3 rounded-xl focus:outline-none transition-all"
-                              style={{ background: theme.bgInput, border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                              className="px-4 py-3 rounded-xl focus:outline-none focus:ring-2 transition-all"
+                              style={{
+                                background: theme.bgInputStyle?.backgroundColor || theme.bgCard,
+                                border: `1px solid ${theme.borderMedium}`,
+                                color: theme.textPrimary,
+                                '--tw-ring-color': theme.theme === 'light' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 212, 255, 0.5)'
+                              } as any}
                             />
                             <div className="flex items-center gap-2">
                               <input
@@ -777,8 +975,13 @@ export default function ResumeBuilderPage() {
                               placeholder="Start Date"
                               value={exp.startDate}
                               onChange={(e) => updateExperience(exp.id, 'startDate', e.target.value)}
-                              className="px-4 py-3 rounded-xl focus:outline-none transition-all"
-                              style={{ background: theme.bgInput, border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                              className="px-4 py-3 rounded-xl focus:outline-none focus:ring-2 transition-all"
+                              style={{
+                                background: theme.bgInputStyle?.backgroundColor || theme.bgCard,
+                                border: `1px solid ${theme.borderMedium}`,
+                                color: theme.textPrimary,
+                                '--tw-ring-color': theme.theme === 'light' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 212, 255, 0.5)'
+                              } as any}
                             />
                             <input
                               type="month"
@@ -786,8 +989,13 @@ export default function ResumeBuilderPage() {
                               value={exp.endDate}
                               onChange={(e) => updateExperience(exp.id, 'endDate', e.target.value)}
                               disabled={exp.current}
-                              className="px-4 py-3 rounded-xl focus:outline-none transition-all disabled:opacity-50"
-                              style={{ background: theme.bgInput, border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                              className="px-4 py-3 rounded-xl focus:outline-none focus:ring-2 transition-all disabled:opacity-50"
+                              style={{
+                                background: theme.bgInputStyle?.backgroundColor || theme.bgCard,
+                                border: `1px solid ${theme.borderMedium}`,
+                                color: theme.textPrimary,
+                                '--tw-ring-color': theme.theme === 'light' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 212, 255, 0.5)'
+                              } as any}
                             />
                             <div className="md:col-span-2">
                               <textarea
@@ -795,8 +1003,13 @@ export default function ResumeBuilderPage() {
                                 placeholder="Describe your responsibilities and achievements..."
                                 value={exp.description}
                                 onChange={(e) => updateExperience(exp.id, 'description', e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl focus:outline-none transition-all resize-none"
-                                style={{ background: theme.bgInput, border: `1px solid ${theme.borderMedium}`, color: theme.textPrimary }}
+                                className="w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 transition-all resize-none"
+                                style={{
+                                  background: theme.bgInputStyle?.backgroundColor || theme.bgCard,
+                                  border: `1px solid ${theme.borderMedium}`,
+                                  color: theme.textPrimary,
+                                  '--tw-ring-color': theme.theme === 'light' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(0, 212, 255, 0.5)'
+                                } as any}
                               />
                             </div>
                           </div>
