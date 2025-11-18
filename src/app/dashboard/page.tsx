@@ -547,7 +547,19 @@ export default function DashboardPage() {
               exit={{ opacity: 0, y: -50 }}
               className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full mx-4"
             >
-              <div className="p-4 rounded-xl bg-gradient-to-br from-[#ff4444]/90 to-[#ff6b00]/90 backdrop-blur-md border border-[#ff4444]/50 shadow-lg flex items-center gap-3">
+              <div className="p-4 rounded-xl bg-gradient-to-br backdrop-blur-md border shadow-lg flex items-center gap-3"
+                style={{
+                  background: theme.theme === 'light'
+                    ? "linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(245, 101, 101, 0.1))"
+                    : "linear-gradient(135deg, rgba(255, 68, 68, 0.9), rgba(255, 107, 0, 0.9))",
+                  borderColor: theme.theme === 'light'
+                    ? "rgba(239, 68, 68, 0.2)"
+                    : "#ff4444",
+                  boxShadow: theme.theme === 'light'
+                    ? "0 4px 14px rgba(239, 68, 68, 0.15)"
+                    : "0 10px 30px rgba(255, 68, 68, 0.25)"
+                }}
+              >
                 <XCircle className="w-5 h-5 text-white flex-shrink-0" />
                 <p className="text-white font-semibold flex-1">{error}</p>
                 <button
@@ -570,7 +582,19 @@ export default function DashboardPage() {
               exit={{ opacity: 0, scale: 0.8, y: 50 }}
               className="fixed bottom-8 right-8 z-50 max-w-sm"
             >
-              <div className="p-6 rounded-2xl bg-gradient-to-br from-[#00ff88]/90 to-[#00d4ff]/90 backdrop-blur-md border-2 border-[#00ff88] shadow-2xl shadow-[#00ff88]/50">
+              <div className="p-6 rounded-2xl bg-gradient-to-br border-2 shadow-2xl shadow-[#00ff88]/50"
+                style={{
+                  background: theme.theme === 'light'
+                    ? "linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(59, 130, 246, 0.1))"
+                    : "linear-gradient(135deg, rgba(0, 255, 136, 0.9), rgba(0, 212, 255, 0.9))",
+                  borderColor: theme.theme === 'light'
+                    ? "rgba(34, 197, 94, 0.3)"
+                    : "#00ff88",
+                  boxShadow: theme.theme === 'light'
+                    ? "0 10px 30px rgba(34, 197, 94, 0.15)"
+                    : "0 20px 40px rgba(0, 255, 136, 0.5)"
+                }}
+              >
                 <div className="flex items-center gap-4">
                   <div className="p-3 rounded-xl bg-white/20">
                     <Trophy className="w-8 h-8 text-white" />
@@ -606,7 +630,9 @@ export default function DashboardPage() {
                   transition={{ duration: 2 + Math.random() * 2, delay: Math.random() * 0.5 }}
                   className="absolute w-3 h-3 rounded-full"
                   style={{
-                    background: ['#ff6b00', '#00d4ff', '#00ff88', '#ff4444'][Math.floor(Math.random() * 4)]
+                    background: theme.theme === 'light'
+                      ? ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'][Math.floor(Math.random() * 4)]
+                      : ['#ff6b00', '#00d4ff', '#00ff88', '#ff4444'][Math.floor(Math.random() * 4)]
                   }}
                 />
               ))}
@@ -675,7 +701,15 @@ export default function DashboardPage() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => logout()}
-                  className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
+                  className="px-6 py-2 text-white text-sm font-bold rounded-full bg-gradient-to-r hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
+                  style={{
+                    background: theme.theme === 'light'
+                      ? "linear-gradient(to right, #f59e0b, #f97316)"
+                      : "linear-gradient(to right, #ff6b00, #ff8c00)",
+                    boxShadow: theme.theme === 'light'
+                      ? "0 4px 14px rgba(245, 158, 11, 0.25)"
+                      : "0 10px 30px rgba(255, 107, 0, 0.25)"
+                  }}
                 >
                   Sign Out
                 </m.button>
@@ -752,7 +786,15 @@ export default function DashboardPage() {
                         logout()
                         setShowMobileMenu(false)
                       }}
-                      className="w-full px-4 py-3 text-left text-white text-sm font-bold rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#ff8c00] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300 flex items-center gap-2"
+                      className="w-full px-4 py-3 text-left text-white text-sm font-bold rounded-xl hover:shadow-lg transition-all duration-300 flex items-center gap-2"
+                      style={{
+                        background: theme.theme === 'light'
+                          ? "linear-gradient(to right, #f59e0b, #f97316)"
+                          : "linear-gradient(to right, #ff6b00, #ff8c00)",
+                        boxShadow: theme.theme === 'light'
+                          ? "0 4px 14px rgba(245, 158, 11, 0.25)"
+                          : "0 10px 30px rgba(255, 107, 0, 0.25)"
+                      }}
                     >
                       <LogOut className="w-4 h-4" />
                       Sign Out
@@ -779,7 +821,9 @@ export default function DashboardPage() {
               ease: "easeInOut",
             }}
             style={{
-              background: "linear-gradient(135deg, rgba(255, 107, 0, 0.3), rgba(0, 212, 255, 0.3))",
+              background: theme.theme === 'light'
+                ? "linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(147, 51, 234, 0.05))"
+                : "linear-gradient(135deg, rgba(255, 107, 0, 0.3), rgba(0, 212, 255, 0.3))",
               filter: "blur(40px)",
             }}
           />
@@ -796,7 +840,9 @@ export default function DashboardPage() {
               ease: "easeInOut",
             }}
             style={{
-              background: "linear-gradient(225deg, rgba(0, 255, 136, 0.2), rgba(255, 107, 0, 0.2))",
+              background: theme.theme === 'light'
+                ? "linear-gradient(225deg, rgba(34, 197, 94, 0.03), rgba(245, 158, 11, 0.03))"
+                : "linear-gradient(225deg, rgba(0, 255, 136, 0.2), rgba(255, 107, 0, 0.2))",
               filter: "blur(30px)",
             }}
           />
@@ -815,7 +861,9 @@ export default function DashboardPage() {
               <h1
                 className="text-4xl sm:text-5xl md:text-6xl font-black leading-none"
                 style={{
-                  background: "linear-gradient(135deg, #1a1a1a 0%, #00d4ff 30%, #ff6b00 60%, #00ff88 90%)",
+                  backgroundImage: theme.theme === 'light'
+                    ? "linear-gradient(135deg, #1e293b 0%, #3b82f6 30%, #f59e0b 60%, #10b981 90%)"
+                    : "linear-gradient(135deg, #1a1a1a 0%, #00d4ff 30%, #ff6b00 60%, #00ff88 90%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
@@ -859,7 +907,15 @@ export default function DashboardPage() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowAddModal(true)}
-              className="px-4 py-3 sm:px-6 sm:py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all text-sm sm:text-base"
+              className="px-4 py-3 sm:px-6 sm:py-3 rounded-xl text-white font-bold flex items-center justify-center gap-2 hover:shadow-lg transition-all text-sm sm:text-base"
+              style={{
+                background: theme.theme === 'light'
+                  ? "linear-gradient(to right, #3b82f6, #8b5cf6)"
+                  : "linear-gradient(to right, #ff6b00, #00d4ff)",
+                boxShadow: theme.theme === 'light'
+                  ? "0 4px 14px rgba(59, 130, 246, 0.25)"
+                  : "0 10px 30px rgba(255, 107, 0, 0.25)"
+              }}
             >
               <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
               Add Application
@@ -950,7 +1006,15 @@ export default function DashboardPage() {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="mb-8 p-6 rounded-2xl bg-gradient-to-br from-[#ff6b00]/20 to-[#00d4ff]/20 border-2 border-[#00ff88] overflow-hidden"
+                className="mb-8 p-6 rounded-2xl bg-gradient-to-br border-2 overflow-hidden"
+                style={{
+                  background: theme.theme === 'light'
+                    ? "linear-gradient(135deg, rgba(34, 197, 94, 0.05), rgba(59, 130, 246, 0.05))"
+                    : "linear-gradient(135deg, rgba(255, 107, 0, 0.2), rgba(0, 212, 255, 0.2))",
+                  borderColor: theme.theme === 'light'
+                    ? "rgba(34, 197, 94, 0.2)"
+                    : "#00ff88"
+                }}
               >
                 <div className="flex items-center gap-3 mb-4">
                   <Sparkles className="w-6 h-6 text-[#00ff88]" />
@@ -1031,10 +1095,27 @@ export default function DashboardPage() {
                     alignItems: "center",
                     gap: "0.25rem",
                     ...(selectedTab === tab.value
-                      ? { background: "linear-gradient(90deg,#ff6b00,#00d4ff)", color: "#fff", boxShadow: "0 10px 30px rgba(0,0,0,0.25)" }
+                      ? {
+                          background: theme.theme === 'light'
+                            ? "linear-gradient(90deg, #3b82f6, #8b5cf6)"
+                            : "linear-gradient(90deg, #ff6b00, #00d4ff)",
+                          color: "#fff",
+                          boxShadow: theme.theme === 'light'
+                            ? "0 4px 14px rgba(59, 130, 246, 0.25)"
+                            : "0 10px 30px rgba(0,0,0,0.25)"
+                        }
                       : theme.theme === 'light'
-                      ? { background: "rgba(255, 255, 255, 0.8)", border: `1px solid rgba(99, 102, 241, 0.2)`, color: "#475569", boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }
-                      : { background: "rgba(26,58,82,0.38)", border: `1px solid rgba(0,212,255,0.2)`, color: theme.textTertiary }),
+                      ? {
+                          background: "rgba(255, 255, 255, 0.8)",
+                          border: `1px solid rgba(99, 102, 241, 0.2)`,
+                          color: "#475569",
+                          boxShadow: "0 2px 8px rgba(0,0,0,0.08)"
+                        }
+                      : {
+                          background: "rgba(26,58,82,0.38)",
+                          border: `1px solid rgba(0,212,255,0.2)`,
+                          color: theme.textTertiary
+                        }),
                   }}
                   className="sm:px-6 sm:py-3 sm:text-sm sm:gap-2"
                 >
@@ -1075,7 +1156,13 @@ export default function DashboardPage() {
                 animate={{ opacity: 1 }}
                 className="col-span-full text-center py-20"
               >
-                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#00d4ff]/20 to-[#ff6b00]/20 flex items-center justify-center">
+                <div className="w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center"
+                  style={{
+                    background: theme.theme === 'light'
+                      ? "linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1))"
+                      : "linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(255, 107, 0, 0.2))"
+                  }}
+                >
                   <div className="w-8 h-8 border-4 border-[#00d4ff] border-t-transparent rounded-full animate-spin"></div>
                 </div>
                 <h3 className="text-2xl font-bold mb-2" style={{ color: theme.textPrimary }}>Loading applications...</h3>
@@ -1099,7 +1186,15 @@ export default function DashboardPage() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={fetchApplications}
-                  className="px-8 py-3 text-white font-bold rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300"
+                  className="px-8 py-3 text-white font-bold rounded-xl hover:shadow-lg transition-all duration-300"
+                  style={{
+                    background: theme.theme === 'light'
+                      ? "linear-gradient(to right, #3b82f6, #8b5cf6)"
+                      : "linear-gradient(to right, #ff6b00, #00d4ff)",
+                    boxShadow: theme.theme === 'light'
+                      ? "0 4px 14px rgba(59, 130, 246, 0.25)"
+                      : "0 10px 30px rgba(255, 107, 0, 0.25)"
+                  }}
                 >
                   Try Again
                 </m.button>
@@ -1152,7 +1247,9 @@ export default function DashboardPage() {
                             <div
                               className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0"
                               style={{
-                                background: `linear-gradient(135deg, ${statusColor}40, ${statusColor}20)`,
+                                background: theme.theme === 'light'
+                                  ? `linear-gradient(135deg, ${statusColor}30, ${statusColor}15)`
+                                  : `linear-gradient(135deg, ${statusColor}40, ${statusColor}20)`,
                               }}
                             >
                               {app.company.charAt(0)}
@@ -1216,7 +1313,9 @@ export default function DashboardPage() {
                               transition={{ duration: 1, delay: idx * 0.05 }}
                               className="h-full rounded-full"
                               style={{
-                                background: `linear-gradient(90deg, ${statusColor}, ${statusColor}80)`,
+                                background: theme.theme === 'light'
+                                  ? `linear-gradient(90deg, ${statusColor}, ${statusColor}80)`
+                                  : `linear-gradient(90deg, ${statusColor}, ${statusColor}80)`,
                               }}
                             />
                           </div>
@@ -1278,7 +1377,13 @@ export default function DashboardPage() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="col-span-full text-center py-20"
               >
-                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#00d4ff]/20 to-[#ff6b00]/20 flex items-center justify-center">
+                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br flex items-center justify-center"
+                  style={{
+                    background: theme.theme === 'light'
+                      ? "linear-gradient(135deg, rgba(156, 163, 175, 0.1), rgba(209, 213, 219, 0.1))"
+                      : "linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(255, 107, 0, 0.2))"
+                  }}
+                >
                   <Briefcase className="w-10 h-10 text-gray-500" />
                 </div>
                 <h3 className="text-2xl font-bold mb-2" style={{ color: theme.textPrimary }}>No applications found</h3>
@@ -1289,7 +1394,15 @@ export default function DashboardPage() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowAddModal(true)}
-                  className="px-8 py-3 text-white font-bold rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all duration-300 flex items-center gap-2 mx-auto"
+                  className="px-8 py-3 text-white font-bold rounded-xl hover:shadow-lg transition-all duration-300 flex items-center gap-2 mx-auto"
+                  style={{
+                    background: theme.theme === 'light'
+                      ? "linear-gradient(to right, #3b82f6, #8b5cf6)"
+                      : "linear-gradient(to right, #ff6b00, #00d4ff)",
+                    boxShadow: theme.theme === 'light'
+                      ? "0 4px 14px rgba(59, 130, 246, 0.25)"
+                      : "0 10px 30px rgba(255, 107, 0, 0.25)"
+                  }}
                 >
                   <Plus className="w-5 h-5" />
                   Add Your First Application
@@ -1467,7 +1580,15 @@ export default function DashboardPage() {
                       type="submit"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      className="flex-1 px-4 sm:px-6 py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
+                      className="flex-1 px-4 sm:px-6 py-3 rounded-xl text-white font-bold hover:shadow-lg transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
+                      style={{
+                        background: theme.theme === 'light'
+                          ? "linear-gradient(to right, #3b82f6, #8b5cf6)"
+                          : "linear-gradient(to right, #ff6b00, #00d4ff)",
+                        boxShadow: theme.theme === 'light'
+                          ? "0 4px 14px rgba(59, 130, 246, 0.25)"
+                          : "0 10px 30px rgba(255, 107, 0, 0.25)"
+                      }}
                     >
                       <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
                       Add Application
@@ -1516,9 +1637,14 @@ export default function DashboardPage() {
                   {/* Company Header */}
                   <div style={{ padding: "1rem 1.5rem", borderRadius: "1rem", border: "1px solid rgba(0,0,0,0.1)", ...(theme.bgCardStyle || {}) }} className="sm:p-6">
                     <div
-                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center text-white font-bold text-2xl sm:text-3xl flex-shrink-0"
+                      className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center font-bold text-2xl sm:text-3xl flex-shrink-0"
                       style={{
-                        background: `linear-gradient(135deg, ${getStatusColor(selectedApp.status)}40, ${getStatusColor(selectedApp.status)}20)`,
+                        background: theme.theme === 'light'
+                          ? `linear-gradient(135deg, ${getStatusColor(selectedApp.status)}25, ${getStatusColor(selectedApp.status)}15)`
+                          : `linear-gradient(135deg, ${getStatusColor(selectedApp.status)}40, ${getStatusColor(selectedApp.status)}20)`,
+                        color: theme.theme === 'light' ? '#ffffff' : '#ffffff',
+                        border: theme.theme === 'light' ? `2px solid ${getStatusColor(selectedApp.status)}40` : 'none',
+                        boxShadow: theme.theme === 'light' ? `0 2px 8px ${getStatusColor(selectedApp.status)}30` : 'none',
                       }}
                     >
                       {selectedApp.company.charAt(0)}
@@ -1660,7 +1786,15 @@ export default function DashboardPage() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => setShowDetailModal(false)}
-                      className="px-6 sm:px-8 py-3 rounded-xl bg-gradient-to-r from-[#ff6b00] to-[#00d4ff] text-white font-bold hover:shadow-lg hover:shadow-[#ff6b00]/50 transition-all text-sm sm:text-base"
+                      className="px-6 sm:px-8 py-3 rounded-xl text-white font-bold hover:shadow-lg transition-all text-sm sm:text-base"
+                      style={{
+                        background: theme.theme === 'light'
+                          ? "linear-gradient(to right, #3b82f6, #8b5cf6)"
+                          : "linear-gradient(to right, #ff6b00, #00d4ff)",
+                        boxShadow: theme.theme === 'light'
+                          ? "0 4px 14px rgba(59, 130, 246, 0.25)"
+                          : "0 10px 30px rgba(255, 107, 0, 0.25)"
+                      }}
                     >
                       Close
                     </m.button>
@@ -1718,7 +1852,12 @@ export default function DashboardPage() {
                       initial={{ width: 0 }}
                       animate={{ width: `${(unlockedAchievements.length / achievements.length) * 100}%` }}
                       transition={{ duration: 1 }}
-                      className="h-full rounded-full bg-gradient-to-r from-[#00ff88] to-[#00d4ff]"
+                      className="h-full rounded-full"
+                      style={{
+                        background: theme.theme === 'light'
+                          ? "linear-gradient(to right, #10b981, #3b82f6)"
+                          : "linear-gradient(to right, #00ff88, #00d4ff)"
+                      }}
                     />
                   </div>
                 </div>
