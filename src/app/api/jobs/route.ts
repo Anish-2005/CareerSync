@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
       .lean();
 
     // Transform jobs to include id field
-    const transformedJobs = jobs.map(job => ({
+    const transformedJobs = jobs.map((job: any) => ({
       ...job,
       id: job._id.toString(),
     }));
