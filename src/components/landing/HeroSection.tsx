@@ -276,7 +276,7 @@ export default function HeroSection() {
              {/* Fluid morphing headline */}
              <m.h1
                variants={itemVariants}
-               className="mt-8 text-[12vw] sm:text-5xl md:text-7xl lg:text-9xl font-black mb-6 sm:mb-8 leading-tight tracking-tight"
+               className="pb-6 mt-8 text-[12vw] sm:text-5xl md:text-7xl lg:text-9xl font-black mb-6 sm:mb-8 leading-tight tracking-tight"
                style={{
                  ...theme.gradientText,
                  filter: theme.theme === 'light'
