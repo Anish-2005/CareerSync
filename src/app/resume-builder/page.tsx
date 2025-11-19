@@ -1430,14 +1430,15 @@ export default function ResumeBuilderPage() {
       document.body.appendChild(resumeElement)
 
       // Generate canvas from the HTML
-      const canvas = await html2canvas(resumeElement, {
+      const options: (Parameters<typeof html2canvas>[1] & { scale: number }) = {
         scale: 2,
         useCORS: true,
         allowTaint: true,
-        backgroundColor: '#ffffff',
+        background: '#ffffff',
         width: 800,
         height: resumeElement.scrollHeight
-      })
+      }
+      const canvas = await html2canvas(resumeElement, options)
 
       // Remove the temporary element
       document.body.removeChild(resumeElement)
