@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import Head from 'next/head'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FileText, Download, Eye, Edit, Plus, Trash2, Save, Palette, Menu, X, User, Briefcase, GraduationCap, Zap, Rocket, Palette as PaletteIcon, Mail, Phone, MapPin, Code, Link, Sparkles, Lightbulb, BarChart3, ClipboardList, LogOut, LogIn } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
@@ -572,6 +573,15 @@ const clone = resumeElement.cloneNode(true) as HTMLElement
 
   return (
     <RouteGuard>
+      <Head>
+        <title>Resume Builder - CareerSync | Create Professional Resumes Online</title>
+        <meta name="description" content="Build stunning, professional resumes with our AI-powered resume builder. Choose from multiple templates, customize your content, and export high-quality PDFs." />
+        <meta name="keywords" content="resume builder, CV maker, professional resume, resume templates, PDF resume, career tools" />
+        <link rel="canonical" href="https://careersync.app/resume-builder" />
+        <meta property="og:title" content="Resume Builder - CareerSync" />
+        <meta property="og:description" content="Build stunning, professional resumes with our AI-powered resume builder." />
+        <meta property="og:url" content="https://careersync.app/resume-builder" />
+      </Head>
       <div style={{ minHeight: "100vh", overflow: "hidden", fontFamily: '"Geist", sans-serif', ...(theme.bgPrimaryStyle as any) }}>
         <Navigation user={user} theme={theme} logout={logout} showMobileMenu={showMobileMenu} setShowMobileMenu={setShowMobileMenu} />
 

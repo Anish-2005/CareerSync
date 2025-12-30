@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect, useState, useCallback, useRef } from "react"
+import Head from "next/head"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   Target, TrendingUp,Briefcase, CheckCircle2, XCircle, AlertCircle,Users, Zap,
@@ -622,6 +623,16 @@ export default function DashboardPage() {
   const unlockedAchievements = achievements.filter(a => a.unlocked)
   return (
     <RouteGuard>
+      <Head>
+        <title>Dashboard - CareerSync | Track Your Job Applications</title>
+        <meta name="description" content="Monitor your job application progress with detailed analytics, streaks, achievements, and insights. Track interviews, offers, and manage your career journey effectively." />
+        <meta name="keywords" content="job dashboard, application tracking, career analytics, job search progress, interview tracking" />
+        <link rel="canonical" href="https://careersync.app/dashboard" />
+        <meta property="og:title" content="Dashboard - CareerSync" />
+        <meta property="og:description" content="Monitor your job application progress with detailed analytics and insights." />
+        <meta property="og:url" content="https://careersync.app/dashboard" />
+        <meta name="robots" content="noindex, nofollow" />
+      </Head>
       <div
         style={{ minHeight: "100vh", overflow: "hidden", fontFamily: '"Geist", sans-serif', ...(safeBgPrimary as any) }}
       >

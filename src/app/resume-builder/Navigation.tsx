@@ -46,15 +46,7 @@ export default function Navigation({ user, theme, logout, showMobileMenu, setSho
 
           {/* Desktop Navigation */}
           <div className="hidden sm:flex items-center gap-6">
-            <m.a
-              href="/home"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-4 py-2 text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
-              style={{ color: theme.textPrimary }}
-            >
-              Home
-            </m.a>
+           
             <m.a
               href="/dashboard"
               whileHover={{ scale: 1.05 }}

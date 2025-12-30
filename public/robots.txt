@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Block access to admin areas
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /node_modules/
+
+# Allow access to static assets
+Allow: /public/
+Allow: /csync.png
+Allow: /file.svg
+Allow: /globe.svg
+Allow: /next.svg
+Allow: /vercel.svg
+Allow: /window.svg
+
+# Sitemap
+Sitemap: https://careersync.app/sitemap.xml

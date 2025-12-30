@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Head from 'next/head'
 import { motion } from 'framer-motion'
 import { useAuth } from '@/contexts/AuthContext'
 import { useThemeClasses } from '@/hooks/useThemeClasses'
@@ -227,6 +228,15 @@ export default function JobsPage() {
 
   return (
     <RouteGuard>
+      <Head>
+        <title>Find Jobs - CareerSync | Discover Your Next Opportunity</title>
+        <meta name="description" content="Browse thousands of job opportunities tailored to your skills and career goals. Search, filter, and apply to jobs with our intelligent job matching system." />
+        <meta name="keywords" content="jobs, job search, career opportunities, employment, job listings, job board" />
+        <link rel="canonical" href="https://careersync.app/jobs" />
+        <meta property="og:title" content="Find Jobs - CareerSync" />
+        <meta property="og:description" content="Browse thousands of job opportunities tailored to your skills and career goals." />
+        <meta property="og:url" content="https://careersync.app/jobs" />
+      </Head>
       <div style={{ minHeight: "100vh", overflow: "hidden", fontFamily: '"Geist", sans-serif', ...(theme.bgPrimaryStyle as any) }}>
         <Navigation
           user={user}
