@@ -13,6 +13,7 @@ import Header from './Header'
 import BackgroundEffects from './BackgroundEffects'
 import ActionButtons from './ActionButtons'
 import SidebarNavigation from './SidebarNavigation'
+import MobileSectionNavigation from './MobileSectionNavigation'
 import EditMode from './EditMode'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
@@ -650,6 +651,15 @@ const clone = resumeElement.cloneNode(true) as HTMLElement
               )}
             </div>
           </div>
+
+          {/* Mobile Section Navigation */}
+          {!previewMode && (
+            <MobileSectionNavigation
+              activeSection={activeSection}
+              setActiveSection={setActiveSection}
+              theme={theme}
+            />
+          )}
         </div>
       </div>
     </RouteGuard>

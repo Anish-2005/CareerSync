@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import ThemeToggle from '@/components/ThemeToggle';
+import { Menu, X } from 'lucide-react';
 
 const m = motion as any;
 
@@ -76,7 +77,7 @@ export default function Navigation({ user, theme, logout, showMobileMenu, setSho
               className="p-1.5 rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
               style={{ color: theme.textPrimary }}
             >
-              {showMobileMenu ? 'X' : 'Menu'}
+              {showMobileMenu ? <X size={20} /> : <Menu size={20} />}
             </m.button>
           </div>
         </div>
