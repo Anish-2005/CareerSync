@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
 import ThemeToggle from '@/components/ThemeToggle';
 
 const m = motion as any;
@@ -46,12 +45,24 @@ export default function Navigation({ user, theme, logout, showMobileMenu, setSho
 
           {/* Desktop Navigation */}
           <div className="hidden sm:flex items-center gap-6">
-            <Link href="/home" className="hover:underline" style={{ color: theme.textPrimary }}>
+            <m.a
+              href="/home"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-4 py-2 text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+              style={{ color: theme.textPrimary }}
+            >
               Home
-            </Link>
-            <Link href="/dashboard" className="hover:underline" style={{ color: theme.textPrimary }}>
+            </m.a>
+            <m.a
+              href="/dashboard"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-4 py-2 text-sm font-medium rounded-full border border-[#00d4ff]/50 hover:border-[#00d4ff] transition-all duration-300"
+              style={{ color: theme.textPrimary }}
+            >
               Dashboard
-            </Link>
+            </m.a>
             <ThemeToggle />
           </div>
 
